@@ -1,405 +1,405 @@
 ---
 name: algorithmic-art
-description: Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.
-license: Complete terms in LICENSE.txt
+description: 使用 p5.js 创建算法艺术，具有种子随机性和交互式参数探索。当用户要求使用代码创建艺术、生成艺术、算法艺术、流场或粒子系统时使用。创建原创算法艺术，而不是复制现有艺术家的作品以避免版权侵犯。
+license: 完整条款见 LICENSE.txt
 ---
 
-Algorithmic philosophies are computational aesthetic movements that are then expressed through code. Output .md files (philosophy), .html files (interactive viewer), and .js files (generative algorithms).
+算法哲学是计算美学运动，然后通过代码表达。输出 .md 文件（哲学）、.html 文件（交互式查看器）和 .js 文件（生成算法）。
 
-This happens in two steps:
-1. Algorithmic Philosophy Creation (.md file)
-2. Express by creating p5.js generative art (.html + .js files)
+这分两步发生：
+1. 算法哲学创建（.md 文件）
+2. 通过创建 p5.js 生成艺术来表达（.html + .js 文件）
 
-First, undertake this task:
+首先，承担这个任务：
 
-## ALGORITHMIC PHILOSOPHY CREATION
+## 算法哲学创建
 
-To begin, create an ALGORITHMIC PHILOSOPHY (not static images or templates) that will be interpreted through:
-- Computational processes, emergent behavior, mathematical beauty
-- Seeded randomness, noise fields, organic systems
-- Particles, flows, fields, forces
-- Parametric variation and controlled chaos
+开始时，创建一个算法哲学（不是静态图像或模板），将通过以下方式解释：
+- 计算过程、涌现行为、数学之美
+- 种子随机性、噪声场、有机系统
+- 粒子、流、场、力
+- 参数变化和受控混沌
 
-### THE CRITICAL UNDERSTANDING
-- What is received: Some subtle input or instructions by the user to take into account, but use as a foundation; it should not constrain creative freedom.
-- What is created: An algorithmic philosophy/generative aesthetic movement.
-- What happens next: The same version receives the philosophy and EXPRESSES IT IN CODE - creating p5.js sketches that are 90% algorithmic generation, 10% essential parameters.
+### 关键理解
+- 接收到的内容：用户的一些微妙输入或指令需要考虑，但用作基础；不应限制创作自由。
+- 创建的内容：一个算法哲学/生成美学运动。
+- 接下来发生的事情：相同版本接收哲学并在代码中表达它——创建 90% 算法生成、10% 必要参数的 p5.js 草图。
 
-Consider this approach:
-- Write a manifesto for a generative art movement
-- The next phase involves writing the algorithm that brings it to life
+考虑这种方法：
+- 为生成艺术运动写一份宣言
+- 下一阶段涉及编写让它活起来的算法
 
-The philosophy must emphasize: Algorithmic expression. Emergent behavior. Computational beauty. Seeded variation.
+哲学必须强调：算法表达。涌现行为。计算之美。种子变化。
 
-### HOW TO GENERATE AN ALGORITHMIC PHILOSOPHY
+### 如何生成算法哲学
 
-**Name the movement** (1-2 words): "Organic Turbulence" / "Quantum Harmonics" / "Emergent Stillness"
+**命名运动**（1-2 个词）："有机湍流"/"量子谐波"/"涌现静寂"
 
-**Articulate the philosophy** (4-6 paragraphs - concise but complete):
+**阐述哲学**（4-6 段 - 简洁但完整）：
 
-To capture the ALGORITHMIC essence, express how this philosophy manifests through:
-- Computational processes and mathematical relationships?
-- Noise functions and randomness patterns?
-- Particle behaviors and field dynamics?
-- Temporal evolution and system states?
-- Parametric variation and emergent complexity?
+要捕捉算法精髓，表达这个哲学如何通过以下方式体现：
+- 计算过程和数学关系？
+- 噪声函数和随机模式？
+- 粒子行为和场动力学？
+- 时间演化和系统状态？
+- 参数变化和涌现复杂性？
 
-**CRITICAL GUIDELINES:**
-- **Avoid redundancy**: Each algorithmic aspect should be mentioned once. Avoid repeating concepts about noise theory, particle dynamics, or mathematical principles unless adding new depth.
-- **Emphasize craftsmanship REPEATEDLY**: The philosophy MUST stress multiple times that the final algorithm should appear as though it took countless hours to develop, was refined with care, and comes from someone at the absolute top of their field. This framing is essential - repeat phrases like "meticulously crafted algorithm," "the product of deep computational expertise," "painstaking optimization," "master-level implementation."
-- **Leave creative space**: Be specific about the algorithmic direction, but concise enough that the next Claude has room to make interpretive implementation choices at an extremely high level of craftsmanship.
+**关键指导原则：**
+- **避免冗余**：每个算法方面应该只提及一次。避免重复关于噪声理论、粒子动力学或数学原理的概念，除非添加新的深度。
+- **反复强调工艺**：哲学必须多次强调最终算法应该看起来像是花费了无数小时开发、精心完善、来自该领域绝对顶尖的人。这种框架是必不可少的——重复诸如"精心制作的算法"、"深厚计算专业知识的产物"、"痛苦的优化"、"大师级实现"等短语。
+- **留出创意空间**：在算法方向上具体，但足够简洁以便下一个 Claude 在极高工艺水平上有解释性实现选择的空间。
 
-The philosophy must guide the next version to express ideas ALGORITHMICALLY, not through static images. Beauty lives in the process, not the final frame.
+哲学必须指导下一个版本算法化地表达想法，而不是通过静态图像。美存在于过程中，而不是最终帧中。
 
-### PHILOSOPHY EXAMPLES
+### 哲学示例
 
-**"Organic Turbulence"**
-Philosophy: Chaos constrained by natural law, order emerging from disorder.
-Algorithmic expression: Flow fields driven by layered Perlin noise. Thousands of particles following vector forces, their trails accumulating into organic density maps. Multiple noise octaves create turbulent regions and calm zones. Color emerges from velocity and density - fast particles burn bright, slow ones fade to shadow. The algorithm runs until equilibrium - a meticulously tuned balance where every parameter was refined through countless iterations by a master of computational aesthetics.
+**"有机湍流"**
+哲学：受自然法则约束的混沌，从无序中出现的秩序。
+算法表达：由分层 Perlin 噪声驱动的流场。数千个粒子跟随矢量力，它们的轨迹积累成有机密度图。多个噪声倍频创建湍流区域和平静区域。颜色从速度和密度中涌现——快速粒子燃烧明亮，慢速粒子褪为阴影。算法运行直到平衡——一个精细调整的平衡，其中每个参数都通过无数次迭代由计算美学大师完善。
 
-**"Quantum Harmonics"**
-Philosophy: Discrete entities exhibiting wave-like interference patterns.
-Algorithmic expression: Particles initialized on a grid, each carrying a phase value that evolves through sine waves. When particles are near, their phases interfere - constructive interference creates bright nodes, destructive creates voids. Simple harmonic motion generates complex emergent mandalas. The result of painstaking frequency calibration where every ratio was carefully chosen to produce resonant beauty.
+**"量子谐波"**
+哲学：表现波状干涉模式的离散实体。
+算法表达：在网格上初始化的粒子，每个携带通过正弦波演化的相位值。当粒子接近时，它们的相位干涉——建设性干涉创建明亮节点，破坏性创建空洞。简谐运动生成复杂的涌现曼陀罗。痛苦频率校准的结果，其中每个比率都被仔细选择以产生共振之美。
 
-**"Recursive Whispers"**
-Philosophy: Self-similarity across scales, infinite depth in finite space.
-Algorithmic expression: Branching structures that subdivide recursively. Each branch slightly randomized but constrained by golden ratios. L-systems or recursive subdivision generate tree-like forms that feel both mathematical and organic. Subtle noise perturbations break perfect symmetry. Line weights diminish with each recursion level. Every branching angle the product of deep mathematical exploration.
+**"递归低语"**
+哲学：跨尺度的自相似性，有限空间中的无限深度。
+算法表达：递归细分的分支结构。每个分支轻微随机化但受黄金比率约束。L-系统或递归细分生成感觉既数学又有机的树状形式。微妙噪声扰动打破完美对称性。线宽随每个递归级别递减。每个分支角度都是深度数学探索的产物。
 
-**"Field Dynamics"**
-Philosophy: Invisible forces made visible through their effects on matter.
-Algorithmic expression: Vector fields constructed from mathematical functions or noise. Particles born at edges, flowing along field lines, dying when they reach equilibrium or boundaries. Multiple fields can attract, repel, or rotate particles. The visualization shows only the traces - ghost-like evidence of invisible forces. A computational dance meticulously choreographed through force balance.
+**"场动力学"**
+哲学：通过它们对物质的影响使不可见的力量可见。
+算法表达：从数学函数或噪声构建的矢量场。在边缘出生的粒子，沿场线流动，当它们达到平衡或边界时死亡。多个场可以吸引、排斥或旋转粒子。可视化只显示痕迹——不可见力量的幽灵证据。一个通过力平衡精心编排的计算舞蹈。
 
-**"Stochastic Crystallization"**
-Philosophy: Random processes crystallizing into ordered structures.
-Algorithmic expression: Randomized circle packing or Voronoi tessellation. Start with random points, let them evolve through relaxation algorithms. Cells push apart until equilibrium. Color based on cell size, neighbor count, or distance from center. The organic tiling that emerges feels both random and inevitable. Every seed produces unique crystalline beauty - the mark of a master-level generative algorithm.
+**"随机结晶"**
+哲学：结晶成有序结构的随机过程。
+算法表达：随机圆包装或 Voronoi 镶嵌。从随机点开始，让它们通过松弛算法演化。细胞推开直到平衡。基于细胞大小、邻居数量或与中心的距离着色。出现的有机平铺感觉既随机又不可避免。每个种子产生独特的晶体之美——大师级生成算法的标记。
 
-*These are condensed examples. The actual algorithmic philosophy should be 4-6 substantial paragraphs.*
+*这些是浓缩示例。实际算法哲学应该是 4-6 个实质性段落。*
 
-### ESSENTIAL PRINCIPLES
-- **ALGORITHMIC PHILOSOPHY**: Creating a computational worldview to be expressed through code
-- **PROCESS OVER PRODUCT**: Always emphasize that beauty emerges from the algorithm's execution - each run is unique
-- **PARAMETRIC EXPRESSION**: Ideas communicate through mathematical relationships, forces, behaviors - not static composition
-- **ARTISTIC FREEDOM**: The next Claude interprets the philosophy algorithmically - provide creative implementation room
-- **PURE GENERATIVE ART**: This is about making LIVING ALGORITHMS, not static images with randomness
-- **EXPERT CRAFTSMANSHIP**: Repeatedly emphasize the final algorithm must feel meticulously crafted, refined through countless iterations, the product of deep expertise by someone at the absolute top of their field in computational aesthetics
+### 基本原则
+- **算法哲学**：创建通过代码表达的计算世界观
+- **过程重于产品**：始终强调美从算法的执行中涌现——每次运行都是独特的
+- **参数表达**：想法通过数学关系、力、行为交流——不是静态构图
+- **艺术自由**：下一个 Claude 算法化地解释哲学——提供创意实现空间
+- **纯粹生成艺术**：这是关于制作活算法，不是带随机性的静态图像
+- **专家工艺**：反复强调最终算法必须感觉精心制作，通过无数次迭代完善，由该领域计算美学绝对顶尖的人深厚专业知识的产物
 
-**The algorithmic philosophy should be 4-6 paragraphs long.** Fill it with poetic computational philosophy that brings together the intended vision. Avoid repeating the same points. Output this algorithmic philosophy as a .md file.
-
----
-
-## DEDUCING THE CONCEPTUAL SEED
-
-**CRITICAL STEP**: Before implementing the algorithm, identify the subtle conceptual thread from the original request.
-
-**THE ESSENTIAL PRINCIPLE**:
-The concept is a **subtle, niche reference embedded within the algorithm itself** - not always literal, always sophisticated. Someone familiar with the subject should feel it intuitively, while others simply experience a masterful generative composition. The algorithmic philosophy provides the computational language. The deduced concept provides the soul - the quiet conceptual DNA woven invisibly into parameters, behaviors, and emergence patterns.
-
-This is **VERY IMPORTANT**: The reference must be so refined that it enhances the work's depth without announcing itself. Think like a jazz musician quoting another song through algorithmic harmony - only those who know will catch it, but everyone appreciates the generative beauty.
+**算法哲学应该是 4-6 段长。**用将预期愿景结合在一起的诗意计算哲学填充它。避免重复相同的观点。将此算法哲学输出为 .md 文件。
 
 ---
 
-## P5.JS IMPLEMENTATION
+## 推断概念种子
 
-With the philosophy AND conceptual framework established, express it through code. Pause to gather thoughts before proceeding. Use only the algorithmic philosophy created and the instructions below.
+**关键步骤**：在实施算法之前，从原始请求中识别微妙的概念线索。
 
-### ⚠️ STEP 0: READ THE TEMPLATE FIRST ⚠️
+**基本原理**：
+概念是**嵌入算法本身内部的微妙、小众引用**——不总是字面的，总是复杂的。熟悉主题的人应该直觉地感受到它，而其他人只是体验大师级的生成构图。算法哲学提供计算语言。推断的概念提供灵魂——编织到参数、行为和涌现模式中无形的、概念性的 DNA。
 
-**CRITICAL: BEFORE writing any HTML:**
-
-1. **Read** `templates/viewer.html` using the Read tool
-2. **Study** the exact structure, styling, and Anthropic branding
-3. **Use that file as the LITERAL STARTING POINT** - not just inspiration
-4. **Keep all FIXED sections exactly as shown** (header, sidebar structure, Anthropic colors/fonts, seed controls, action buttons)
-5. **Replace only the VARIABLE sections** marked in the file's comments (algorithm, parameters, UI controls for parameters)
-
-**Avoid:**
-- ❌ Creating HTML from scratch
-- ❌ Inventing custom styling or color schemes
-- ❌ Using system fonts or dark themes
-- ❌ Changing the sidebar structure
-
-**Follow these practices:**
-- ✅ Copy the template's exact HTML structure
-- ✅ Keep Anthropic branding (Poppins/Lora fonts, light colors, gradient backdrop)
-- ✅ Maintain the sidebar layout (Seed → Parameters → Colors? → Actions)
-- ✅ Replace only the p5.js algorithm and parameter controls
-
-The template is the foundation. Build on it, don't rebuild it.
+这是**非常重要的**：引用必须如此精炼以增强作品的深度而不宣布自己。像爵士音乐家通过算法和谐引用另一首歌一样思考——只有知道的人会捕捉到，但每个人都欣赏生成之美。
 
 ---
 
-To create gallery-quality computational art that lives and breathes, use the algorithmic philosophy as the foundation.
+## P5.JS 实施
 
-### TECHNICAL REQUIREMENTS
+在哲学和概念框架都建立之后，通过代码表达它。暂停收集思想然后继续。仅使用创建的算法哲学和下面的指导。
 
-**Seeded Randomness (Art Blocks Pattern)**:
+### ⚠️ 步骤 0：首先阅读模板 ⚠️
+
+**关键：在编写任何 HTML 之前：**
+
+1. **阅读** `templates/viewer.html` 使用 Read 工具
+2. **研究**确切的结构、样式和 Anthropic 品牌
+3. **使用该文件作为字面起点**——不仅仅是灵感
+4. **保持所有固定部分完全按所示**（标题、侧边栏结构、Anthropic 颜色/字体、种子控件、操作按钮）
+5. **仅替换文件注释中标记的可变部分**（算法、参数、参数的 UI 控件）
+
+**避免：**
+- ❌ 从头创建 HTML
+- ❌ 发明自定义样式或颜色方案
+- ❌ 使用系统字体或深色主题
+- ❌ 更改侧边栏结构
+
+**遵循这些实践：**
+- ✅ 复制模板的确切 HTML 结构
+- ✅ 保持 Anthropic 品牌（Poppins/Lora 字体、浅色、渐变背景）
+- ✅ 维持侧边栏布局（种子 → 参数 → 颜色？→ 操作）
+- ✅ 仅替换 p5.js 算法和参数控件
+
+模板是基础。在其上构建，不要重建。
+
+---
+
+要创建生活和呼吸的画廊质量计算艺术，使用算法哲学作为基础。
+
+### 技术要求
+
+**种子随机性（Art Blocks 模式）**：
 ```javascript
-// ALWAYS use a seed for reproducibility
-let seed = 12345; // or hash from user input
+// 始终使用种子以实现可重现性
+let seed = 12345; // 或来自用户输入的哈希
 randomSeed(seed);
 noiseSeed(seed);
 ```
 
-**Parameter Structure - FOLLOW THE PHILOSOPHY**:
+**参数结构 - 遵循哲学**：
 
-To establish parameters that emerge naturally from the algorithmic philosophy, consider: "What qualities of this system can be adjusted?"
+要建立从算法哲学自然涌现的参数，考虑："这个系统的哪些品质可以调整？"
 
 ```javascript
 let params = {
-  seed: 12345,  // Always include seed for reproducibility
-  // colors
-  // Add parameters that control YOUR algorithm:
-  // - Quantities (how many?)
-  // - Scales (how big? how fast?)
-  // - Probabilities (how likely?)
-  // - Ratios (what proportions?)
-  // - Angles (what direction?)
-  // - Thresholds (when does behavior change?)
+  seed: 12345,  // 始终包含种子以实现可重现性
+  // 颜色
+  // 添加控制您的算法的参数：
+  // - 数量（多少？）
+  // - 尺度（多大？多快？）
+  // - 概率（多可能？）
+  // - 比率（什么比例？）
+  // - 角度（什么方向？）
+  // - 阈值（行为何时改变？）
 };
 ```
 
-**To design effective parameters, focus on the properties the system needs to be tunable rather than thinking in terms of "pattern types".**
+**要设计有效的参数，专注于系统需要可调的属性，而不是从"模式类型"角度思考。**
 
-**Core Algorithm - EXPRESS THE PHILOSOPHY**:
+**核心算法 - 表达哲学**：
 
-**CRITICAL**: The algorithmic philosophy should dictate what to build.
+**关键**：算法哲学应该指导构建什么。
 
-To express the philosophy through code, avoid thinking "which pattern should I use?" and instead think "how to express this philosophy through code?"
+要通过代码表达哲学，避免思考"我应该使用哪个模式？"而思考"如何通过代码表达这个哲学？"
 
-If the philosophy is about **organic emergence**, consider using:
-- Elements that accumulate or grow over time
-- Random processes constrained by natural rules
-- Feedback loops and interactions
+如果哲学是关于**有机涌现**，考虑使用：
+- 随时间积累或增长的元素
+- 受自然规则约束的随机过程
+- 反馈循环和交互
 
-If the philosophy is about **mathematical beauty**, consider using:
-- Geometric relationships and ratios
-- Trigonometric functions and harmonics
-- Precise calculations creating unexpected patterns
+如果哲学是关于**数学之美**，考虑使用：
+- 几何关系和比率
+- 三角函数和谐波
+- 创建意外模式的精确计算
 
-If the philosophy is about **controlled chaos**, consider using:
-- Random variation within strict boundaries
-- Bifurcation and phase transitions
-- Order emerging from disorder
+如果哲学是关于**受控混沌**，考虑使用：
+- 严格边界内的随机变化
+- 分岔和相变
+- 从无序中出现的秩序
 
-**The algorithm flows from the philosophy, not from a menu of options.**
+**算法从哲学流出，不是从选项菜单。**
 
-To guide the implementation, let the conceptual essence inform creative and original choices. Build something that expresses the vision for this particular request.
+要指导实施，让概念精髓告知创意和原创选择。构建表达这个特定请求愿景的东西。
 
-**Canvas Setup**: Standard p5.js structure:
+**画布设置**：标准 p5.js 结构：
 ```javascript
 function setup() {
   createCanvas(1200, 1200);
-  // Initialize your system
+  // 初始化您的系统
 }
 
 function draw() {
-  // Your generative algorithm
-  // Can be static (noLoop) or animated
+  // 您的生成算法
+  // 可以是静态的（noLoop）或动画的
 }
 ```
 
-### CRAFTSMANSHIP REQUIREMENTS
+### 工艺要求
 
-**CRITICAL**: To achieve mastery, create algorithms that feel like they emerged through countless iterations by a master generative artist. Tune every parameter carefully. Ensure every pattern emerges with purpose. This is NOT random noise - this is CONTROLLED CHAOS refined through deep expertise.
+**关键**：要达到精通，创建感觉像是通过无数次迭代由大师级生成艺术家涌现的算法。仔细调整每个参数。确保每个模式都有目的地涌现。这不是随机噪声——这是通过深厚专业知识精炼的受控混沌。
 
-- **Balance**: Complexity without visual noise, order without rigidity
-- **Color Harmony**: Thoughtful palettes, not random RGB values
-- **Composition**: Even in randomness, maintain visual hierarchy and flow
-- **Performance**: Smooth execution, optimized for real-time if animated
-- **Reproducibility**: Same seed ALWAYS produces identical output
+- **平衡**：没有视觉噪声的复杂性，没有僵硬的秩序
+- **色彩和谐**：深思熟虑的调色板，不是随机 RGB 值
+- **构图**：即使在随机性中，也保持视觉层次和流动
+- **性能**：平滑执行，如果是动画的则针对实时优化
+- **可重现性**：相同的种子总是产生相同的输出
 
-### OUTPUT FORMAT
+### 输出格式
 
-Output:
-1. **Algorithmic Philosophy** - As markdown or text explaining the generative aesthetic
-2. **Single HTML Artifact** - Self-contained interactive generative art built from `templates/viewer.html` (see STEP 0 and next section)
+输出：
+1. **算法哲学** - 作为解释生成美学的 markdown 或文本
+2. **单一 HTML 制品** - 从 `templates/viewer.html` 构建的自包含交互式生成艺术（参见步骤 0 和下一节）
 
-The HTML artifact contains everything: p5.js (from CDN), the algorithm, parameter controls, and UI - all in one file that works immediately in claude.ai artifacts or any browser. Start from the template file, not from scratch.
+HTML 制品包含一切：p5.js（来自 CDN）、算法、参数控件和 UI——所有在一个文件中，立即在 claude.ai 制品或任何浏览器中工作。从模板文件开始，不要从头开始。
 
 ---
 
-## INTERACTIVE ARTIFACT CREATION
+## 交互式制品创建
 
-**REMINDER: `templates/viewer.html` should have already been read (see STEP 0). Use that file as the starting point.**
+**提醒：`templates/viewer.html` 应该已经读过（参见步骤 0）。使用该文件作为起点。**
 
-To allow exploration of the generative art, create a single, self-contained HTML artifact. Ensure this artifact works immediately in claude.ai or any browser - no setup required. Embed everything inline.
+要允许生成艺术的探索，创建单一、自包含的 HTML 制品。确保此制品立即在 claude.ai 或任何浏览器中工作——不需要设置。内联嵌入一切。
 
-### CRITICAL: WHAT'S FIXED VS VARIABLE
+### 关键：什么是固定 vs 可变
 
-The `templates/viewer.html` file is the foundation. It contains the exact structure and styling needed.
+`templates/viewer.html` 文件是基础。它包含确切的结构和样式需求。
 
-**FIXED (always include exactly as shown):**
-- Layout structure (header, sidebar, main canvas area)
-- Anthropic branding (UI colors, fonts, gradients)
-- Seed section in sidebar:
-  - Seed display
-  - Previous/Next buttons
-  - Random button
-  - Jump to seed input + Go button
-- Actions section in sidebar:
-  - Regenerate button
-  - Reset button
+**固定（完全按所示包含）：**
+- 布局结构（标题、侧边栏、主画布区域）
+- Anthropic 品牌（UI 颜色、字体、渐变）
+- 侧边栏中的种子部分：
+  - 种子显示
+  - 上一个/下一个按钮
+  - 随机按钮
+  - 跳转到种子输入 + 转到按钮
+- 侧边栏中的操作部分：
+  - 重新生成按钮
+  - 重置按钮
 
-**VARIABLE (customize for each artwork):**
-- The entire p5.js algorithm (setup/draw/classes)
-- The parameters object (define what the art needs)
-- The Parameters section in sidebar:
-  - Number of parameter controls
-  - Parameter names
-  - Min/max/step values for sliders
-  - Control types (sliders, inputs, etc.)
-- Colors section (optional):
-  - Some art needs color pickers
-  - Some art might use fixed colors
-  - Some art might be monochrome (no color controls needed)
-  - Decide based on the art's needs
+**可变（为每个艺术品自定义）：**
+- 整个 p5.js 算法（setup/draw/类）
+- 参数对象（定义艺术需要什么）
+- 侧边栏中的参数部分：
+  - 参数控件数量
+  - 参数名称
+  - 滑块的最小/最大/步长值
+  - 控件类型（滑块、输入等）
+- 颜色部分（可选）：
+  - 一些艺术需要颜色选择器
+  - 一些艺术可能使用固定颜色
+  - 一些艺术可能是单色的（不需要颜色控件）
+  - 根据艺术需求决定
 
-**Every artwork should have unique parameters and algorithm!** The fixed parts provide consistent UX - everything else expresses the unique vision.
+**每个艺术品都应该有独特的参数和算法！** 固定部分提供一致的用户体验——其他一切都表达独特的愿景。
 
-### REQUIRED FEATURES
+### 必需功能
 
-**1. Parameter Controls**
-- Sliders for numeric parameters (particle count, noise scale, speed, etc.)
-- Color pickers for palette colors
-- Real-time updates when parameters change
-- Reset button to restore defaults
+**1. 参数控件**
+- 数值参数的滑块（粒子计数、噪声尺度、速度等）
+- 调色板颜色的颜色选择器
+- 参数变化时实时更新
+- 恢复默认值按钮
 
-**2. Seed Navigation**
-- Display current seed number
-- "Previous" and "Next" buttons to cycle through seeds
-- "Random" button for random seed
-- Input field to jump to specific seed
-- Generate 100 variations when requested (seeds 1-100)
+**2. 种子导航**
+- 显示当前种子号
+- "上一个"和"下一个"按钮循环种子
+- "随机"按钮用于随机种子
+- 跳转到特定种子的输入字段
+- 请求时生成 100 个变化（种子 1-100）
 
-**3. Single Artifact Structure**
+**3. 单一制品结构**
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- p5.js from CDN - always available -->
+  <!-- 来自 CDN 的 p5.js - 始终可用 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
   <style>
-    /* All styling inline - clean, minimal */
-    /* Canvas on top, controls below */
+    /* 所有样式内联 - 干净、极简 */
+    /* 画布在顶部，控件在下面 */
   </style>
 </head>
 <body>
   <div id="canvas-container"></div>
   <div id="controls">
-    <!-- All parameter controls -->
+    <!-- 所有参数控件 -->
   </div>
   <script>
-    // ALL p5.js code inline here
-    // Parameter objects, classes, functions
-    // setup() and draw()
-    // UI handlers
-    // Everything self-contained
+    // 所有 p5.js 代码内联在这里
+    // 参数对象、类、函数
+    // setup() 和 draw()
+    // UI 处理程序
+    // 一切自包含
   </script>
 </body>
 </html>
 ```
 
-**CRITICAL**: This is a single artifact. No external files, no imports (except p5.js CDN). Everything inline.
+**关键**：这是单一制品。没有外部文件，没有导入（除了 p5.js CDN）。一切内联。
 
-**4. Implementation Details - BUILD THE SIDEBAR**
+**4. 实施细节 - 构建侧边栏**
 
-The sidebar structure:
+侧边栏结构：
 
-**1. Seed (FIXED)** - Always include exactly as shown:
-- Seed display
-- Prev/Next/Random/Jump buttons
+**1. 种子（固定）** - 完全按所示包含：
+- 种子显示
+- 上一个/下一个/随机/跳转按钮
 
-**2. Parameters (VARIABLE)** - Create controls for the art:
+**2. 参数（可变）** - 为艺术创建控件：
 ```html
 <div class="control-group">
-    <label>Parameter Name</label>
+    <label>参数名称</label>
     <input type="range" id="param" min="..." max="..." step="..." value="..." oninput="updateParam('param', this.value)">
     <span class="value-display" id="param-value">...</span>
 </div>
 ```
-Add as many control-group divs as there are parameters.
+添加与参数数量一样多的 control-group div。
 
-**3. Colors (OPTIONAL/VARIABLE)** - Include if the art needs adjustable colors:
-- Add color pickers if users should control palette
-- Skip this section if the art uses fixed colors
-- Skip if the art is monochrome
+**3. 颜色（可选/可变）** - 如果艺术需要可调整颜色则包含：
+- 如果用户应该控制调色板则添加颜色选择器
+- 如果艺术使用固定颜色则跳过此部分
+- 如果艺术是单色的则跳过
 
-**4. Actions (FIXED)** - Always include exactly as shown:
-- Regenerate button
-- Reset button
-- Download PNG button
+**4. 操作（固定）** - 完全按所示包含：
+- 重新生成按钮
+- 重置按钮
+- 下载 PNG 按钮
 
-**Requirements**:
-- Seed controls must work (prev/next/random/jump/display)
-- All parameters must have UI controls
-- Regenerate, Reset, Download buttons must work
-- Keep Anthropic branding (UI styling, not art colors)
+**要求**：
+- 种子控件必须工作（上一个/下一个/随机/跳转/显示）
+- 所有参数必须有 UI 控件
+- 重新生成、重置、下载按钮必须工作
+- 保持 Anthropic 品牌（UI 样式，不是艺术颜色）
 
-### USING THE ARTIFACT
+### 使用制品
 
-The HTML artifact works immediately:
-1. **In claude.ai**: Displayed as an interactive artifact - runs instantly
-2. **As a file**: Save and open in any browser - no server needed
-3. **Sharing**: Send the HTML file - it's completely self-contained
-
----
-
-## VARIATIONS & EXPLORATION
-
-The artifact includes seed navigation by default (prev/next/random buttons), allowing users to explore variations without creating multiple files. If the user wants specific variations highlighted:
-
-- Include seed presets (buttons for "Variation 1: Seed 42", "Variation 2: Seed 127", etc.)
-- Add a "Gallery Mode" that shows thumbnails of multiple seeds side-by-side
-- All within the same single artifact
-
-This is like creating a series of prints from the same plate - the algorithm is consistent, but each seed reveals different facets of its potential. The interactive nature means users discover their own favorites by exploring the seed space.
+HTML 制品立即工作：
+1. **在 claude.ai 中**：显示为交互式制品——立即运行
+2. **作为文件**：保存并在任何浏览器中打开——不需要服务器
+3. **分享**：发送 HTML 文件——它完全自包含
 
 ---
 
-## THE CREATIVE PROCESS
+## 变化和探索
 
-**User request** → **Algorithmic philosophy** → **Implementation**
+制品默认包含种子导航（上一个/下一个/随机按钮），允许用户探索变化而无需创建多个文件。如果用户想要突出显示特定变化：
 
-Each request is unique. The process involves:
+- 包含种子预设（"变化 1：种子 42"、"变化 2：种子 127"等按钮）
+- 添加"画廊模式"，并排显示多个种子的缩略图
+- 都在同一个单一制品中
 
-1. **Interpret the user's intent** - What aesthetic is being sought?
-2. **Create an algorithmic philosophy** (4-6 paragraphs) describing the computational approach
-3. **Implement it in code** - Build the algorithm that expresses this philosophy
-4. **Design appropriate parameters** - What should be tunable?
-5. **Build matching UI controls** - Sliders/inputs for those parameters
-
-**The constants**:
-- Anthropic branding (colors, fonts, layout)
-- Seed navigation (always present)
-- Self-contained HTML artifact
-
-**Everything else is variable**:
-- The algorithm itself
-- The parameters
-- The UI controls
-- The visual outcome
-
-To achieve the best results, trust creativity and let the philosophy guide the implementation.
+这就像从同一版画创建一系列印刷品——算法是一致的，但每个种子揭示其潜力的不同方面。交互性意味着用户通过探索种子空间发现自己喜欢的。
 
 ---
 
-## RESOURCES
+## 创作过程
 
-This skill includes helpful templates and documentation:
+**用户请求** → **算法哲学** → **实施**
 
-- **templates/viewer.html**: REQUIRED STARTING POINT for all HTML artifacts.
-  - This is the foundation - contains the exact structure and Anthropic branding
-  - **Keep unchanged**: Layout structure, sidebar organization, Anthropic colors/fonts, seed controls, action buttons
-  - **Replace**: The p5.js algorithm, parameter definitions, and UI controls in Parameters section
-  - The extensive comments in the file mark exactly what to keep vs replace
+每个请求都是独特的。过程涉及：
 
-- **templates/generator_template.js**: Reference for p5.js best practices and code structure principles.
-  - Shows how to organize parameters, use seeded randomness, structure classes
-  - NOT a pattern menu - use these principles to build unique algorithms
-  - Embed algorithms inline in the HTML artifact (don't create separate .js files)
+1. **解释用户的意图** - 正在寻求什么美学？
+2. **创建算法哲学**（4-6 段）描述计算方法
+3. **在代码中实施它** - 构建表达此哲学的算法
+4. **设计适当的参数** - 什么应该是可调的？
+5. **构建匹配的 UI 控件** - 那些参数的滑块/输入
 
-**Critical reminder**:
-- The **template is the STARTING POINT**, not inspiration
-- The **algorithm is where to create** something unique
-- Don't copy the flow field example - build what the philosophy demands
-- But DO keep the exact UI structure and Anthropic branding from the template
+**常量**：
+- Anthropic 品牌（颜色、字体、布局）
+- 种子导航（始终存在）
+- 自包含 HTML 制品
+
+**其他一切都是可变的**：
+- 算法本身
+- 参数
+- UI 控件
+- 视觉结果
+
+要达到最佳结果，信任创意并让哲学指导实施。
+
+---
+
+## 资源
+
+此技能包括有用的模板和文档：
+
+- **templates/viewer.html**：所有 HTML 制品的必需起点。
+  - 这是基础 - 包含确切的结构和 Anthropic 品牌
+  - **保持不变**：布局结构、侧边栏组织、Anthropic 颜色/字体、种子控件、操作按钮
+  - **替换**：p5.js 算法、参数定义和参数部分中的 UI 控件
+  - 文件中的广泛注释准确标记要保留 vs 替换什么
+
+- **templates/generator_template.js**：p5.js 最佳实践和代码结构原则的参考。
+  - 显示如何组织参数、使用种子随机性、结构化类
+  - 不是模式菜单 - 使用这些原则构建独特算法
+  - 将算法内联嵌入 HTML 制品中（不要创建单独的 .js 文件）
+
+**关键提醒**：
+- **模板是起点**，不是灵感
+- **算法是创造**独特事物的地方
+- 不要复制流场示例 - 构建哲学要求的东西
+- 但是要从模板保持确切的 UI 结构和 Anthropic 品牌

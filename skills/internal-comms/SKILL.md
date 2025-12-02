@@ -1,32 +1,32 @@
 ---
 name: internal-comms
-description: A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).
-license: Complete terms in LICENSE.txt
+description: 一套帮助我编写各种内部沟通的资源，使用我们公司喜欢使用的格式。当被要求编写某种内部沟通（状态报告、领导更新、3P 更新、公司通讯、常见问题解答、事件报告、项目更新等）时，Claude 应该使用此技能。
+license: 完整条款见 LICENSE.txt
 ---
 
-## When to use this skill
-To write internal communications, use this skill for:
-- 3P updates (Progress, Plans, Problems)
-- Company newsletters
-- FAQ responses
-- Status reports
-- Leadership updates
-- Project updates
-- Incident reports
+## 何时使用此技能
+要编写内部沟通，使用此技能进行：
+- 3P 更新（进展、计划、问题）
+- 公司通讯
+- 常见问题解答回复
+- 状态报告
+- 领导更新
+- 项目更新
+- 事件报告
 
-## How to use this skill
+## 如何使用此技能
 
-To write any internal communication:
+要编写任何内部沟通：
 
-1. **Identify the communication type** from the request
-2. **Load the appropriate guideline file** from the `examples/` directory:
-    - `examples/3p-updates.md` - For Progress/Plans/Problems team updates
-    - `examples/company-newsletter.md` - For company-wide newsletters
-    - `examples/faq-answers.md` - For answering frequently asked questions
-    - `examples/general-comms.md` - For anything else that doesn't explicitly match one of the above
-3. **Follow the specific instructions** in that file for formatting, tone, and content gathering
+1. **从请求中识别沟通类型**
+2. **从 `examples/` 目录加载适当的指导文件**：
+    - `examples/3p-updates.md` - 用于进展/计划/问题团队更新
+    - `examples/company-newsletter.md` - 用于全公司通讯
+    - `examples/faq-answers.md` - 用于回答常见问题
+    - `examples/general-comms.md` - 用于其他任何没有明确匹配上述内容的沟通
+3. **遵循该文件中关于格式、语调和内容收集的具体指导**
 
-If the communication type doesn't match any existing guideline, ask for clarification or more context about the desired format.
+如果沟通类型不匹配任何现有指导，请请求澄清或更多关于期望格式的上下文。
 
-## Keywords
-3P updates, company newsletter, company comms, weekly update, faqs, common questions, updates, internal comms
+## 关键词
+3P 更新、公司通讯、公司沟通、每周更新、常见问题、常见问题、更新、内部沟通

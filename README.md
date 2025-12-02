@@ -1,92 +1,93 @@
-# Skills
-Skills are folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. Skills teach Claude how to complete specific tasks in a repeatable way, whether that's creating documents with your company's brand guidelines, analyzing data using your organization's specific workflows, or automating personal tasks.
+# 技能
 
-For more information, check out:
-- [What are skills?](https://support.claude.com/en/articles/12512176-what-are-skills)
-- [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
-- [How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)
-- [Equipping agents for the real world with Agent Skills](https://anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+技能是指令、脚本和资源的文件夹，Claude 会动态加载这些内容以提高在专门任务上的性能。技能教会 Claude 如何以可重复的方式完成特定任务，无论是使用您公司的品牌指南创建文档，使用您组织的特定工作流程分析数据，还是自动化个人任务。
 
-# About This Repository
+更多信息，请查看：
+- [什么是技能？](https://support.claude.com/en/articles/12512176-what-are-skills)
+- [在 Claude 中使用技能](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
+- [如何创建自定义技能](https://support.claude.com/en/articles/12512198-creating-custom-skills)
+- [使用代理技能为真实世界配备代理](https://anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
 
-This repository contains skills that demonstrate what's possible with Claude's skills system. These skills range from creative applications (art, music, design) to technical tasks (testing web apps, MCP server generation) to enterprise workflows (communications, branding, etc.).
+# 关于此仓库
 
-Each skill is self-contained in its own folder with a `SKILL.md` file containing the instructions and metadata that Claude uses. Browse through these skills to get inspiration for your own skills or to understand different patterns and approaches.
+此仓库包含展示 Claude 技能系统可能性的技能。这些技能范围从创意应用（艺术、音乐、设计）到技术任务（测试 Web 应用、MCP 服务器生成）再到企业工作流程（沟通、品牌等）。
 
-Many skills in this repo are open source (Apache 2.0). We've also included the document creation & editing skills that power [Claude's document capabilities](https://www.anthropic.com/news/create-files) under the hood in the [`skills/docx`](./skills/docx), [`skills/pdf`](./skills/pdf), [`skills/pptx`](./skills/pptx), and [`skills/xlsx`](./skills/xlsx) subfolders. These are source-available, not open source, but we wanted to share these with developers as a reference for more complex skills that are actively used in a production AI application.
+每个技能都在自己的文件夹中自包含，带有一个包含 Claude 使用的指令和元数据的 `SKILL.md` 文件。浏览这些技能以获取您自己技能的灵感或了解不同的模式和方法。
 
-## Disclaimer
+此仓库中的许多技能都是开源的（Apache 2.0）。我们还在 [`skills/docx`](./skills/docx)、[`skills/pdf`](./skills/pdf)、[`skills/pptx`](./skills/pptx) 和 [`skills/xlsx`](./skills/xlsx) 子文件夹中包含了驱动 [Claude 的文档功能](https://www.anthropic.com/news/create-files) 的文档创建和编辑技能。这些是源代码可用，不是开源的，但我们希望与开发人员分享这些作为参考，用于在生产 AI 应用程序中积极使用的更复杂技能。
 
-**These skills are provided for demonstration and educational purposes only.** While some of these capabilities may be available in Claude, the implementations and behaviors you receive from Claude may differ from what is shown in these skills. These skills are meant to illustrate patterns and possibilities. Always test skills thoroughly in your own environment before relying on them for critical tasks.
+## 免责声明
 
-# Skill Sets
-- [./skills](./skills): Skill examples for Creative & Design, Development & Technical, Enterprise & Communication, and Document Skills
-- [./spec](./spec): The Agent Skills specification
-- [./template](./template): Skill template
+**这些技能仅供演示和教育目的。** 虽然其中一些功能可能在 Claude 中可用，但从 Claude 获得的实现和行为可能与这些技能中显示的不同。这些技能旨在说明模式和可能性。在依赖关键任务之前，始终在您自己的环境中彻底测试技能。
 
-# Try in Claude Code, Claude.ai, and the API
+# 技能集
+- [./skills](./skills)：创意与设计、开发与技术、企业与沟通以及文档技能的技能示例
+- [./spec](./spec)：代理技能规范
+- [./template](./template)：技能模板
+
+# 在 Claude Code、Claude.ai 和 API 中尝试
 
 ## Claude Code
-You can register this repository as a Claude Code Plugin marketplace by running the following command in Claude Code:
+您可以通过在 Claude Code 中运行以下命令将此仓库注册为 Claude Code 插件市场：
 ```
 /plugin marketplace add anthropics/skills
 ```
 
-Then, to install a specific set of skills:
-1. Select `Browse and install plugins`
-2. Select `anthropic-agent-skills`
-3. Select `document-skills` or `example-skills`
-4. Select `Install now`
+然后，要安装特定的技能集：
+1. 选择 `浏览并安装插件`
+2. 选择 `anthropic-agent-skills`
+3. 选择 `document-skills` 或 `example-skills`
+4. 选择 `立即安装`
 
-Alternatively, directly install either Plugin via:
+或者，直接通过以下方式安装任一插件：
 ```
 /plugin install document-skills@anthropic-agent-skills
 /plugin install example-skills@anthropic-agent-skills
 ```
 
-After installing the plugin, you can use the skill by just mentioning it. For instance, if you install the `document-skills` plugin from the marketplace, you can ask Claude Code to do something like: "Use the PDF skill to extract the form fields from `path/to/some-file.pdf`"
+安装插件后，您可以通过提及它来使用该技能。例如，如果您从市场安装了 `document-skills` 插件，您可以要求 Claude Code 执行类似这样的操作："使用 PDF 技能从 `path/to/some-file.pdf` 中提取表单字段"
 
 ## Claude.ai
 
-These example skills are all already available to paid plans in Claude.ai. 
+这些示例技能在 Claude.ai 的付费计划中已经可用。
 
-To use any skill from this repository or upload custom skills, follow the instructions in [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude#h_a4222fa77b).
+要使用此仓库中的任何技能或上传自定义技能，请遵循 [在 Claude 中使用技能](https://support.claude.com/en/articles/12512180-using-skills-in-claude#h_a4222fa77b) 中的说明。
 
 ## Claude API
 
-You can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.claude.com/en/api/skills-guide#creating-a-skill) for more.
+您可以通过 Claude API 使用 Anthropic 的预构建技能并上传自定义技能。有关更多信息，请参阅 [技能 API 快速入门](https://docs.claude.com/en/api/skills-guide#creating-a-skill)。
 
-# Creating a Basic Skill
+# 创建基本技能
 
-Skills are simple to create - just a folder with a `SKILL.md` file containing YAML frontmatter and instructions. You can use the **template-skill** in this repository as a starting point:
+创建技能很简单——只需一个带有 `SKILL.md` 文件的文件夹，该文件包含 YAML 前言和指令。您可以使用此仓库中的 **template-skill** 作为起点：
 
 ```markdown
 ---
 name: my-skill-name
-description: A clear description of what this skill does and when to use it
+description: 对此技能的作用以及何时使用的清晰描述
 ---
 
-# My Skill Name
+# 我的技能名称
 
-[Add your instructions here that Claude will follow when this skill is active]
+[在此处添加当此技能处于活动状态时 Claude 将遵循的说明]
 
-## Examples
-- Example usage 1
-- Example usage 2
+## 示例
+- 示例用法 1
+- 示例用法 2
 
-## Guidelines
-- Guideline 1
-- Guideline 2
+## 指南
+- 指南 1
+- 指南 2
 ```
 
-The frontmatter requires only two fields:
-- `name` - A unique identifier for your skill (lowercase, hyphens for spaces)
-- `description` - A complete description of what the skill does and when to use it
+前言只需要两个字段：
+- `name` - 您技能的唯一标识符（小写，空格用连字符）
+- `description` - 对技能作用以及何时使用的完整描述
 
-The markdown content below contains the instructions, examples, and guidelines that Claude will follow. For more details, see [How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills).
+下面的 markdown 内容包含 Claude 将遵循的说明、示例和指南。有关更多详细信息，请参阅 [如何创建自定义技能](https://support.claude.com/en/articles/12512198-creating-custom-skills)。
 
-# Partner Skills
+# 合作伙伴技能
 
-Skills are a great way to teach Claude how to get better at using specific pieces of software. As we see awesome example skills from partners, we may highlight some of them here:
+技能是教会 Claude 如何更好地使用特定软件的绝佳方式。当我们看到来自合作伙伴的优秀技能示例时，我们可能会在此处突出其中一些：
 
-- **Notion** - [Notion Skills for Claude](https://www.notion.so/notiondevs/Notion-Skills-for-Claude-28da4445d27180c7af1df7d8615723d0)
+- **Notion** - [Claude 的 Notion 技能](https://www.notion.so/notiondevs/Notion-Skills-for-Claude-28da4445d27180c7af1df7d8615723d0)
