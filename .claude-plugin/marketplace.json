@@ -1,11 +1,11 @@
 {
-  "name": "anthropic-agent-skills",
+  "name": "yudady-skills",
   "owner": {
     "name": "Keith Lazuka",
     "email": "klazuka@anthropic.com"
   },
   "metadata": {
-    "description": "Anthropic example skills",
+    "description": "fork Anthropic example skills",
     "version": "1.0.0"
   },
   "plugins": [
@@ -39,6 +39,16 @@
         "./skills/theme-factory",
         "./skills/web-artifacts-builder",
         "./skills/webapp-testing"
+      ]
+    },
+    {
+      "name": "yudady-skills",
+      "description": "自定义技能集",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/en-to-zh-translator",
+        "./skills/repeatable-sql"
       ]
     }
   ]
