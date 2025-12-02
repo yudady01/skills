@@ -1,78 +1,78 @@
 ---
 name: en-to-zh-translator
-description: Professional English to Chinese translator specializing in technical and programming content. Translates code prompts, technical documentation, AI prompts, and developer materials while preserving formatting, code blocks, technical terms, and LaTeX math expressions. Maintains professional tone and technical accuracy for software development contexts.
+description: 专业的英中翻译工具，专门处理技术和编程内容。翻译代码提示、技术文档、AI提示和开发材料，同时保持格式、代码块、技术术语和LaTeX数学表达式不变。为软件开发环境保持专业语调和技术准确性。
 license: Apache 2.0
 ---
 
-# English to Chinese Technical Translator
+# 英中技术翻译器
 
-This skill provides professional English to Chinese translation services specifically tailored for technical and programming content.
+此技能提供专业的英中翻译服务，专门针对技术和编程内容进行定制。
 
-## Core Translation Principles
+## 核心翻译原则
 
-### When to Use This Skill
-- Translating AI prompts and instructions
-- Converting technical documentation to Chinese
-- Translating programming tutorials and guides
-- Converting code comments and technical explanations
-- Translating developer-focused content
+### 何时使用此技能
+- 翻译 AI 提示和指令
+- 将技术文档转换为中文
+- 翻译编程教程和指南
+- 转换代码注释和技术说明
+- 翻译以开发者为重点的内容
 
-### Translation Guidelines
+### 翻译指南
 
-#### 1. Preserve Technical Integrity
-- **Code blocks**: Keep all code unchanged, preserve syntax highlighting
-- **Technical terms**: Maintain original English terms in parentheses when appropriate
-- **Variable names**: Do not translate function names, variable names, or APIs
-- **File extensions**: Keep file extensions and paths unchanged
-- **Math expressions**: Preserve all LaTeX math expressions unchanged
+#### 1. 保持技术完整性
+- **代码块**：保持所有代码不变，保留语法高亮
+- **技术术语**：在适当时保留括号中的原始英文术语
+- **变量名**：不要翻译函数名、变量名或 API
+- **文件扩展名**：保持文件扩展名和路径不变
+- **数学表达式**：保持所有 LaTeX 数学表达式不变
 
-#### 2. Formatting Preservation
-- **Markdown structure**: Maintain headings, lists, bold, italic formatting
-- **Links**: Keep URLs and technical references unchanged
-- **Code formatting**: Preserve inline code formatting (`backticks`)
-- **Tables**: Maintain table structure and technical content
+#### 2. 格式保持
+- **Markdown 结构**：保持标题、列表、粗体、斜体格式
+- **链接**：保持 URL 和技术参考不变
+- **代码格式**：保持内联代码格式（`反引号`）
+- **表格**：保持表格结构和技术内容
 
-#### 3. Translation Quality
-- **Technical accuracy**: Ensure precise translation of technical concepts
-- **Professional tone**: Use formal, technical Chinese language
-- **Consistency**: Maintain consistent terminology throughout
-- **Context awareness**: Consider programming and technical context
+#### 3. 翻译质量
+- **技术准确性**：确保技术概念的精确翻译
+- **专业语调**：使用正式的技术中文语言
+- **一致性**：保持术语的一致性
+- **上下文意识**：考虑编程和技术上下文
 
-## Translation Patterns
+## 翻译模式
 
-### Code-Related Content
+### 代码相关内容
 ```markdown
-**Original:**
+**原文：**
 ```rust
 fn calculate_fibonacci(n: u32) -> u64 {
     // Calculate fibonacci number
 }
 ```
 
-**Translation:**
+**翻译：**
 ```rust
 fn calculate_fibonacci(n: u32) -> u64 {
     // 计算斐波那契数
 }
 ```
 
-### Technical Instructions
-**Original:**
+### 技术指令
+**原文：**
 > Create a function that accepts a `u32` parameter and returns a `Result<T, Error>`
 
-**Translation:**
+**翻译：**
 > 创建一个接受 `u32` 参数并返回 `Result<T, Error>` 的函数
 
-### Mathematical Expressions
-**Original:**
+### 数学表达式
+**原文：**
 > Calculate the $n$-th Fibonacci number using $O(n)$ time complexity
 
-**Translation:**
+**翻译：**
 > 使用 $O(n)$ 时间复杂度计算第 $n$ 个斐波那契数
 
-## Common Technical Term Mappings
+## 常见技术术语映射
 
-### Programming Concepts
+### 编程概念
 - function → 函数
 - variable → 变量
 - parameter → 参数
@@ -81,7 +81,7 @@ fn calculate_fibonacci(n: u32) -> u64 {
 - algorithm → 算法
 - data structure → 数据结构
 
-### Development Process
+### 开发流程
 - implementation → 实现
 - optimization → 优化
 - debugging → 调试
@@ -89,35 +89,36 @@ fn calculate_fibonacci(n: u32) -> u64 {
 - deployment → 部署
 - version control → 版本控制
 
-## Special Handling
+## 特殊处理
 
-### AI Prompts
-For AI prompt translations:
-- Translate role descriptions and instructions
-- Preserve technical requirements and constraints
-- Maintain output format specifications
-- Keep example structures intact
+### AI 提示
+对于 AI 提示翻译：
+- 翻译角色描述和指令
+- 保留技术要求和约束
+- 保持输出格式规范
+- 保持示例结构完整
 
-### Documentation
-For technical documentation:
-- Translate explanatory text while preserving code examples
-- Maintain step-by-step procedure formatting
-- Preserve warning and note sections
-- Keep reference tables and technical specifications
+### 文档
+对于技术文档：
+- 翻译说明文字，同时保留代码示例
+- 保持逐步程序格式
+- 保留警告和注释部分
+- 保持参考表和技术规范
 
-## Output Format
+## 输出格式
 
-Always provide:
-1. **Direct translation** of the source content
-2. **Preserved formatting** with all technical elements intact
-3. **Chinese translation** that maintains technical accuracy
-4. **Original structure** with proper Chinese linguistic flow
+始终提供：
+1. 源内容的**直接翻译**
+2. 保持所有技术元素不变的**保留格式**
+3. 保持技术准确性的**中文翻译**
+4. 具有适当中文语言流畅度的**原始结构**
+5. 覆盖原始文件或是选中内容
 
-## Quality Assurance
+## 质量保证
 
-Before finalizing translation, verify:
-- All code blocks remain unchanged
-- Technical terms are correctly translated
-- Mathematical expressions are preserved
-- Formatting structure is maintained
-- Chinese text flows naturally and professionally
+在最终确定翻译之前，请验证：
+- 所有代码块保持不变
+- 技术术语翻译正确
+- 数学表达式被保留
+- 格式结构得到保持
+- 中文文本自然且专业
