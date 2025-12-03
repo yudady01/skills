@@ -22,8 +22,12 @@ python scripts/validate_payment_handler.py --file Pay1270.java
 ## 支付渠道类型
 
 ### 认证方式分类
-- **签名认证**：MD5/SHA256 + 私钥 (如：Pay1268, Pay1256)
+- **MD5签名认证**：MD5 + 私钥拼接 (如：Pay1262, Pay1266)
+- **SHA256+MD5双重签名**：SHA256加密后再MD5 + 私钥 (如：Pay1269)
+- **HMAC-SHA256签名**：HMAC-SHA256 + Base64 (如：Pay1260)
+- **HMAC-SHA1签名**：HMAC-SHA1 + Base64 (如：Pay1271)
 - **Token认证**：Bearer Token (如：Pay1260)
+- **简化MD5签名**：订单号+私钥简单组合 (如：Pay1265)
 - **AES加密**：AES/CBC/PKCS5Padding (如：Pay1255)
 - **无认证**：直接API调用 (如：Pay1265余额查询)
 
@@ -56,6 +60,25 @@ private String generateSign(String functionName, TreeMap<String, Object> sortedM
     String textToBeSigned = queryString + SIGN_SUFFIX_WITH_API_KEY + privateKey;
     String sign = DigestUtils.md5Hex(textToBeSigned);
     return sign.toUpperCase(); // 或小写，根据三方要求
+}
+```
+
+#### MD5 + 转大写签名 (Pay1266)
+```java
+private String generateSign(String functionName, TreeMap<String, Object> parameters, String signKey) {
+    String textToBeSigned = paymentUtils.convertMapToQueryStringIgnoreEmpty(parameters, StringPool.AMPERSAND)
+        + SIGN_SUFFIX_WITH_API_KEY + signKey;
+
+    String sign = DigestUtils.md5Hex(textToBeSigned);
+    return sign.toUpperCase(); // 必须转大写
+}
+```
+
+#### 简化MD5签名 (Pay1265)
+```java
+private String generateSimpleSign(String orderNo, String privateKey) {
+    String signSource = orderNo + privateKey;
+    return DigestUtils.md5Hex(signSource);
 }
 ```
 
@@ -96,6 +119,40 @@ private boolean isValidHmacSign(String functionName, NotifyDto notify, String si
 }
 ```
 
+#### HMAC-SHA1 + Base64签名 (Pay1271)
+```java
+private String generateSignature(String secretKey, Map<String, Object> params) {
+    // 1. 过滤空值并按key排序（字典序）
+    TreeMap<String, Object> sortedParams = buildSignParams(params);
+
+    // 2. 拼接成键值对字符串
+    String stringA = paymentUtils.convertToQueryString(sortedParams);
+
+    // 3. HMAC-SHA1加密
+    HmacUtils hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_SHA_1,
+        secretKey.getBytes(StandardCharsets.UTF_8));
+    byte[] bytes = hmacUtils.hmac(stringA.getBytes(StandardCharsets.UTF_8));
+
+    // 4. Base64编码
+    return Base64.getEncoder().encodeToString(bytes);
+}
+
+private TreeMap<String, Object> buildSignParams(Map<String, Object> params) {
+    TreeMap<String, Object> signParams = new TreeMap<>();
+    if (params != null) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            // 过滤空值和sign字段
+            if (value != null && StringUtils.isNotBlank(value.toString()) && !"sign".equals(key)) {
+                signParams.put(key, value);
+            }
+        }
+    }
+    return signParams;
+}
+```
+
 ### 3. 银行名称映射
 ```java
 private static final Map<String, String> BANK_NAME_MAPPING = Map.of(
@@ -112,7 +169,180 @@ private String getThirdPartyBankName(String bankCode) {
 }
 ```
 
-### 4. AES加密解密
+### 4. 多国家支付配置 (Pay1271)
+```java
+/**
+ * 代收国家配置
+ */
+private enum Pay1271RechargeCountry {
+    THAILAND("THAILAND", "泰國") {
+        @Override
+        public void validateAndSetParams(Map<String, Object> params) {
+            validateRequired(params, "bank_name", "card_no", "card_name");
+        }
+    },
+    NEPAL("NEPAL", "尼泊爾") {
+        @Override
+        public void validateAndSetParams(Map<String, Object> params) {
+            validateRequired(params, "card_no", "card_name");
+        }
+    },
+    PAKISTAN("PAKISTAN", "巴基斯坦") {
+        @Override
+        public void validateAndSetParams(Map<String, Object> params) {
+            validateRequired(params, "card_no");
+            // 巴基斯坦：card_no=手機號碼
+            String cardNo = (String) params.get("card_no");
+            if (!isValidPhoneNumber(cardNo)) {
+                throw new IllegalArgumentException("巴基斯坦支付需要有效手機號碼");
+            }
+        }
+    };
+
+    private final String code;
+    private final String description;
+
+    public abstract void validateAndSetParams(Map<String, Object> params);
+
+    protected void validateRequired(Map<String, Object> params, String... fields) {
+        for (String field : fields) {
+            if (!params.containsKey(field) || params.get(field) == null ||
+                StringUtils.isBlank(params.get(field).toString())) {
+                throw new IllegalArgumentException("字段 " + field + " 不能為空");
+            }
+        }
+    }
+
+    public static Pay1271RechargeCountry fromCurrency(String currency) {
+        if (currency.startsWith("THB")) {
+            return THAILAND;
+        }
+        return DEFAULT;
+    }
+}
+```
+
+### 5. 多支付通道支持 (Pay1265)
+```java
+/**
+ * 支付通道配置
+ */
+private enum Pay1265PayChannel {
+    EZ_PAY("ezpay", "/api/ezpay_order_create"),      // EZ Pay通道
+    ALI_PAY("alipay", "/api/alipay_order_create");  // 支付宝通道
+
+    private final String channel;
+    private final String apiUrl;
+
+    public static Pay1265PayChannel fromDynamicColumnPayChannel(String payChannel) {
+        return Arrays.stream(values())
+            .filter(t -> t.channel.equals(payChannel))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Invalid pay channel: " + payChannel));
+    }
+}
+
+/**
+ * 代收支付类型配置
+ */
+private enum Pay1265RechargeType {
+    CREDIT_CARD("credit"),  // 信用卡
+    ATM("atm"),            // 虚拟账号、支付宝
+    CVS("cvs");            // 超商代码
+
+    private final String type;
+
+    public static Pay1265RechargeType fromRechargeMerchantThirdPartyCode(String code) {
+        return Arrays.stream(values())
+            .filter(t -> t.getType().equals(code))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Invalid recharge type: " + code));
+    }
+}
+```
+
+### 6. 台湾手机号格式转换
+```java
+/**
+ * 转换为台湾手机号格式
+ */
+private String toTaiwanPhoneNumber(String countryCode, String telephone) {
+    return Objects.equals(countryCode, "886") ? "0" + telephone : telephone;
+}
+
+// 使用示例
+String taiwanPhone = toTaiwanPhoneNumber("886", "912345678"); // 结果: "0912345678"
+```
+
+### 7. 订单号格式转换 (Pay1262)
+```java
+/**
+ * 代付订单号格式转换：我方使用底线(-)，三方只支持下划线(_)
+ */
+@Override
+public Map<String, Object> generateWithdrawRequest(WithdrawParameterDto dto) throws JsonProcessingException {
+    // 订单号格式转换
+    String convertedOrderNo = dto.getOrderSubId().replaceAll(StringPool.DASH, StringPool.UNDERSCORE);
+
+    TreeMap<String, Object> sortedMap = new TreeMap<>();
+    sortedMap.put("agent", dto.getChannelMerchantAccountVo().getMerchantCode());
+    sortedMap.put("order_sn", convertedOrderNo); // 转换为下划线格式
+    // ... 其他参数
+}
+
+/**
+ * 代付回调订单号还原
+ */
+@Override
+public WithdrawNotifyResult handleWithdrawNotify(NotifyDto notify, ChannelMerchantAccountEntity account) {
+    Map<String, String> params = notify.getParameters();
+    String callbackOrderNo = params.get("order_sn");
+    // 还原订单号格式：下划线转底线
+    String originalOrderNo = callbackOrderNo.replaceAll(StringPool.UNDERSCORE, StringPool.DASH);
+
+    // ... 业务处理
+}
+```
+
+### 8. 随机数防重放攻击 (Pay1266)
+```java
+/**
+ * 余额查询使用随机数防止重放攻击
+ */
+@Override
+public Map<String, Object> generateQueryBalanceRequest(ChannelMerchantAccountEntity channelMerchantAccountEntity) {
+    TreeMap<String, Object> sortedMap = new TreeMap<>();
+    sortedMap.put("appId", channelMerchantAccountEntity.getMerchantCode());
+    // 使用雪花算法生成唯一随机数
+    sortedMap.put("random", String.valueOf(uidGenerator.getUID()));
+
+    String signature = this.generateSign("商戶餘額請求", sortedMap, channelMerchantAccountEntity.getPrivateKey());
+    sortedMap.put("sign", signature);
+
+    return sortedMap;
+}
+```
+
+### 9. 特殊回调响应格式
+```java
+/**
+ * 不同三方的回调响应格式要求
+ */
+@Override
+public ResponseEntity<String> responseRechargeNotify() {
+    return ResponseEntity.ok(this.getConfig().getRechargeNotifyPrint());
+}
+
+// 配置示例：
+// Pay1260: "anythingIsFine"
+// Pay1262: "OK"
+// Pay1265: "success"
+// Pay1266: "SUCCESS"
+// Pay1269: "success"
+// Pay1271: "ok"
+```
+
+### 10. AES加密解密
 ```java
 public static String decrypt(String doubleBase64Cipher, String secretKey, String secretIv) throws Exception {
     byte[] key = deriveKey(secretKey);    // 32 bytes
@@ -192,6 +422,27 @@ A: 检查参数排序、编码格式、大小写、空值处理等细节，使�
 
 ### Q: 如何处理银行代码映射？
 A: 创建统一的银行代码映射表，支持三方不同银行代码的转换。
+
+### Q: Webhook签名验证复杂怎么办？(Pay1260)
+A: 需要从HTTP头提取webhook-id、webhook-timestamp、webhook-signature，然后使用"{webhook-id}.{webhook-timestamp}.{rawBody}"格式进行HMAC-SHA256+Base64签名验证。
+
+### Q: 订单号格式不匹配如何处理？(Pay1262)
+A: 在请求时将底线(-)转换为下划线(_)，回调时再将下划线还原为底线，确保订单号的双向正确转换。
+
+### Q: 多国家支付字段要求不同如何处理？(Pay1271)
+A: 使用国家配置枚举，为不同国家定义专门的字段验证逻辑，如泰国需要bank_name/card_no/card_name，巴基斯坦需要手机号码格式的card_no。
+
+### Q: 回调签名只验证data字段怎么办？(Pay1271)
+A: 代收和代付回调都只对data中的字段进行签名验证，不包括外层的code、message等字段。需要构建只包含data字段的参数Map进行签名。
+
+### Q: 如何处理多签名版本验证？(Pay1260)
+A: webhook-signature可能包含多个签名，需要分割后逐一比对，只要有一个匹配即可通过验证。
+
+### Q: 支付通道动态选择如何实现？(Pay1265)
+A: 根据配置动态选择不同的API端点，如EZ Pay和支付宝通道对应不同的API路径，通过枚举管理通道配置。
+
+### Q: SHA256+MD5双重签名如何实现？(Pay1269)
+A: 先对参数+私钥进行SHA256加密，再对结果进行MD5加密并转大写，支持动态排除字段配置。
 
 ## 测试模板
 
