@@ -14,7 +14,7 @@
 
 每个技能都在自己的文件夹中自包含，带有一个包含 Claude 使用的指令和元数据的 `SKILL.md` 文件。浏览这些技能以获取您自己技能的灵感或了解不同的模式和方法。
 
-此仓库中的许多技能都是开源的（Apache 2.0）。我们还在 [`skills/docx`](./skills/docx)、[`skills/pdf`](./skills/pdf)、[`skills/pptx`](./skills/pptx) 和 [`skills/xlsx`](./skills/xlsx) 子文件夹中包含了驱动 [Claude 的文档功能](https://www.anthropic.com/news/create-files) 的文档创建和编辑技能。这些是源代码可用，不是开源的，但我们希望与开发人员分享这些作为参考，用于在生产 AI 应用程序中积极使用的更复杂技能。
+此仓库中的许多技能都是开源的（Apache 2.0）。我们还在 [`skills/docx`](anthropics/docx)、[`skills/pdf`](anthropics/pdf)、[`skills/pptx`](anthropics/pptx) 和 [`skills/xlsx`](anthropics/xlsx) 子文件夹中包含了驱动 [Claude 的文档功能](https://www.anthropic.com/news/create-files) 的文档创建和编辑技能。这些是源代码可用，不是开源的，但我们希望与开发人员分享这些作为参考，用于在生产 AI 应用程序中积极使用的更复杂技能。
 
 ## 免责声明
 
