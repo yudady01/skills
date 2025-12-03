@@ -9,37 +9,37 @@
     "version": "1.0.2"
   },
   "plugins": [
-    {
-      "name": "document-skills",
-      "description": "Collection of document processing suite including Excel, Word, PowerPoint, and PDF capabilities",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/xlsx",
-        "./skills/docx",
-        "./skills/pptx",
-        "./skills/pdf"
-      ]
-    },
-    {
-      "name": "example-skills",
-      "description": "Collection of example skills demonstrating various capabilities including skill creation, MCP building, visual design, algorithmic art, internal communications, web testing, artifact building, Slack GIFs, and theme styling",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/algorithmic-art",
-        "./skills/brand-guidelines",
-        "./skills/canvas-design",
-        "./skills/frontend-design",
-        "./skills/internal-comms",
-        "./skills/mcp-builder",
-        "./skills/skill-creator",
-        "./skills/slack-gif-creator",
-        "./skills/theme-factory",
-        "./skills/web-artifacts-builder",
-        "./skills/webapp-testing"
-      ]
-    },
+//    {
+//      "name": "document-skills",
+//      "description": "Collection of document processing suite including Excel, Word, PowerPoint, and PDF capabilities",
+//      "source": "./",
+//      "strict": false,
+//      "skills": [
+//        "./skills/xlsx",
+//        "./skills/docx",
+//        "./skills/pptx",
+//        "./skills/pdf"
+//      ]
+//    },
+//    {
+//      "name": "example-skills",
+//      "description": "Collection of example skills demonstrating various capabilities including skill creation, MCP building, visual design, algorithmic art, internal communications, web testing, artifact building, Slack GIFs, and theme styling",
+//      "source": "./",
+//      "strict": false,
+//      "skills": [
+//        "./skills/algorithmic-art",
+//        "./skills/brand-guidelines",
+//        "./skills/canvas-design",
+//        "./skills/frontend-design",
+//        "./skills/internal-comms",
+//        "./skills/mcp-builder",
+//        "./skills/skill-creator",
+//        "./skills/slack-gif-creator",
+//        "./skills/theme-factory",
+//        "./skills/web-artifacts-builder",
+//        "./skills/webapp-testing"
+//      ]
+//    },
     {
       "name": "yudady-skills",
       "description": "自定义技能集",
@@ -48,6 +48,15 @@
       "skills": [
         "./skills/en-to-zh-translator",
         "./skills/repeatable-sql"
+      ]
+    },
+    {
+      "name": "mr9-skills",
+      "description": "mr9-技能集",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/payChannel-thirdparty"
       ]
     }
   ]
