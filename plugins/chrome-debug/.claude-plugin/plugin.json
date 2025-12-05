@@ -1,0 +1,12 @@
+{
+  "name": "chrome-debug",
+  "version": "1.0.0",
+  "description": "Chrome DevTools integration plugin for debugging web applications with automated login and DOM manipulation capabilities",
+  "author": {
+    "name": "yudady",
+    "email": "yudady@gmail.com"
+  },
+  "homepage": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+  "license": "MIT",
+  "keywords": ["chrome", "debug", "devtools", "automation", "testing", "mcp"]
+}
