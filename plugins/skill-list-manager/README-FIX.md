@@ -40,8 +40,14 @@
 
 - **`scripts/integrated_fix.py`** - 集成修复工具
   - 结合基础修复和兼容性检查
+  - 包含 settings.json 修复功能
   - 综合错误报告
   - 支持多种输出格式
+
+- **`scripts/settings_fix.py`** - Settings.json 专用修复工具
+  - 专门处理 `~/.claude/settings.json` 问题
+  - 智能插件名称匹配
+  - 自动备份和验证
 
 ## 🔧 支持的错误类型
 
@@ -65,6 +71,12 @@
 - 使用 `plugin.json` 而非标准 `marketplace.json`
 - 配置文件位置错误
 - 配置格式不统一
+
+### 5. 系统设置错误 (settings)
+- `~/.claude/settings.json` 中插件名称不匹配
+- 驼峰式 vs kebab-case 命名不一致
+- 插件状态配置错误
+- 缺失插件的启用状态
 
 ## 💡 使用方法
 
@@ -90,6 +102,21 @@
 
 # 使用集成工具（推荐）
 python3 plugins/skill-list-manager/scripts/integrated_fix.py --auto-fix
+```
+
+### 系统设置修复
+```bash
+# 检测设置文件问题
+/settings-fix
+
+# 预览修复操作
+/settings-fix --dry-run
+
+# 自动修复设置问题
+/settings-fix --auto-fix
+
+# 专用工具
+python3 plugins/skill-list-manager/scripts/settings_fix.py --auto-fix
 ```
 
 ### 系统兼容性检查
@@ -160,6 +187,41 @@ python3 plugins/skill-list-manager/scripts/system_compatibility.py --format json
 **新增**: 能够检测配置文件命名错误
 **新增**: 集成到自动修复流程中
 **新增**: 提供详细的修复建议
+
+### 已修复: Settings.json 插件名称不匹配
+**原始问题**:
+```
+✘ thirdpartyPayChannel@yudady-skills
+   Plugin 'thirdpartyPayChannel' not found in marketplace 'yudady-skills'
+```
+
+**根本原因分析**:
+- **错误位置**: `~/.claude/settings.json` 第36行
+- **错误名称**: `thirdpartyPayChannel` (驼峰式)
+- **正确名称**: `thirdparty-pay-channel` (kebab-case)
+- **影响范围**: 插件无法正常加载
+
+**解决方案**:
+1. **自动检测**: 智能识别 settings.json 中的插件名称不匹配
+2. **智能匹配**: 支持多种命名格式的自动转换
+3. **安全修复**: 自动备份和验证修复结果
+
+**修复结果**:
+```json
+// 修复前 (错误)
+{
+  "enabledPlugins": {
+    "thirdpartyPayChannel@yudady-skills": true  // ❌ 驼峰式
+  }
+}
+
+// 修复后 (正确)
+{
+  "enabledPlugins": {
+    "thirdparty-pay-channel@yudady-skills": true  // ✅ kebab-case
+  }
+}
+```
 
 ## 🚀 未来扩展
 

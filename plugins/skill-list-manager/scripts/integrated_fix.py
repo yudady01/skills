@@ -15,6 +15,7 @@ from datetime import datetime
 # 导入现有的修复器
 from fix_errors import SkillFixer
 from system_compatibility import SystemCompatibilityChecker
+from settings_fix import SettingsFixer
 
 class IntegratedSkillFixer:
     """集成技能错误修复器"""
@@ -26,6 +27,7 @@ class IntegratedSkillFixer:
         # 初始化子修复器
         self.basic_fixer = SkillFixer(marketplace_path)
         self.compatibility_checker = SystemCompatibilityChecker(marketplace_path)
+        self.settings_fixer = SettingsFixer(marketplace_path=marketplace_path)
 
         self.all_errors = []
         self.all_fixes = []
@@ -58,6 +60,11 @@ class IntegratedSkillFixer:
                     "suggested_fix": issue.get("suggested_fix", "")
                 })
 
+        # 3. Settings.json 错误检测
+        print("🔍 检测系统设置错误...")
+        settings_errors = self.settings_fixer.detect_plugin_name_mismatches()
+        all_errors.extend(settings_errors)
+
         return all_errors
 
     def fix_all_errors(self, auto_fix: bool = False, dry_run: bool = False) -> Dict:
@@ -85,7 +92,10 @@ class IntegratedSkillFixer:
         # 修复兼容性错误
         compatibility_fixes = self._fix_compatibility_errors(errors, auto_fix, dry_run)
 
-        all_fixes = basic_fixes + compatibility_fixes
+        # 修复 settings.json 错误
+        settings_fixes = self._fix_settings_errors(errors, auto_fix, dry_run)
+
+        all_fixes = basic_fixes + compatibility_fixes + settings_fixes
 
         return {
             "status": "completed",
@@ -106,6 +116,28 @@ class IntegratedSkillFixer:
                     fix_result = self.basic_fixer.fix_config_filename(error)
                     fixes.append(fix_result)
                 else:
+                    fixes.append({
+                        "error": error,
+                        "status": "pending",
+                        "message": f"需要修复: {error['issue']}"
+                    })
+
+        return fixes
+
+    def _fix_settings_errors(self, errors: List[Dict], auto_fix: bool, dry_run: bool) -> List[Dict]:
+        """修复 settings.json 错误"""
+        fixes = []
+
+        # 收集 settings.json 相关的错误
+        settings_errors = [error for error in errors if error.get("target", "").startswith("settings.json")]
+
+        if settings_errors:
+            if auto_fix or dry_run:
+                # 使用 settings_fixer 修复所有 settings 错误
+                settings_fixes = self.settings_fixer.apply_fixes(settings_errors, auto_fix, dry_run)
+                fixes.extend(settings_fixes)
+            else:
+                for error in settings_errors:
                     fixes.append({
                         "error": error,
                         "status": "pending",

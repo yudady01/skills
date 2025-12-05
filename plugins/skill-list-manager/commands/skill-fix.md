@@ -70,6 +70,20 @@ allowed-tools: Read, Write, Edit, Bash
 - 简化配置内容为标准字段
 - 创建配置文件备份
 
+### 5. 系统设置错误 (settings)
+
+**常见问题**：
+- `~/.claude/settings.json` 中插件名称与 marketplace 不匹配
+- 驼峰式 vs kebab-case 命名不一致
+- 插件状态配置错误
+- 缺失插件的启用状态
+
+**修复策略**：
+- 自动检测插件名称不匹配
+- 统一命名规范为 kebab-case
+- 修复插件状态配置
+- 禁用缺失的插件
+
 ## 执行步骤
 
 ### 1. 综合错误检测阶段
