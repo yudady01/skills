@@ -1,0 +1,9 @@
+{
+  "name": "skill-list-manager",
+  "description": "技能列表管理器，提供动态技能发现、验证和搜索功能，支持多种输出格式和错误修复",
+  "version": "1.0.0",
+  "author": {
+    "name": "yudady",
+    "email": "yudady@gmail.com"
+  }
+}

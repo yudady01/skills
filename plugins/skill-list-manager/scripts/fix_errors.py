@@ -290,6 +290,8 @@ class SkillFixer:
                 return self.update_source_path(error)
             elif fix_method == "fix_plugin_name":
                 return self.fix_plugin_name(error)
+            elif fix_method == "fix_config_filename":
+                return self.fix_config_filename(error)
             else:
                 return {
                     "error": error,
@@ -678,6 +680,81 @@ class SkillFixer:
         result = re.sub('-+', '-', s2.lower())
 
         return result.strip('-')
+
+    def fix_config_filename(self, error: Dict) -> Dict:
+        """修复配置文件命名错误"""
+        plugin_name = error.get("plugin", {}).get("directory_name", "")
+        if not plugin_name:
+            return {
+                "error": error,
+                "status": "failed",
+                "message": "无法确定插件名称"
+            }
+
+        plugin_dir = self.base_path / "plugins" / plugin_name
+        old_config_file = plugin_dir / ".claude-plugin" / "plugin.json"
+        new_config_file = plugin_dir / ".claude-plugin" / "marketplace.json"
+
+        try:
+            if self.dry_run:
+                return {
+                    "error": error,
+                    "status": "dry_run",
+                    "message": f"[预览] 将重命名配置文件: plugin.json → marketplace.json"
+                }
+
+            # 创建备份
+            if old_config_file.exists():
+                # 备份原文件
+                backup_dir = self.backup_dir
+                if not backup_dir.exists():
+                    backup_dir.mkdir(parents=True, exist_ok=True)
+
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                backup_file = backup_dir / f"{plugin_name}_plugin_{timestamp}.json"
+                shutil.copy2(old_config_file, backup_file)
+
+                # 重命名文件
+                old_config_file.rename(new_config_file)
+
+                # 简化配置内容（如果需要）
+                try:
+                    with open(new_config_file, 'r', encoding='utf-8') as f:
+                        config_data = json.load(f)
+
+                    # 保持标准字段，移除额外字段
+                    standard_config = {
+                        "name": config_data.get("name", plugin_name),
+                        "description": config_data.get("description", ""),
+                        "version": config_data.get("version", "1.0.0"),
+                        "author": config_data.get("author", {})
+                    }
+
+                    with open(new_config_file, 'w', encoding='utf-8') as f:
+                        json.dump(standard_config, f, indent=2, ensure_ascii=False)
+
+                except:
+                    # 如果简化失败，保持原文件
+                    pass
+
+                return {
+                    "error": error,
+                    "status": "success",
+                    "message": f"已修复插件 {plugin_name} 的配置文件命名: plugin.json → marketplace.json"
+                }
+            else:
+                return {
+                    "error": error,
+                    "status": "failed",
+                    "message": f"plugin.json 文件不存在: {old_config_file}"
+                }
+
+        except Exception as e:
+            return {
+                "error": error,
+                "status": "failed",
+                "message": f"修复配置文件命名失败: {str(e)}"
+            }
 
     @staticmethod
     def to_camel_case(name: str) -> str:

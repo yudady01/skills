@@ -69,8 +69,25 @@ class SystemCompatibilityChecker:
                 actual_plugins = {}
                 for item in self.plugins_dir.iterdir():
                     if item.is_dir():
-                        # 检查是否有 marketplace.json
+                        # 检查是否有配置文件
                         plugin_config_file = item / ".claude-plugin" / "marketplace.json"
+                        if not plugin_config_file.exists():
+                            # 检查是否有 plugin.json（不兼容的旧格式）
+                            old_config_file = item / ".claude-plugin" / "plugin.json"
+                            if old_config_file.exists():
+                                # 记录配置文件命名问题
+                                self.issues.append({
+                                    "type": "warning",
+                                    "category": "configuration",
+                                    "message": f"插件配置文件命名不正确: '{item.name}/.claude-plugin/plugin.json'",
+                                    "target": f"config:{item.name}",
+                                    "plugin_name": item.name,
+                                    "fixable": True,
+                                    "fix_method": "fix_config_filename",
+                                    "suggested_fix": f"重命名为 marketplace.json"
+                                })
+                                plugin_config_file = old_config_file
+
                         plugin_config = {}
                         if plugin_config_file.exists():
                             try:
