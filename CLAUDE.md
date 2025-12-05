@@ -4,9 +4,9 @@
 
 ## 项目概览
 
-这是一个 Claude Code 市场，包含三个针对不同开发领域的专业技能/插件：
+这是一个 Claude Code 市场，包含五个针对不同开发领域的专业技能/插件：
 
-- **yudady-skills**: 一个包含翻译工具、SQL 脚本生成器和支付渠道集成开发技能的市场
+- **yudady-skills**: 一个包含翻译工具、SQL 脚本生成器、支付渠道集成开发技能、Chrome DevTools 调试和技能列表管理工具的市场
 - **位置**: `/Users/tommy/Documents/work.nosync/skills/`
 - **结构**: 市场格式，包含 `.claude-plugin/marketplace.json` 和 `plugins/` 目录中的独立插件
 
@@ -18,7 +18,9 @@
 plugins/
 ├── en-to-zh-translator/          # 技术翻译技能
 ├── repeatable-sql/               # 数据库迁移脚本生成器
-└── thirdparty-pay-channel/       # 支付集成开发技能
+├── thirdparty-pay-channel/       # 支付集成开发技能
+├── skill-list-manager/           # 技能列表管理工具
+└── chrome-debug/                 # Chrome DevTools 调试插件
 ```
 
 每个插件都遵循标准结构：
@@ -58,6 +60,10 @@ python3 plugins/repeatable-sql/skills/scripts/flyway_validator.py --directory mi
 
 # 翻译验证
 python3 plugins/en-to-zh-translator/skills/scripts/validate_translation.py --file translation.md
+
+# Chrome 调试验证
+python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mcp.py --help
+./plugins/chrome-debug/scripts/validate-chrome.sh
 ```
 
 ## 插件特定指南
@@ -78,6 +84,23 @@ python3 plugins/en-to-zh-translator/skills/scripts/validate_translation.py --fil
 - **用途**: 英中技术翻译，保留代码块和格式
 - **关键文件**: `validate_translation.py`
 - **参考资料**: 技术术语映射、质量指南、翻译示例
+
+### 技能列表管理插件 (skill-list-manager)
+- **用途**: 技能列表管理器，提供动态技能发现、验证和搜索功能
+- **关键文件**: 技能验证脚本、搜索工具、管理工具
+- **参考资料**: 技能模式、验证标准、配置示例
+
+### Chrome 调试插件 (chrome-debug)
+- **用途**: Chrome DevTools 集成插件，提供 Web 应用调试、自动化操作和性能分析
+- **关键文件**: `chrome-debug` 主命令、配置管理、诊断工具
+- **核心功能**:
+  - 一键调试：自动启动 Chrome 并导航到目标页面
+  - 自动登录：支持预设凭据的自动登录流程
+  - DOM 操作：元素检查、选择和自动化操作
+  - 智能回退：当目标 URL 返回 404 时自动回退到 Google
+- **命令**: `/chrome-debug`、`/chrome-config`、`/chrome-diagnose`
+- **技能**: Chrome DevTools MCP 集成、DOM 自动化
+- **代理**: debug-automation（处理复杂多步骤调试工作流）
 
 ## 文件结构约定
 
@@ -102,6 +125,8 @@ license: Apache 2.0  # 可选
 }
 ```
 
+**重要**: 插件必须使用 `marketplace.json` 而不是 `plugin.json` 作为配置文件名
+
 ## 关键集成点
 
 ### 环境变量
@@ -123,3 +148,26 @@ license: Apache 2.0  # 可选
 3. **验证**: 确保 marketplace.json 引用与插件目录名称匹配
 4. **文档**: 添加新功能时更新 README.md 文件
 5. **一致性**: 保持目录、技能文件和元数据之间的命名约定
+
+### Marketplace 注册
+
+创建新插件时，必须注册到主市场的 `.claude-plugin/marketplace.json`：
+
+```json
+{
+  "plugins": [
+    // 现有插件...
+    {
+      "name": "new-plugin",
+      "description": "插件描述",
+      "source": "./plugins/new-plugin",
+      "category": "category-name"
+    }
+  ]
+}
+```
+
+**注意事项**:
+- 确保 `source` 路径与实际插件目录匹配
+- 使用描述性的 `category` 名称
+- 保持插件名称的一致性（目录名、配置文件名、注册名称）
