@@ -5,27 +5,27 @@
     "email": "yudady@gmail.com"
   },
   "metadata": {
-    "description": "fork Anthropic example skills",
-    "version": "1.0.2"
+    "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器和支付渠道集成开发技能",
+    "version": "1.0.0"
   },
   "plugins": [
     {
-      "name": "thirdpartyPayChannel",
-      "description": "支付渠道第三方集成开发技能",
+      "name": "thirdparty-pay-channel",
+      "description": "支付渠道第三方集成开发技能，提供支付渠道处理类的快速生成和最佳实践指南",
       "source": "./plugins/thirdparty-pay-channel",
-      "category": "mr9-toolkit"
+      "category": "payment"
     },
     {
       "name": "repeatable-sql",
-      "description": "可重复执行SQL技能",
+      "description": "可重复执行SQL技能生成器，专门用于创建幂等的数据库迁移脚本",
       "source": "./plugins/repeatable-sql",
-      "category": "sql"
+      "category": "database"
     },
     {
       "name": "en-to-zh-translator",
-      "description": "英中技术翻译器",
+      "description": "专业的英中翻译工具，专门处理技术和编程内容",
       "source": "./plugins/en-to-zh-translator",
-      "category": "翻译"
+      "category": "translation"
     }
   ]
 }

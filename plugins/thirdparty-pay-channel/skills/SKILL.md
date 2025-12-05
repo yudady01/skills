@@ -1,5 +1,5 @@
 ---
-name: payChannel-thirdparty
+name: thirdparty-pay-channel
 description: 专业的支付渠道第三方集成开发技能，提供支付渠道处理类的快速生成、最佳实践指南、安全验证和代码模板。支持代收(Recharge)、代付(Withdraw)、余额查询等功能模块的标准化开发，包含签名验证、加密解密、银行映射等常用工具类。用于开发新的支付渠道集成、重构现有支付代码、支付安全审计、支付接口测试等场景。
 ---
 
