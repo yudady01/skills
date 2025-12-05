@@ -10,23 +10,22 @@
   },
   "plugins": [
     {
-      "name": "yudady-skills",
-      "description": "自定义技能集",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/en-to-zh-translator",
-        "./skills/repeatable-sql"
-      ]
+      "name": "thirdpartyPayChannel",
+      "description": "支付渠道第三方集成开发技能",
+      "source": "./plugins/thirdparty-pay-channel",
+      "category": "mr9-toolkit"
     },
     {
-      "name": "mr9-skills",
-      "description": "mr9-技能集",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/payChannel-thirdparty"
-      ]
+      "name": "repeatable-sql",
+      "description": "可重复执行SQL技能",
+      "source": "./plugins/repeatable-sql",
+      "category": "sql"
+    },
+    {
+      "name": "en-to-zh-translator",
+      "description": "英中技术翻译器",
+      "source": "./plugins/en-to-zh-translator",
+      "category": "翻译"
     }
   ]
 }

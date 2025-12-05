@@ -1,8 +1,8 @@
-# payChannel-thirdparty 技能包
+# thirdparty-pay-channel 技能包
 
 ## 技能概述
 
-`payChannel-thirdparty` 是一个专业的支付渠道第三方集成开发技能，提供支付渠道处理类的快速生成、最佳实践指南、安全验证和代码模板。
+`thirdparty-pay-channel` 是一个专业的支付渠道第三方集成开发技能，提供支付渠道处理类的快速生成、最佳实践指南、安全验证和代码模板。
 
 ## 技能功能
 

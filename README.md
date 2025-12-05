@@ -1,93 +1,279 @@
-# 技能
+# 🚀 从零开始：Claude Code 插件开发实战指南
+本指南将带您创建一个名为 demo-toolkit 的插件项目。我们将实现以下功能：
 
-技能是指令、脚本和资源的文件夹，Claude 会动态加载这些内容以提高在专门任务上的性能。技能教会 Claude 如何以可重复的方式完成特定任务，无论是使用您公司的品牌指南创建文档，使用您组织的特定工作流程分析数据，还是自动化个人任务。
+- Command: 一个简单的 /greet 命令。
+- Skill: 一个专门的 "Python 代码审查" 技能。
+- Hook: 每次提交 Prompt 时自动记录日志。
 
-更多信息，请查看：
-- [什么是技能？](https://support.claude.com/en/articles/12512176-what-are-skills)
-- [在 Claude 中使用技能](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
-- [如何创建自定义技能](https://support.claude.com/en/articles/12512198-creating-custom-skills)
-- [使用代理技能为真实世界配备代理](https://anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
 
-# 关于此仓库
 
-此仓库包含展示 Claude 技能系统可能性的技能。这些技能范围从创意应用（艺术、音乐、设计）到技术任务（测试 Web 应用、MCP 服务器生成）再到企业工作流程（沟通、品牌等）。
+## 目录应该看起来像这样
 
-每个技能都在自己的文件夹中自包含，带有一个包含 Claude 使用的指令和元数据的 `SKILL.md` 文件。浏览这些技能以获取您自己技能的灵感或了解不同的模式和方法。
-
-此仓库中的许多技能都是开源的（Apache 2.0）。我们还在 [`skills/docx`](anthropics/docx)、[`skills/pdf`](anthropics/pdf)、[`skills/pptx`](anthropics/pptx) 和 [`skills/xlsx`](anthropics/xlsx) 子文件夹中包含了驱动 [Claude 的文档功能](https://www.anthropic.com/news/create-files) 的文档创建和编辑技能。这些是源代码可用，不是开源的，但我们希望与开发人员分享这些作为参考，用于在生产 AI 应用程序中积极使用的更复杂技能。
-
-## 免责声明
-
-**这些技能仅供演示和教育目的。** 虽然其中一些功能可能在 Claude 中可用，但从 Claude 获得的实现和行为可能与这些技能中显示的不同。这些技能旨在说明模式和可能性。在依赖关键任务之前，始终在您自己的环境中彻底测试技能。
-
-# 技能集
-- [./skills](./skills)：创意与设计、开发与技术、企业与沟通以及文档技能的技能示例
-- [./spec](./spec)：代理技能规范
-- [./template](./template)：技能模板
-
-# 在 Claude Code、Claude.ai 和 API 中尝试
-
-## Claude Code
-您可以通过在 Claude Code 中运行以下命令将此仓库注册为 Claude Code 插件市场：
-```
-/plugin marketplace add anthropics/skills
+```shell
+my-marketplace/                  # 您的市场根目录
+├── .claude-plugin/
+│   └── marketplace.json         # 市场配置文件
+└── plugins/
+    └── demo-toolkit/            # 您的第一个插件目录
+        ├── .claude-plugin/
+        │   └── plugin.json      # 插件元数据
+        ├── commands/            # 存放自定义命令
+        ├── skills/              # 存放技能
+        ├── hooks/               # 存放钩子配置
+        └── scripts/             # 存放执行脚本
 ```
 
-然后，要安装特定的技能集：
-1. 选择 `浏览并安装插件`
-2. 选择 `anthropic-agent-skills`
-3. 选择 `document-skills` 或 `example-skills`
-4. 选择 `立即安装`
 
-或者，直接通过以下方式安装任一插件：
+
+
+
+
+这是一份基于您提供的详细资料整理而成的**实战指南**。我们将跳过单纯的概念堆砌，直接带您动手编写一个包含自定义命令、技能（Skill）和自动化钩子（Hook）的完整插件。
+
+-----
+
+# 🚀 从零开始：Claude Code 插件开发实战指南
+
+本指南将带您创建一个名为 `demo-toolkit` 的插件项目。我们将实现以下功能：
+
+1.  **Command**: 一个简单的 `/greet` 命令。
+2.  **Skill**: 一个专门的 "Python 代码审查" 技能。
+3.  **Hook**: 每次提交 Prompt 时自动记录日志。
+
+-----
+
+## 第一步：项目初始化与目录结构
+
+首先，我们需要建立符合 Claude Code 标准的目录结构。这不仅是存放代码的地方，也是插件被识别的基础。
+
+1.  **创建文件夹结构**
+    在您的终端中执行（或手动创建）：
+
+    ```bash
+    mkdir -p my-marketplace/plugins/demo-toolkit/{commands,skills/python-reviewer,hooks,scripts}
+    mkdir -p my-marketplace/.claude-plugin
+    mkdir -p my-marketplace/plugins/demo-toolkit/.claude-plugin
+    ```
+
+2.  **最终结构预览**
+    您的目录应该看起来像这样：
+
+    ```text
+    my-marketplace/                  # 您的市场根目录
+    ├── .claude-plugin/
+    │   └── marketplace.json         # 市场配置文件
+    └── plugins/
+        └── demo-toolkit/            # 您的第一个插件目录
+            ├── .claude-plugin/
+            │   └── plugin.json      # 插件元数据
+            ├── commands/            # 存放自定义命令
+            ├── skills/              # 存放技能
+            ├── hooks/               # 存放钩子配置
+            └── scripts/             # 存放执行脚本
+    ```
+
+-----
+
+## 第二步：配置市场与插件身份
+
+### 1\. 配置市场 (marketplace.json)
+
+创建文件 `my-marketplace/.claude-plugin/marketplace.json`。这是 Claude Code 寻找插件的入口。
+
+```json
+{
+  "name": "my-personal-marketplace",
+  "owner": {
+    "name": "Developer",
+    "email": "dev@example.com"
+  },
+  "plugins": [
+    {
+      "name": "demo-toolkit",
+      "source": "./plugins/demo-toolkit",
+      "description": "我的第一个 Claude Code 实验插件。",
+      "version": "1.0.0"
+    }
+  ]
+}
 ```
-/plugin install document-skills@anthropic-agent-skills
-/plugin install example-skills@anthropic-agent-skills
+
+### 2\. 配置插件 (plugin.json)
+
+创建文件 `my-marketplace/plugins/demo-toolkit/.claude-plugin/plugin.json`。这是插件的“身份证”。
+
+```json
+{
+  "name": "demo-toolkit",
+  "version": "1.0.0",
+  "description": "包含命令、技能和钩子的演示工具包。",
+  "author": {
+    "name": "Developer"
+  },
+  "license": "MIT",
+  "commands": ["./commands/greet.md"],
+  "hooks": "./hooks/hooks.json"
+}
 ```
 
-安装插件后，您可以通过提及它来使用该技能。例如，如果您从市场安装了 `document-skills` 插件，您可以要求 Claude Code 执行类似这样的操作："使用 PDF 技能从 `path/to/some-file.pdf` 中提取表单字段"
+-----
 
-## Claude.ai
+## 第三步：开发核心组件
 
-这些示例技能在 Claude.ai 的付费计划中已经可用。
+现在我们来填充实际的功能。
 
-要使用此仓库中的任何技能或上传自定义技能，请遵循 [在 Claude 中使用技能](https://support.claude.com/en/articles/12512180-using-skills-in-claude#h_a4222fa77b) 中的说明。
+### 1\. 创建命令 (Command)
 
-## Claude API
+**目标**：输入 `/greet` 时，Claude 会礼貌地问候并报告当前时间。
 
-您可以通过 Claude API 使用 Anthropic 的预构建技能并上传自定义技能。有关更多信息，请参阅 [技能 API 快速入门](https://docs.claude.com/en/api/skills-guide#creating-a-skill)。
-
-# 创建基本技能
-
-创建技能很简单——只需一个带有 `SKILL.md` 文件的文件夹，该文件包含 YAML 前言和指令。您可以使用此仓库中的 **template-skill** 作为起点：
+创建文件 `plugins/demo-toolkit/commands/greet.md`：
 
 ```markdown
 ---
-name: my-skill-name
-description: 对此技能的作用以及何时使用的清晰描述
+description: "向用户问好并报告时间"
+argument-hint: "你的名字"
 ---
-
-# 我的技能名称
-
-[在此处添加当此技能处于活动状态时 Claude 将遵循的说明]
-
-## 示例
-- 示例用法 1
-- 示例用法 2
-
-## 指南
-- 指南 1
-- 指南 2
+你好，{{ARG}}！
+请以非常热情的方式向用户打招呼，并告诉用户现在的准确时间（精确到秒）。
 ```
 
-前言只需要两个字段：
-- `name` - 您技能的唯一标识符（小写，空格用连字符）
-- `description` - 对技能作用以及何时使用的完整描述
+### 2\. 创建技能 (Skill)
 
-下面的 markdown 内容包含 Claude 将遵循的说明、示例和指南。有关更多详细信息，请参阅 [如何创建自定义技能](https://support.claude.com/en/articles/12512198-creating-custom-skills)。
+**目标**：让 Claude 在处理 Python 代码时，自动通过 `SKILL.md` 加载最佳实践，变身为代码审查专家。
 
-# 合作伙伴技能
+创建文件 `plugins/demo-toolkit/skills/python-reviewer/SKILL.md`：
 
-技能是教会 Claude 如何更好地使用特定软件的绝佳方式。当我们看到来自合作伙伴的优秀技能示例时，我们可能会在此处突出其中一些：
+````markdown
+---
+name: python-reviewer
+description: 专业的 Python 代码审查和最佳实践指导
+when_to_use: 当用户要求编写、审查或重构 Python 代码时
+allowed-tools:
+  - Read
+  - Edit
+---
 
-- **Notion** - [Claude 的 Notion 技能](https://www.notion.so/notiondevs/Notion-Skills-for-Claude-28da4445d27180c7af1df7d8615723d0)
+# Python 代码审查专家
+
+## 审查原则
+在审查或编写代码时，请严格遵守以下 PEP 8 标准：
+
+1. **类型提示**：所有函数必须包含 Type Hints。
+   ```python
+   def calculate_sum(a: int, b: int) -> int:
+       return a + b
+````
+
+2.  **文档字符串**：使用 Google Style 的 Docstrings。
+
+3.  **异常处理**：不要使用裸露的 `except:`，必须捕获特定异常。
+
+## 检查清单
+
+- [ ] 是否使用了 f-strings 替代 .format()？
+- [ ] 变量命名是否清晰（snake\_case）？
+- [ ] 列表推导式是否被正确使用？
+
+<!-- end list -->
+
+````
+
+### 3. 创建钩子 (Hook)
+**目标**：每次用户提交 Prompt 时，在后台记录一条日志。
+
+首先，创建执行脚本 `plugins/demo-toolkit/scripts/log.sh`：
+
+```bash
+#!/bin/bash
+# 注意：确保给此文件执行权限 chmod +x log.sh
+echo "[$(date)] User Prompt Submitted" >> ~/claude_plugin_debug.log
+````
+
+然后，创建钩子配置 `plugins/demo-toolkit/hooks/hooks.json`：
+
+```json
+{
+  "UserPromptSubmit": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "${CLAUDE_PLUGIN_ROOT}/scripts/log.sh"
+        }
+      ]
+    }
+  ]
+}
+```
+
+*记得赋予脚本执行权限：*
+
+```bash
+chmod +x my-marketplace/plugins/demo-toolkit/scripts/log.sh
+```
+
+-----
+
+## 第四步：本地安装与测试 (关键步骤)
+
+在发布到 GitHub 之前，我们先在本地进行测试。请确保您已经安装并登录了 `claude` CLI。
+
+1.  **进入市场目录**：
+
+    ```bash
+    cd my-marketplace
+    ```
+
+2.  **添加本地市场**：
+    告诉 Claude Code 信任当前目录作为一个市场。
+
+    ```bash
+    claude plugin marketplace add --local .
+    ```
+
+3.  **安装插件**：
+    从刚才添加的市场中安装插件。
+
+    ```bash
+    claude plugin install demo-toolkit
+    ```
+
+4.  **验证功能**：
+    启动 Claude Code (`claude`) 并尝试以下操作：
+
+    * **测试命令**：输入 `/greet 开发者`。
+        * *预期*：Claude 会热情回复并报时。
+    * **测试技能**：输入 “写一个简单的 Python 计算器函数”。
+        * *预期*：Claude 会自动加载 `python-reviewer` 技能（您可以通过查看 verbose 日志或观察其是否使用了类型提示和 Google 风格文档来验证）。
+    * **测试钩子**：检查日志文件。
+        * *预期*：运行 `cat ~/claude_plugin_debug.log`，应该能看到刚才操作的时间戳记录。
+
+-----
+
+## 第五步：发布与分享
+
+当您对插件满意后，就可以分享给团队或全世界了。
+
+1.  **推送到 GitHub**：
+    将 `my-marketplace` 文件夹作为一个仓库推送到 GitHub（例如：`github.com/yourname/my-claude-tools`）。
+
+2.  **修改配置 (可选)**：
+    如果希望别人直接引用 GitHub 链接，确保 `marketplace.json` 中的 `source` 字段指向正确的相对路径或 GitHub 对象（如果是单体仓库，保持相对路径通常即可）。
+
+3.  **安装命令**：
+    其他人只需运行一行命令即可使用您的所有工具：
+
+    ```bash
+    claude plugin marketplace add github.com/yourname/my-claude-tools
+    claude plugin install demo-toolkit
+    ```
+
+-----
+
+## 开发小贴士
+
+* **路径引用**：在 Hook 脚本中始终使用 `${CLAUDE_PLUGIN_ROOT}`，因为用户安装插件后，您的脚本路径会发生变化，硬编码路径会导致脚本失效。
+* **Skill 的触发**：Skill 不需要用户手动安装或调用。只要插件被安装，Claude 就会根据 `when_to_use` 的描述智能判断何时加载。描述写得越精准，触发越准确。
+* **调试**：如果插件行为异常，可以使用 `/plugin list` 查看状态，或使用 `claude --verbose` 启动 CLI 查看详细加载日志。
+
+现在，您已经掌握了构建 Claude Code 插件的核心能力。您可以尝试添加更多复杂的 `MCP Server` 或编写更强大的 `Agent` 来扩展您的开发工作流！
