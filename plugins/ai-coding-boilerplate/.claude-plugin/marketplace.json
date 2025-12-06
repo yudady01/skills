@@ -1,21 +1,33 @@
 {
   "name": "ai-coding-boilerplate",
-  "version": "1.0.0",
-  "description": "Claude Code 专用的 TypeScript 项目模板插件，提供完整的 AI 驱动开发流程",
+  "version": "2.7.0",
+  "description": "Claude Code 专用的 Spring Boot 2.7 + Dubbo 企业级微服务项目模板插件，提供完整的 AI 驱动分布式系统开发流程",
   "author": {
-    "name": "AI Coding Boilerplate Team",
-    "email": "support@example.com"
+    "name": "Spring Boot + Dubbo AI Coding Team",
+    "email": "dubbo-microservice-support@example.com"
   },
   "homepage": "https://github.com/shinpr/ai-coding-project-boilerplate",
   "repository": "https://github.com/shinpr/ai-coding-project-boilerplate",
   "license": "MIT",
   "keywords": [
-    "typescript",
+    "spring-boot",
+    "dubbo",
+    "microservices",
+    "distributed-system",
+    "java",
+    "enterprise",
     "boilerplate",
     "claude-code",
     "ai-development",
     "quality-assurance",
     "project-template",
-    "automation"
+    "automation",
+    "zookeeper",
+    "mysql",
+    "mongodb",
+    "redis",
+    "activemq",
+    "mybatis-plus",
+    "monitoring"
   ]
 }
