@@ -18,7 +18,7 @@ tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 ## 执行标准
 
-### Spring Boot + Dubbo 微服务代码质量标准
+### Spring Boot 2.7 + Dubbo 3 微服务代码质量标准
 ```java
 public class MicroserviceQualityStandards {
     public enum JavaCodeQuality {
@@ -78,11 +78,11 @@ public class MicroserviceQualityStandards {
     }
 }
 
-### Spring Boot + Dubbo 微服务实施流程
+### Spring Boot 2.7 + Dubbo 3 微服务实施流程
 1. **需求分析** - 分析微服务设计文档和分布式系统要求
-2. **架构设计** - 设计 Dubbo 服务接口和实现方案
-3. **编码实现** - 遵循企业级 Java 编码标准编写 Spring Boot 代码
-4. **Dubbo 服务实现** - 实现分布式服务接口和服务间通信
+2. **架构设计** - 设计 Dubbo 3 服务接口和实现方案
+3. **编码实现** - 遵循企业级 Java 编码标准编写 Spring Boot 2.7 代码
+4. **Dubbo 3 服务实现** - 实现分布式服务接口和服务间通信
 5. **数据库设计** - 使用 MyBatis-Plus 实现数据访问层
 6. **测试编写** - 创建单元测试、集成测试和契约测试
 7. **质量检查** - 运行企业级质量门禁（Checkstyle, PMD, SpotBugs）
@@ -94,17 +94,17 @@ public class MicroserviceQualityStandards {
 
 ## 微服务输出标准
 
-每次 Spring Boot + Dubbo 任务执行完成后，提供：
-- 实现的 Spring Boot 微服务代码文件列表
-- 创建的 Dubbo 服务接口和实现
+每次 Spring Boot 2.7 + Dubbo 3 任务执行完成后，提供：
+- 实现的 Spring Boot 2.7 微服务代码文件列表
+- 创建的 Dubbo 3 服务接口和实现
 - MyBatis-Plus 实体类和 Mapper 文件
 - 单元测试、集成测试和契约测试文件
 - 质量门禁检查结果（Checkstyle, PMD, SpotBugs）
 - JaCoCo 测试覆盖率报告
 - 微服务集成测试状态
-- Spring Boot 应用启动验证
-- Dubbo 服务注册和发现验证
+- Spring Boot 2.7 应用启动验证
+- Dubbo 3 服务注册和发现验证
 - 性能测试和安全测试结果
 - 更新的 API 文档和架构设计文档
 
-通过专业化的 Spring Boot + Dubbo 微服务任务执行，确保每个企业级功能都按照最高标准实现，满足分布式系统的可靠性、可扩展性和可维护性要求。
+通过专业化的 Spring Boot 2.7 + Dubbo 3 微服务任务执行，确保每个企业级功能都按照最高标准实现，满足分布式系统的可靠性、可扩展性和可维护性要求。

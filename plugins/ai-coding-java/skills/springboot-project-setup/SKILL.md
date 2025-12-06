@@ -1,6 +1,6 @@
 ---
 name: springboot-project-setup
-description: This skill should be used when the user asks to "setup Spring Boot project", "configure Spring Boot", "create application.properties", "setup build tools", "configure testing", or "initialize Spring Boot development environment". Provides comprehensive Spring Boot 2.7 + Apache Dubbo 3.2.14 enterprise microservice project configuration guidance.
+description: This skill should be used when the user asks to "setup Spring Boot 2.7 project", "configure Spring Boot 2.7", "create application.properties", "setup build tools", "configure testing", or "initialize Spring Boot 2.7 development environment". Provides comprehensive Spring Boot 2.7 + Apache Dubbo 3.2.14 enterprise microservice project configuration guidance.
 version: 2.7.0
 ---
 
@@ -10,7 +10,7 @@ version: 2.7.0
 
 ## 核心配置组件
 
-### 1. Spring Boot + Dubbo 微服务项目基础配置
+### 1. Spring Boot 2.7 + Dubbo 微服务项目基础配置
 
 #### Maven 配置 (pom.xml)
 创建企业级 Spring Boot 2.7 + Apache Dubbo 3.2.14 微服务项目配置：
@@ -47,7 +47,7 @@ version: 2.7.0
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starters -->
+        <!-- Spring Boot 2.7 Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -214,7 +214,7 @@ version: 2.7.0
 ```
 
 #### 应用配置 (application.yml)
-创建 Spring Boot + Dubbo 分布式微服务配置文件：
+创建 Spring Boot 2.7 + Dubbo 分布式微服务配置文件：
 
 ```yaml
 # application.yml
@@ -1541,7 +1541,7 @@ management:
 ## 升级和维护
 
 ### 版本升级策略
-- **Spring Boot 升级**: 参考官方迁移指南，关注破坏性变更
+- **Spring Boot 2.7 升级**: 参考官方迁移指南，关注破坏性变更
 - **依赖版本管理**: 定期更新安全补丁，测试兼容性
 - **数据库迁移**: 使用 Flyway 进行版本化数据库变更
 

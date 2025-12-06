@@ -191,7 +191,7 @@ const documentation = {
 /task "重构用户验证模块，提高可读性"
 
 # 配置更新
-/task "更新 Spring Boot 配置以支持新的模块"
+/task "更新 Spring Boot 2.7 配置以支持新的模块"
 ```
 
 ### 高级用法
@@ -368,7 +368,7 @@ async function refactorCode(refactorSpec: RefactorSpec) {
 - **`quality-assurance`** - 质量保证策略
 
 ### 相关技能
-- **`springboot-project-setup`** - Spring Boot 配置
+- **`springboot-project-setup`** - Spring Boot 2.7 配置
 - **`ai-coding-best-practices`** - 开发最佳实践
 
 ### 相关命令

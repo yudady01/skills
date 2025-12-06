@@ -1,11 +1,11 @@
 ---
-description: 注入 Spring Boot + Dubbo 微服务项目上下文配置，建立企业级开发环境和规则标准
+description: 注入 Spring Boot 2.7 + Dubbo 微服务项目上下文配置，建立企业级开发环境和规则标准
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ---
 
-# Spring Boot + Dubbo 微服务项目注入命令
+# Spring Boot 2.7 + Dubbo 微服务项目注入命令
 
-这个命令用于建立 Spring Boot + Dubbo 微服务项目上下文，配置企业级开发环境，并设置专用的开发规则和标准。
+这个命令用于建立 Spring Boot 2.7 + Dubbo 微服务项目上下文，配置企业级开发环境，并设置专用的开发规则和标准。
 
 ## 配置流程
 
@@ -15,7 +15,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 分析微服务项目的关键特征：
 - **微服务类型** - 微服务领域（用户服务、订单服务、支付服务等）
-- **技术栈** - Spring Boot + Dubbo 技术栈
+- **技术栈** - Spring Boot 2.7 + Dubbo 技术栈
 - **团队规模** - 开发团队大小
 - **业务领域** - 项目所属业务领域
 - **质量标准** - 企业级代码质量要求
@@ -23,7 +23,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 ### 2. 环境配置
 
-**Spring Boot + Dubbo 微服务项目上下文配置**：
+**Spring Boot 2.7 + Dubbo 微服务项目上下文配置**：
 
 #### 微服务技术栈配置
 ```java
@@ -87,12 +87,12 @@ public class EnterpriseDevelopmentRules {
 
 #### CLAUDE.md 配置
 ```markdown
-# Spring Boot + Dubbo 微服务项目特定配置
+# Spring Boot 2.7 + Dubbo 微服务项目特定配置
 
 ## 项目信息
 - 服务名称：${serviceName}
 - 微服务类型：${microserviceType}
-- 技术栈：Spring Boot ${springBootVersion} + Apache Dubbo ${dubboVersion}
+- 技术栈：Spring Boot 2.7 ${springBootVersion} + Apache Dubbo ${dubboVersion}
 
 ## 开发规则
 - 编码标准：${codingStandards}
@@ -119,7 +119,7 @@ public class EnterpriseDevelopmentRules {
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starter -->
+        <!-- Spring Boot 2.7 Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -135,7 +135,7 @@ public class EnterpriseDevelopmentRules {
 </project>
 ```
 
-#### Spring Boot 配置
+#### Spring Boot 2.7 配置
 ```yaml
 # application.yml
 spring:
@@ -263,7 +263,7 @@ ${testingRequirements}
 
 ### 技术栈选项
 - **java** - Java 语言
-- **spring-boot** - Spring Boot 框架
+- **spring-boot** - Spring Boot 2.7 框架
 - **dubbo** - Apache Dubbo 微服务框架
 - **mybatis-plus** - MyBatis-Plus ORM框架
 - **postgresql** - PostgreSQL 数据库
@@ -294,7 +294,7 @@ ${testingRequirements}
 ### 2. 开发工具配置
 ```
 ├── pom.xml               # Maven 配置
-├── application.yml       # Spring Boot 配置
+├── application.yml       # Spring Boot 2.7 配置
 ├── dubbo.properties      # Dubbo 配置
 └── checkstyle.xml        # 代码质量工具配置
 ```
@@ -366,7 +366,7 @@ project:
 
 techStack:
   language: "Java"
-  framework: "Spring Boot"
+  framework: "Spring Boot 2.7"
   microservice: "Apache Dubbo"
   database: "MySQL"
   deployment: "Docker"
@@ -438,7 +438,7 @@ public class ExtendedConfig {
 ## 相关资源
 
 ### 参考文档
-- **`springboot-project-setup`** - Spring Boot 配置指南
+- **`springboot-project-setup`** - Spring Boot 2.7 配置指南
 - **`quality-assurance`** - 质量保证策略
 
 ### 配置模板

@@ -1,11 +1,11 @@
 ---
-description: 协调从需求到部署的完整 Spring Boot 企业级应用实现生命周期，智能化管理微服务开发流程
+description: 协调从需求到部署的完整 Spring Boot 2.7 企业级应用实现生命周期，智能化管理微服务开发流程
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite, Task]
 ---
 
-# Spring Boot 企业级实现命令
+# Spring Boot 2.7 企业级实现命令
 
-这个命令协调完整的 Spring Boot 企业级应用开发流程，从需求分析到最终部署，确保每个阶段都遵循企业级微服务最佳实践。
+这个命令协调完整的 Spring Boot 2.7 企业级应用开发流程，从需求分析到最终部署，确保每个阶段都遵循企业级微服务最佳实践。
 
 ## 执行决策流程
 
@@ -65,7 +65,7 @@ List<String> largeScaleTasks = Arrays.asList(
 Task requirementAnalysis = Task.builder()
     .subagentType("general-purpose")
     .prompt(String.format("""
-        分析以下 Spring Boot 微服务需求并确定开发规模：%s
+        分析以下 Spring Boot 2.7 微服务需求并确定开发规模：%s
 
         请评估：
         - 微服务边界和职责划分
@@ -86,7 +86,7 @@ if (scale.equals("medium") || scale.equals("large")) {
     Task designPhase = Task.builder()
         .subagentType("general-purpose")
         .prompt(String.format("""
-            基于需求分析结果创建 Spring Boot 微服务技术设计文档
+            基于需求分析结果创建 Spring Boot 2.7 微服务技术设计文档
 
             需求：%s
 
@@ -109,13 +109,13 @@ if (scale.equals("medium") || scale.equals("large")) {
 Task implementation = Task.builder()
     .subagentType("general-purpose")
     .prompt(String.format("""
-        基于设计文档实现 Spring Boot 微服务功能：
+        基于设计文档实现 Spring Boot 2.7 微服务功能：
 
         设计文档：%s
         工作计划：%s
 
         请：
-        1. 遵循 Spring Boot 最佳实践 @docs/rules/coding-standards.md
+        1. 遵循 Spring Boot 2.7 最佳实践 @docs/rules/coding-standards.md
         2. 实现核心业务逻辑
         3. 配置 Spring Security 和JWT认证
         4. 编写相应的单元测试和集成测试
@@ -129,7 +129,7 @@ Task implementation = Task.builder()
 
 **自动化质量检查**：
 ```java
-// Spring Boot 质量检查清单
+// Spring Boot 2.7 质量检查清单
 List<String> qualityChecks = Arrays.asList(
     "Java 编译和语法检查",
     "Checkstyle 代码规范检查",
@@ -154,11 +154,11 @@ for (String check : qualityChecks) {
 
 ### 5. 微服务特定检查
 
-**Spring Boot 微服务验证**：
+**Spring Boot 2.7 微服务验证**：
 ```java
 // 微服务特定检查
 List<String> microserviceChecks = Arrays.asList(
-    "Spring Boot Actuator 健康检查",
+    "Spring Boot 2.7 Actuator 健康检查",
     "数据库连接池配置",
     "Redis 缓存配置",
     "Spring Security 配置验证",
@@ -228,8 +228,8 @@ List<String> microserviceChecks = Arrays.asList(
 - 数据库分离
 - 容错设计
 
-### 2. Spring Boot 最佳实践
-- 使用 Spring Boot 2.7.x
+### 2. Spring Boot 2.7 最佳实践
+- 使用 Spring Boot 2.7 2.7.x
 - 遵循 Spring 配置约定
 - 合理使用 Spring 注解
 - 配置外部化
@@ -275,7 +275,7 @@ List<String> microserviceChecks = Arrays.asList(
 2. 微服务边界设计
 3. 数据库设计
 4. RESTful API 设计
-5. Spring Boot 项目实现
+5. Spring Boot 2.7 项目实现
 6. 安全配置
 7. 缓存配置
 8. 测试编写
@@ -315,11 +315,11 @@ List<String> microserviceChecks = Arrays.asList(
 ## 企业级开发模式
 
 ### 1. 微服务架构模式
-- 服务发现（Eureka）
-- 配置中心（Config Server）
-- API 网关（Gateway）
-- 熔断器（Hystrix）
-- 链路追踪（Sleuth）
+- 服务发现（Zookeeper/Nacos）
+- 配置中心（Nacos）
+- API 网关（Spring Cloud Gateway + Dubbo）
+- 熔断器（Dubbo Filter）
+- 链路追踪（Dubbo 分布式追踪）
 
 ### 2. 数据管理模式
 - 数据库分离
@@ -358,8 +358,8 @@ List<String> microserviceChecks = Arrays.asList(
 - **`@docs/rules/coding-standards.md`** - Java 编码规范
 
 ### 相关技能
-- **`ai-coding-best-practices`** - Spring Boot 开发最佳实践
-- **`springboot-project-setup`** - Spring Boot 项目配置
+- **`ai-coding-best-practices`** - Spring Boot 2.7 开发最佳实践
+- **`springboot-project-setup`** - Spring Boot 2.7 项目配置
 - **`quality-assurance`** - 企业级质量保证策略
 
 ### 相关命令
@@ -380,9 +380,9 @@ List<String> microserviceChecks = Arrays.asList(
 # 系统自动执行的流程
 # 1. 需求分析 → 确定为大规模微服务功能
 # 2. 微服务设计 → 服务边界、数据库设计
-# 3. 技术设计 → Spring Boot 架构、API 设计
+# 3. 技术设计 → Spring Boot 2.7 架构、API 设计
 # 4. 工作计划 → 任务分解和时间估算
-# 5. 项目初始化 → Spring Boot 项目脚手架
+# 5. 项目初始化 → Spring Boot 2.7 项目脚手架
 # 6. 数据库实现 → MyBatis-Plus 实体、Mapper
 # 7. 服务层实现 → 业务逻辑、事务管理
 # 8. 控制器实现 → RESTful API
@@ -395,4 +395,4 @@ List<String> microserviceChecks = Arrays.asList(
 # 15. 最终提交 → 符合企业级标准的代码提交
 ```
 
-通过这个命令，您可以享受到从概念到部署的完整 Spring Boot 企业级微服务开发流程管理，确保每个环节都符合企业级最佳实践标准。
+通过这个命令，您可以享受到从概念到部署的完整 Spring Boot 2.7 企业级微服务开发流程管理，确保每个环节都符合企业级最佳实践标准。

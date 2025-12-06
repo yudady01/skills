@@ -1,12 +1,12 @@
 ---
 name: quality-assurance
-description: This skill should be used when the user asks to "ensure code quality", "run quality checks", "setup quality gates", "implement code review", "testing strategy", or "quality assurance workflow". Provides comprehensive quality assurance and testing strategies for Spring Boot enterprise applications.
+description: This skill should be used when the user asks to "ensure code quality", "run quality checks", "setup quality gates", "implement code review", "testing strategy", or "quality assurance workflow". Provides comprehensive quality assurance and testing strategies for Spring Boot 2.7 enterprise applications.
 version: 2.7.0
 ---
 
-# Spring Boot 企业级质量保证技能
+# Spring Boot 2.7 企业级质量保证技能
 
-这个技能提供全面的 Spring Boot 企业级应用代码质量保证策略，包括自动化检查、测试策略和代码审查流程。
+这个技能提供全面的 Spring Boot 2.7 企业级应用代码质量保证策略，包括自动化检查、测试策略和代码审查流程。
 
 ## 质量检查层级
 
