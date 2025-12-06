@@ -1,0 +1,26 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash /Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-boilerplate/scripts/quality-gate.sh",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit|Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash /Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-boilerplate/scripts/documentation-validator.sh",
+          "timeout": 15
+        }
+      ]
+    }
+  ]
+}

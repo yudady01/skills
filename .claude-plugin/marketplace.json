@@ -38,6 +38,12 @@
       "description": "Chrome DevTools 集成插件，提供强大的 Web 应用调试、自动化操作和性能分析能力，支持自动登录和智能回退机制",
       "source": "./plugins/chrome-debug",
       "category": "debugging"
+    },
+    {
+      "name": "ai-coding-boilerplate",
+      "description": "Claude Code 专用的 TypeScript 项目模板插件，提供完整的 AI 驱动开发流程",
+      "source": "./plugins/ai-coding-boilerplate",
+      "category": "development"
     }
   ]
 }

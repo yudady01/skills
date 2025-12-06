@@ -1,0 +1,21 @@
+{
+  "name": "ai-coding-boilerplate",
+  "version": "1.0.0",
+  "description": "Claude Code 专用的 TypeScript 项目模板插件，提供完整的 AI 驱动开发流程",
+  "author": {
+    "name": "AI Coding Boilerplate Team",
+    "email": "support@example.com"
+  },
+  "homepage": "https://github.com/shinpr/ai-coding-project-boilerplate",
+  "repository": "https://github.com/shinpr/ai-coding-project-boilerplate",
+  "license": "MIT",
+  "keywords": [
+    "typescript",
+    "boilerplate",
+    "claude-code",
+    "ai-development",
+    "quality-assurance",
+    "project-template",
+    "automation"
+  ]
+}
