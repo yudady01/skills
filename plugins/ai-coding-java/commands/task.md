@@ -140,7 +140,7 @@ const implementation = {
   core: "实现主要功能",
 
   // 错误处理
-  errorHandling: "添加 try-catch 和错误处理",
+  errorHandling: "添加 @SneakyThrows 和错误处理",
 
   // 类型定义
   types: "定义必要的 Java 类型",

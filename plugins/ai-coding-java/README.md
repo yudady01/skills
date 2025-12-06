@@ -20,6 +20,7 @@
 | Java | JDK 11 | 编程语言 |
 | Spring Boot | 2.7.18 | 应用框架 |
 | Apache Dubbo | 3.2.14 | 微服务框架 |
+| Lombok | 1.18.30 | 代码简化工具 |
 | MySQL | 8.0.33 | 主数据库 |
 | MongoDB | - | 文档数据库 |
 | Redis | - | 缓存 |
@@ -73,6 +74,8 @@
 - Zookeeper 服务发现和配置中心
 - Redis 缓存和 ActiveMQ 消息队列
 - Prometheus + Grafana 监控体系
+- **Lombok 简化开发** - 自动生成样板代码，提升开发效率
+- **@SneakyThrows 错误处理** - 简化异常处理代码，避免冗长的 try-catch
 
 ## 📦 安装
 

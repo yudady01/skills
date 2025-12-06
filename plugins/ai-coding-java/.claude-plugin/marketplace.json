@@ -28,6 +28,11 @@
     "redis",
     "activemq",
     "mybatis-plus",
-    "monitoring"
+    "monitoring",
+    "lombok",
+    "code-generation",
+    "sneaky-throws",
+    "exception-handling",
+    "development-efficiency"
   ]
 }

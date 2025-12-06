@@ -93,14 +93,45 @@ CREATE TABLE orders (
 
 ### 数据访问层
 ```java
-// Repository 模式示例
+// 使用 Lombok 的 Repository 模式示例
 @Repository
-public interface UserRepository {
-    User create(CreateUserDto user);
-    User findById(Long id);
-    User findByEmail(String email);
-    User update(Long id, UpdateUserDto data);
-    void delete(Long id);
+@Mapper
+public interface UserMapper extends BaseMapper<User> {
+
+    @Select("SELECT * FROM users WHERE email = #{email}")
+    User findByEmail(@Param("email") String email);
+
+    @Select("SELECT * FROM users WHERE status = #{status}")
+    List<User> findByStatus(@Param("status") Integer status);
+
+    @Update("UPDATE users SET last_login_time = #{time} WHERE id = #{id}")
+    void updateLastLoginTime(@Param("id") Long id, @Param("time") LocalDateTime time);
+}
+
+// 实体类使用 Lombok
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@TableName("users")
+public class User extends BaseEntity {
+
+    private String username;
+
+    private String email;
+
+    @JsonIgnore
+    private String password;
+
+    @TableField("phone_number")
+    private String phoneNumber;
+
+    @Builder.Default
+    private Integer status = 1;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastLoginTime;
 }
 ```
 
@@ -110,42 +141,112 @@ public interface UserRepository {
 
 #### 认证相关
 ```java
-// 用户注册 DTO
+// 使用 Lombok 的用户注册 DTO
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUserRequest {
+
+    @NotBlank(message = "用户名不能为空")
+    @Size(min = 2, max = 50, message = "用户名长度必须在2-50个字符之间")
     private String name;
+
+    @NotBlank(message = "邮箱不能为空")
+    @Email(message = "邮箱格式不正确")
     private String email;
+
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 20, message = "密码长度必须在6-20个字符之间")
     private String password;
-    // getters and setters
 }
 
-// 用户注册响应 DTO
+// 使用 Lombok 的用户注册响应 DTO
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
+
     private UserDTO user;
+
     private String token;
-    // getters and setters
+
+    private Long expiresIn;
 }
 ```
 
 #### 用户管理
 ```java
-// 用户控制器
+// 使用 Lombok 的用户控制器
 @RestController
 @RequestMapping("/api/users")
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
+    private final UserService userService;
+
     @GetMapping("/{id}")
+    @SneakyThrows(UserNotFoundException.class)
     public ResponseEntity<ApiResponse<UserDTO>> getUser(
         @PathVariable Long id,
         @RequestHeader("Authorization") String token) {
-        // 实现获取用户逻辑
+
+        UserDTO user = userService.getUserById(id);
+
+        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
+                .success(true)
+                .data(user)
+                .message("获取用户信息成功")
+                .build());
     }
 
     @PutMapping("/{id}")
+    @SneakyThrows
     public ResponseEntity<ApiResponse<UserDTO>> updateUser(
-        @PathVariable Long id,
-        @RequestBody UpdateUserRequest request,
+        @Valid @PathVariable Long id,
+        @Valid @RequestBody UpdateUserRequest request,
         @RequestHeader("Authorization") String token) {
-        // 实现更新用户逻辑
+
+        UserDTO updatedUser = userService.updateUser(id, request);
+
+        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
+                .success(true)
+                .data(updatedUser)
+                .message("更新用户信息成功")
+                .build());
+    }
+}
+
+// 统一响应类
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApiResponse<T> {
+
+    private boolean success;
+
+    private T data;
+
+    private String message;
+
+    private String timestamp = LocalDateTime.now().toString();
+
+    public static <T> ApiResponse<T> success(T data, String message) {
+        return ApiResponse.<T>builder()
+                .success(true)
+                .data(data)
+                .message(message)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return ApiResponse.<T>builder()
+                .success(false)
+                .message(message)
+                .build();
     }
 }
 ```

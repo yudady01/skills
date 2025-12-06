@@ -55,7 +55,7 @@ Map<String, String> technicalAnalysis = Map.of(
 - **微服务模块影响** - 涉及的业务模块和 Spring 组件
 - **分层架构影响** - Controller、Service、Repository 层的影响
 - **API 接口变更** - RESTful API、Feign 接口的变更范围
-- **数据库影响** - JPA 实体、数据库迁移和事务需求
+- **数据库影响** - MyBatis-Plus 实体、数据库迁移和事务需求
 - **微服务间通信** - 服务发现、负载均衡、熔断器影响
 - **配置管理** - Spring Cloud Config 配置变更
 - **安全影响** - Spring Security、JWT 认证变更
@@ -162,7 +162,7 @@ public class PrdCriteria {
 public class AdrCriteria {
     List<String> triggers = Arrays.asList(
         "Spring Boot 微服务架构变更（服务拆分、合并）",
-        "数据库模式变更（JPA 实体、数据库分库分表）",
+        "数据库模式变更（MyBatis-Plus 实体、数据库分库分表）",
         "微服务通信变更（REST API、消息队列、服务发现）",
         "安全架构变更（Spring Security、认证授权）",
         "性能要求变更（缓存策略、数据库优化、并发处理）",
@@ -179,7 +179,7 @@ public class DesignDocCriteria {
 
     List<String> content = Arrays.asList(
         "微服务架构设计",
-        "JPA 实体和数据库设计",
+        "MyBatis-Plus 实体和数据库设计",
         "RESTful API 设计",
         "Spring Security 安全设计",
         "缓存和性能设计",
@@ -277,7 +277,7 @@ public class ImplementationStrategy {
 - **预估 Java 文件数**：[数量]
 - **影响微服务层**：[Controller/Service/Repository 列表]
 - **影响组件**：[Spring Boot 组件列表]
-- **数据库影响**：[JPA 实体、表结构变更]
+- **数据库影响**：[MyBatis-Plus 实体、表结构变更]
 - **API 影响范围**：[RESTful API 变更]
 - **预估工作量**：[天数或小时数]
 
@@ -303,7 +303,7 @@ public class ImplementationStrategy {
 - **推荐方法**：[具体的微服务实施方法]
 - **开发阶段**：[建议的微服务开发阶段分解]
 - **技术选型**：[Spring Boot、Spring Cloud 组件选择]
-- **数据库设计**：[JPA、数据库选择建议]
+- **数据库设计**：[MyBatis-Plus、数据库选择建议]
 - **安全设计**：[Spring Security、认证授权方案]
 - **性能设计**：[缓存、并发、扩展性方案]
 - **优先级**：[高/中/低]
@@ -338,7 +338,7 @@ public class ImplementationStrategy {
 ### 企业级开发经验
 - **Spring Boot 微服务**：丰富的企业级微服务开发经验
 - **Spring Cloud**：服务发现、配置管理、API 网关
-- **数据库设计**：JPA、数据库分库分表、读写分离
+- **数据库设计**：MyBatis-Plus、数据库分库分表、读写分离
 - **企业级安全**：Spring Security、JWT、OAuth2
 - **性能优化**：缓存策略、并发处理、JVM 调优
 - **DevOps 实践**：Docker、Kubernetes、CI/CD

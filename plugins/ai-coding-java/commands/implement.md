@@ -92,7 +92,7 @@ if (scale.equals("medium") || scale.equals("large")) {
 
             请包含：
             - 微服务架构设计
-            - 数据库设计和JPA实体
+            - 数据库设计和MyBatis-Plus实体
             - RESTful API 设计
             - Spring Security 安全设计
             - 缓存策略设计
@@ -236,7 +236,7 @@ List<String> microserviceChecks = Arrays.asList(
 - 健康检查和监控
 
 ### 3. 数据设计标准
-- JPA 实体设计
+- MyBatis-Plus 实体设计
 - 数据库索引优化
 - 事务边界管理
 - 数据库连接池配置
@@ -383,7 +383,7 @@ List<String> microserviceChecks = Arrays.asList(
 # 3. 技术设计 → Spring Boot 架构、API 设计
 # 4. 工作计划 → 任务分解和时间估算
 # 5. 项目初始化 → Spring Boot 项目脚手架
-# 6. 数据库实现 → JPA 实体、Repository
+# 6. 数据库实现 → MyBatis-Plus 实体、Mapper
 # 7. 服务层实现 → 业务逻辑、事务管理
 # 8. 控制器实现 → RESTful API
 # 9. 安全配置 → Spring Security、JWT

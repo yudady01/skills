@@ -39,6 +39,7 @@ version: 2.7.0
         <java.version>11</java.version>
         <dubbo.version>3.2.14</dubbo.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <lombok.version>1.18.30</lombok.version>
         <mysql.version>8.0.33</mysql.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -127,6 +128,14 @@ version: 2.7.0
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.15</version>
+        </dependency>
+
+        <!-- Lombok for Code Generation -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Utilities -->
@@ -378,21 +387,44 @@ app:
 #### 开发环境配置 (application-dev.yml)
 ```yaml
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-
-  # H2 内存数据库用于开发
+  # MyBatis-Plus 配置
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/enterprise_dev?useSSL=false&serverTimezone=UTC
+    username: root
+    password: password
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.enterprise.entity
+  # 配置mapper的xml路径
+  mapper-locations: classpath:mapper/*.xml
+  # 全局配置
+  global-config:
+    # 数据库配置
+    db-config:
+      # 主键类型
+      id-type: AUTO
+      # 字段验证策略
+      field-strategy: NOT_EMPTY
+      # 逻辑删除值
+      logic-delete-value: 1
+      # 逻辑未删除值
+      logic-not-delete-value: 0
+    # Banner 配置
+    banner: false
+  # 配置类型处理器
+  type-handlers-package: com.enterprise.handler
+  # 配置sql打印
+  configuration:
+    # 开启驼峰转换
+    map-underscore-to-camel-case: true
+    # 打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   level:
@@ -400,7 +432,185 @@ logging:
     com.enterprise: DEBUG
 ```
 
-### 3. 测试配置
+### 3. Lombok 配置
+
+#### Lombok 配置文件 (lombok.config)
+在项目根目录创建 Lombok 配置文件，统一 Lombok 行为：
+
+```properties
+# lombok.config
+config.stopBubbling = true
+lombok.addLombokGeneratedAnnotation = true
+lombok.anyConstructor.addConstructorProperties = true
+
+# @Data 配置
+lombok.data.flagUsage = WARNING
+
+# @Builder 配置
+lombok.builder.flagUsage = OK
+
+# @SneakyThrows 配置
+lombok.sneakyThrows.flagUsage = OK
+
+# @Cleanup 配置
+lombok.cleanup.flagUsage = OK
+
+# 生成私有字段默认为 final
+lombok.fieldDefaults.defaultPrivate = final
+
+# Accessors 链式调用
+lombok.accessors.chain = true
+lombok.accessors.fluent = false
+
+# ToString 配置
+lombok.toString.includeFieldNames = true
+lombok.toString.callSuper = CALL
+lombok.toString.doNotUseGetters = false
+```
+
+#### Lombok 最佳实践示例
+
+```java
+// 实体类示例
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@TableName("users")
+public class User extends BaseEntity {
+
+    private String username;
+
+    private String email;
+
+    @TableField("phone_number")
+    private String phoneNumber;
+
+    @JsonIgnore
+    private String password;
+
+    @Builder.Default
+    private Integer status = 1;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+}
+
+// DTO 示例
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+
+    private Long id;
+
+    private String username;
+
+    private String email;
+
+    private String phoneNumber;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
+}
+
+// 服务接口示例
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
+    private final UserMapper userMapper;
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    @Transactional
+    public UserDTO createUser(CreateUserRequest request) {
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
+
+        userMapper.insert(user);
+
+        log.info("Created user: {}", user.getId());
+
+        return UserDTO.fromEntity(user);
+    }
+
+    @Override
+    @SneakyThrows(DataAccessException.class)
+    public UserDTO getUserById(Long id) {
+        String cacheKey = "user:" + id;
+
+        // 先从缓存获取
+        UserDTO cachedUser = (UserDTO) redisTemplate.opsForValue().get(cacheKey);
+        if (cachedUser != null) {
+            return cachedUser;
+        }
+
+        // 从数据库获取
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new UserNotFoundException("用户不存在: " + id);
+        }
+
+        UserDTO userDTO = UserDTO.fromEntity(user);
+
+        // 缓存结果
+        redisTemplate.opsForValue().set(cacheKey, userDTO, 30, TimeUnit.MINUTES);
+
+        return userDTO;
+    }
+
+    @Override
+    @SneakyThrows
+    public void deleteUser(Long id) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new UserNotFoundException("用户不存在: " + id);
+        }
+
+        userMapper.deleteById(id);
+        redisTemplate.delete("user:" + id);
+
+        log.info("Deleted user: {}", id);
+    }
+}
+
+// 基础实体类
+@Data
+public abstract class BaseEntity {
+
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
+
+    @TableField(fill = FieldFill.INSERT)
+    @Builder.Default
+    private LocalDateTime createTime = LocalDateTime.now();
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    @TableField(fill = FieldFill.INSERT)
+    @TableField(value = "create_by")
+    private String createBy;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "update_by")
+    private String updateBy;
+}
+```
+
+### 4. 测试配置
 
 #### JUnit 5 配置
 创建测试配置：
@@ -409,14 +619,24 @@ logging:
 // src/test/resources/application-test.yml
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     username: sa
     password:
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+
+# MyBatis-Plus 测试配置
+mybatis-plus:
+  configuration:
+    # 开启驼峰转换
+    map-underscore-to-camel-case: true
+    # 打印sql，便于测试
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # H2 不支持自增，使用 ASSIGN_ID
+      id-type: ASSIGN_ID
+
+spring:
   redis:
     host: localhost
     port: 6379
@@ -903,31 +1123,35 @@ public class User extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    @Column(name = "username", unique = true, nullable = false, length = 50)
+    @TableField("username")
+    @NotBlank(message = "用户名不能为空")
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false, length = 100)
+    @TableField("email")
+    @Email(message = "邮箱格式不正确")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @TableField("password")
+    @NotBlank(message = "密码不能为空")
     private String password;
 
-    @Column(name = "first_name", length = 50)
+    @TableField("first_name")
     private String firstName;
 
-    @Column(name = "last_name", length = 50)
+    @TableField("last_name")
     private String lastName;
 
-    @Column(name = "phone", length = 20)
+    @TableField("phone")
     private String phone;
 
-    @Column(name = "avatar", length = 255)
+    @TableField("avatar")
     private String avatar;
 
-    @Column(name = "status", nullable = false)
+    @TableField("status")
+    @NotNull(message = "状态不能为空")
     private UserStatus status = UserStatus.ACTIVE;
 
-    @Column(name = "deleted")
+    @TableField("deleted")
     private LocalDateTime deleted;
 
     // 逻辑删除注解
@@ -1117,7 +1341,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
 ### 数据库优化
 - 使用连接池优化数据库连接
-- 合理配置 JPA 二级缓存
+- 合理配置 MyBatis-Plus 二级缓存
 - 使用数据库索引优化查询性能
 - 避免N+1查询问题
 
