@@ -5,7 +5,7 @@
 
 set -e
 
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-boilerplate}"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java}"
 
 echo "🔍 Starting Spring Boot enterprise quality gate checks..."
 

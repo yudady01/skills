@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# AI Coding Boilerplate - Documentation Validator Script
-# 验证项目文档完整性和一致性
+# AI Coding Java - Documentation Validator Script
+# 验证 Java 微服务项目文档完整性和一致性
 
 set -e
 
-PLUGIN_ROOT="/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-boilerplate"
+PLUGIN_ROOT="/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java"
 
 echo "📚 Starting documentation validation..."
 

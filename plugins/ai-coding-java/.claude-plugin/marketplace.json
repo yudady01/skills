@@ -1,20 +1,20 @@
 {
-  "name": "ai-coding-boilerplate",
+  "name": "ai-coding-java",
   "version": "2.7.0",
   "description": "Claude Code 专用的 Spring Boot 2.7 + Dubbo 企业级微服务项目模板插件，提供完整的 AI 驱动分布式系统开发流程",
   "author": {
     "name": "Spring Boot + Dubbo AI Coding Team",
     "email": "dubbo-microservice-support@example.com"
   },
-  "homepage": "https://github.com/shinpr/ai-coding-project-boilerplate",
-  "repository": "https://github.com/shinpr/ai-coding-project-boilerplate",
+  "homepage": "https://github.com/shinpr/ai-coding-java",
+  "repository": "https://github.com/shinpr/ai-coding-java",
   "license": "MIT",
   "keywords": [
+    "java",
     "spring-boot",
     "dubbo",
     "microservices",
     "distributed-system",
-    "java",
     "enterprise",
     "boilerplate",
     "claude-code",

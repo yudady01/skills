@@ -1,11 +1,11 @@
 ---
-description: 注入项目上下文配置，建立开发环境和规则标准
+description: 注入 Spring Boot + Dubbo 微服务项目上下文配置，建立企业级开发环境和规则标准
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ---
 
-# 项目注入命令
+# Spring Boot + Dubbo 微服务项目注入命令
 
-这个命令用于建立项目上下文，配置开发环境，并设置专用的开发规则和标准。
+这个命令用于建立 Spring Boot + Dubbo 微服务项目上下文，配置企业级开发环境，并设置专用的开发规则和标准。
 
 ## 配置流程
 
@@ -13,116 +13,172 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 **当前项目评估**：`$ARGUMENTS`
 
-分析项目的关键特征：
-- **项目类型** - 应用类型（web、api、library等）
-- **技术栈** - 主要技术和框架
+分析微服务项目的关键特征：
+- **微服务类型** - 微服务领域（用户服务、订单服务、支付服务等）
+- **技术栈** - Spring Boot + Dubbo 技术栈
 - **团队规模** - 开发团队大小
 - **业务领域** - 项目所属业务领域
-- **质量标准** - 代码质量要求
-- **部署环境** - 目标部署环境
+- **质量标准** - 企业级代码质量要求
+- **部署环境** - 分布式部署环境
 
 ### 2. 环境配置
 
-**项目上下文配置**：
+**Spring Boot + Dubbo 微服务项目上下文配置**：
 
-#### 技术栈配置
-```typescript
-// 项目技术栈定义
-interface TechStack {
-  language: 'TypeScript' | 'JavaScript' | 'Python';
-  framework?: 'React' | 'Express' | 'Fastify' | 'Next.js';
-  database?: 'PostgreSQL' | 'MySQL' | 'MongoDB' | 'Redis';
-  testing?: 'Vitest' | 'Jest' | 'Mocha';
-  buildTools?: 'Vite' | 'Webpack' | 'Rollup';
-  deployment?: 'Docker' | 'Serverless' | 'Traditional';
+#### 微服务技术栈配置
+```java
+// 微服务技术栈定义
+public class MicroserviceTechStack {
+    public enum Language {
+        JAVA_11
+    }
+
+    public enum Framework {
+        SPRING_BOOT_2_7
+    }
+
+    public enum MicroserviceFramework {
+        APACHE_DUBBO_3_2
+    }
+
+    public enum Database {
+        MYSQL_8_0, MONGODB, REDIS
+    }
+
+    public enum MessageQueue {
+        ACTIVEMQ, RABBITMQ, KAFKA
+    }
+
+    public enum Registry {
+        ZOOKEEPER, NACOS
+    }
 }
 ```
 
 #### 开发规则配置
-```typescript
-// 开发规则标准
-interface DevelopmentRules {
-  codeStyle: 'Biome' | 'ESLint + Prettier';
-  typeChecking: 'strict' | 'standard' | 'loose';
-  testCoverage: number; // 目标覆盖率百分比
-  commitStyle: 'conventional' | 'custom';
-  branchStrategy: 'GitFlow' | 'GitHub Flow' | 'trunk';
-};
-```
+```java
+// 企业级开发规则标准
+public class EnterpriseDevelopmentRules {
+    public enum CodeStyle {
+        CHECKSTYLE, GOOGLE_STYLE, ALI_STYLE
+    }
+
+    public enum QualityGate {
+        STRICT, STANDARD, BASIC
+    }
+
+    public enum TestCoverage {
+        CRITICAL(90), HIGH(80), STANDARD(70), BASIC(60);
+
+        private final int threshold;
+        TestCoverage(int threshold) {
+            this.threshold = threshold;
+        }
+    }
+
+    public enum DeploymentStrategy {
+        DOCKER, KUBERNETES, TRADITIONAL
+    }
+}
 
 ### 3. 文件生成
 
-**配置文件生成**：
+**微服务配置文件生成**：
 
 #### CLAUDE.md 配置
 ```markdown
-# 项目特定配置
+# Spring Boot + Dubbo 微服务项目特定配置
 
 ## 项目信息
-- 名称：${projectName}
-- 类型：${projectType}
-- 技术栈：${techStack}
+- 服务名称：${serviceName}
+- 微服务类型：${microserviceType}
+- 技术栈：Spring Boot ${springBootVersion} + Apache Dubbo ${dubboVersion}
 
 ## 开发规则
 - 编码标准：${codingStandards}
-- 测试要求：${testingRequirements}
-- 部署流程：${deploymentProcess}
+- 质量门禁：${qualityGate}
+- 部署策略：${deploymentStrategy}
 ```
 
-#### TypeScript 配置优化
-```json
-{
-  "compilerOptions": {
-    "target": "${targetES}",
-    "module": "${moduleSystem}",
-    "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-}
+#### Maven 配置优化 (pom.xml)
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${companyGroup}</groupId>
+    <artifactId>${serviceName}</artifactId>
+    <version>${serviceVersion}</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>11</java.version>
+        <spring-boot.version>${springBootVersion}</spring-boot.version>
+        <dubbo.version>${dubboVersion}</dubbo.version>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+    </properties>
+
+    <dependencies>
+        <!-- Spring Boot Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Apache Dubbo -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo.version}</version>
+        </dependency>
+    </dependencies>
+</project>
 ```
 
-#### 测试配置
-```typescript
-// vitest.config.ts
-export default defineConfig({
-  test: {
-    environment: 'node',
-    coverage: {
-      thresholds: {
-        global: {
-          branches: ${testCoverageThreshold},
-          functions: ${testCoverageThreshold},
-          lines: ${testCoverageThreshold}
-        }
-      }
-    }
-  }
-});
+#### Spring Boot 配置
+```yaml
+# application.yml
+spring:
+  application:
+    name: ${serviceName}
+  profiles:
+    active: ${environment}
+
+server:
+  port: ${servicePort}
+
+dubbo:
+  application:
+    name: ${serviceName}
+  registry:
+    address: zookeeper://${registryHost}:2181
+  protocol:
+    name: dubbo
+    port: ${dubboPort}
 ```
 
-### 4. 脚本配置
+### 4. 质量门禁配置
 
-**package.json 脚本优化**：
+**Maven 质量检查配置**：
 
-```json
-{
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc && tsc-alias",
-    "type-check": "tsc --noEmit",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "lint": "biome check src",
-    "lint:fix": "biome check --write src",
-    "format": "biome format --write src",
-    "check:all": "npm run type-check && npm run lint && npm test"
-  }
-}
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <version>3.2.0</version>
+</plugin>
+
+<plugin>
+    <groupId>com.github.spotbugs</groupId>
+    <artifactId>spotbugs-maven-plugin</artifactId>
+    <version>4.7.3.0</version>
+</plugin>
+
+<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.8</version>
+</plugin>
 ```
 
 ### 5. 文档模板生成

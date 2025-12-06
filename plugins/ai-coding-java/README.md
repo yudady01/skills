@@ -1,11 +1,11 @@
-# Spring Boot 2.7 + Dubbo AI Coding Boilerplate Plugin
+# Java AI Coding Plugin - Spring Boot 2.7 + Dubbo
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple)](https://claude.ai/code)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Apache Dubbo](https://img.shields.io/badge/Apache%20Dubbo-3.2.14-blue.svg)](https://dubbo.apache.org/)
 
-为 Claude Code 优化的 Spring Boot 2.7 + Dubbo 企业级微服务项目模板插件，专为企业级分布式系统开发设计，提供完整的 AI 驱动微服务架构开发流程。
+为 Claude Code 优化的 Spring Boot 2.7 + Dubbo 企业级 Java 微服务项目模板插件，专为企业级分布式系统开发设计，提供完整的 AI 驱动 Java 微服务架构开发流程。
 
 **核心特性**:
 - 🏗️ 微服务架构 (Spring Boot + Dubbo)
@@ -78,10 +78,10 @@
 
 ```bash
 # 方式1: 从 Marketplace 安装（推荐）
-claude --install ai-coding-boilerplate
+claude --install ai-coding-java
 
 # 方式2: 本地安装
-claude --plugin-dir /path/to/ai-coding-boilerplate
+claude --plugin-dir /path/to/ai-coding-java
 ```
 
 ## 🚀 快速开发
@@ -151,7 +151,7 @@ claude
 
 ## 🔧 配置
 
-插件支持个性化配置，创建 `.claude/ai-coding-boilerplate.local.md` 文件：
+插件支持个性化配置，创建 `.claude/ai-coding-java.local.md` 文件：
 
 ```markdown
 ---
@@ -159,17 +159,17 @@ projectName: "企业级微服务项目"
 projectType: "enterprise-microservice"
 springBootVersion: "2.7.x"
 javaVersion: "11"
-techStack: ["Spring Boot", "Spring Cloud", "Spring Security", "Spring Data JPA", "MySQL", "Redis", "Docker"]
+techStack: ["Spring Boot", "Apache Dubbo", "MyBatis-Plus", "MySQL", "Redis", "MongoDB", "ActiveMQ"]
 buildTool: "maven"
 teamSize: 5
 architecture: "microservices"
 database: "mysql"
 cache: "redis"
-messageQueue: "rabbitmq"
+messageQueue: "activemq"
 containerPlatform: "docker"
 ---
 
-企业级 Spring Boot 项目特定配置信息
+企业级 Java 微服务项目特定配置信息
 ```
 
 ## 🌍 语言支持
