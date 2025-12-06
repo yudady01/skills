@@ -7,7 +7,7 @@
 这是一个 Claude Code 市场，包含五个针对不同开发领域的专业技能/插件：
 
 - **yudady-skills**: 一个包含翻译工具、SQL 脚本生成器、支付渠道集成开发技能、Chrome DevTools 调试和技能列表管理工具的市场
-- **位置**: `/Users/tommy/Documents/work.nosync/skills/`
+- **位置**: `./` (项目根目录)
 - **结构**: 市场格式，包含 `.claude-plugin/marketplace.json` 和 `plugins/` 目录中的独立插件
 
 ## 插件架构

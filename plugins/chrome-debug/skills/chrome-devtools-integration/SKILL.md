@@ -117,10 +117,10 @@ Use the validation script to diagnose issues:
 
 ```bash
 # Run comprehensive diagnostics
-python3 /Users/tommy/Documents/work.nosync/skills/plugins/chrome-debug/skills/chrome-devtools-integration/scripts/diagnose-mcp.py
+python3 ./plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mcp.py
 
-# Quick connection test
-python3 /Users/tommy/Documents/work.nosync/skills/plugins/chrome-debug/skills/chrome-devtools-integration/scripts/test-connection.py
+# Quick validation check
+./plugins/chrome-debug/scripts/validate-chrome.sh
 ```
 
 ## Performance Analysis Setup
