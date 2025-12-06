@@ -40,9 +40,9 @@
       "category": "debugging"
     },
     {
-      "name": "ai-coding-boilerplate",
-      "description": "Claude Code 专用的 TypeScript 项目模板插件，提供完整的 AI 驱动开发流程",
-      "source": "./plugins/ai-coding-boilerplate",
+      "name": "ai-coding-java",
+      "description": "Claude Code 专用的 Spring Boot 2.7 + Dubbo 企业级微服务项目模板插件，提供完整的 AI 驱动分布式系统开发流程",
+      "source": "./plugins/ai-coding-java",
       "category": "development"
     }
   ]
