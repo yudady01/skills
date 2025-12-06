@@ -64,10 +64,10 @@ version: 1.0.0
 ## 质量保证策略
 
 ### 自动化检查
-- 类型检查（TypeScript 严格模式）
-- 代码格式化（Biome）
-- 静态分析（ ESLint 规则）
-- 测试覆盖率（Vitest）
+- 类型检查（Java 编译器）
+- 代码格式化（Checkstyle）
+- 静态分析（PMD 规则）
+- 测试覆盖率（JUnit + JaCoCo）
 
 ### 代码审查要点
 - 功能正确性

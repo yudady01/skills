@@ -53,12 +53,12 @@ check_file_exists "README.md" || ((missing_docs++))
 check_file_exists "CHANGELOG.md" || ((missing_docs++))
 
 # API 文档检查
-if [ -d "src" ] && find src -name "*.ts" | grep -q "api\|route\|controller"; then
+if [ -d "src" ] && find src -name "*.java" | grep -q "api\|controller\|service"; then
     check_file_exists "docs/api/README.md" || ((missing_docs++))
 fi
 
 # 配置文档检查
-if [ -f "package.json" ] && grep -q "scripts" package.json; then
+if [ -f "pom.xml" ] && grep -q "build" pom.xml; then
     check_file_exists "docs/development.md" || ((missing_docs++))
 fi
 
@@ -71,23 +71,23 @@ fi
 # 3. 检查代码注释
 echo "💬 Checking code documentation..."
 if [ -d "src" ]; then
-    ts_files=$(find src -name "*.ts" | wc -l)
-    if [ "$ts_files" -gt 0 ]; then
-        echo "Found $ts_files TypeScript files"
-        # 简单检查是否有 JSDoc 注释
-        documented_files=$(grep -r "/\*\*" src --include="*.ts" | wc -l)
+    java_files=$(find src -name "*.java" | wc -l)
+    if [ "$java_files" -gt 0 ]; then
+        echo "Found $java_files Java files"
+        # 简单检查是否有 Javadoc 注释
+        documented_files=$(grep -r "/\*\*" src --include="*.java" | wc -l)
         if [ "$documented_files" -gt 0 ]; then
-            echo -e "${GREEN}✓ Found JSDoc comments in code${NC}"
+            echo -e "${GREEN}✓ Found Javadoc comments in code${NC}"
         else
-            echo -e "${YELLOW}⚠ No JSDoc comments found in TypeScript files${NC}"
+            echo -e "${YELLOW}⚠ No Javadoc comments found in Java files${NC}"
         fi
     fi
 fi
 
 # 4. 检查 API 文档
 echo "🔌 Checking API documentation..."
-if [ -d "src/routes" ] || [ -d "src/controllers" ] || [ -d "src/api" ]; then
-    api_files=$(find src -name "*.ts" | grep -E "(route|controller|api)" | wc -l)
+if [ -d "src/main/java/controller" ] || [ -d "src/main/java/service" ] || [ -d "src/main/java/api" ]; then
+    api_files=$(find src -name "*.java" | grep -E "(Controller|Service|Api)" | wc -l)
     if [ "$api_files" -gt 0 ]; then
         echo "Found $api_files API-related files"
         if check_file_exists "docs/api/README.md"; then
@@ -98,12 +98,12 @@ fi
 
 # 5. 检查文档一致性
 echo "🔄 Checking documentation consistency..."
-if check_file_exists "README.md" && check_file_exists "package.json"; then
-    # 检查 README 中的脚本名称是否与 package.json 一致
-    if grep -q "npm run" README.md; then
-        echo -e "${GREEN}✓ README contains npm script references${NC}"
+if check_file_exists "README.md" && check_file_exists "pom.xml"; then
+    # 检查 README 中的脚本名称是否与 pom.xml 一致
+    if grep -q "mvn" README.md; then
+        echo -e "${GREEN}✓ README contains Maven script references${NC}"
     else
-        echo -e "${YELLOW}⚠ README doesn't contain npm script usage examples${NC}"
+        echo -e "${YELLOW}⚠ README doesn't contain Maven usage examples${NC}"
     fi
 fi
 

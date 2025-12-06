@@ -10,7 +10,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ## 质量检查项目
 
 ### 1. 类型安全
-- TypeScript 严格模式检查
+- Java 编译检查
 - 类型定义完整性
 - 接口契约验证
 

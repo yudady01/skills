@@ -233,7 +233,7 @@ ${testingRequirements}
 /project-inject --type web-app
 
 # 指定技术栈
-/project-inject --stack typescript,react,nodejs
+/project-inject --stack java,spring-boot,dubbo
 
 # 指定团队规模
 /project-inject --team enterprise
@@ -243,7 +243,7 @@ ${testingRequirements}
 
 ```bash
 # 完整配置
-/project-inject --name "我的项目" --type api-service --stack typescript,express,postgresql --coverage 80
+/project-inject --name "我的项目" --type api-service --stack java,spring-boot,dubbo,mysql --coverage 80
 
 # 自定义配置文件
 /project-inject --config ./custom-config.json
@@ -262,16 +262,16 @@ ${testingRequirements}
 - **mobile-app** - 移动应用
 
 ### 技术栈选项
-- **typescript** - TypeScript 语言
-- **javascript** - JavaScript 语言
-- **react** - React 框架
-- **vue** - Vue.js 框架
-- **express** - Express.js 服务器
-- **fastify** - Fastify 服务器
+- **java** - Java 语言
+- **spring-boot** - Spring Boot 框架
+- **dubbo** - Apache Dubbo 微服务框架
+- **mybatis-plus** - MyBatis-Plus ORM框架
 - **postgresql** - PostgreSQL 数据库
 - **mysql** - MySQL 数据库
 - **mongodb** - MongoDB 数据库
 - **redis** - Redis 缓存
+- **activemq** - ActiveMQ 消息队列
+- **zookeeper** - Zookeeper 注册中心
 - **docker** - Docker 容器化
 
 ### 团队规模选项
@@ -293,10 +293,10 @@ ${testingRequirements}
 
 ### 2. 开发工具配置
 ```
-├── tsconfig.json         # TypeScript 配置
-├── vitest.config.ts      # 测试配置
-├── biome.json           # 代码质量工具配置
-└── package.json         # 项目脚本优化
+├── pom.xml               # Maven 配置
+├── application.yml       # Spring Boot 配置
+├── dubbo.properties      # Dubbo 配置
+└── checkstyle.xml        # 代码质量工具配置
 ```
 
 ### 3. 文档文件
@@ -318,88 +318,90 @@ docs/
 ## 交互式配置
 
 ### 配置向导
-```typescript
+```java
 // 交互式配置流程
-const configurationWizard = {
-  projectInfo: {
-    name: "项目名称是什么？",
-    description: "项目的主要功能是什么？",
-    type: "这是什么类型的项目？"
-  },
-  techStack: {
-    language: "使用什么编程语言？",
-    framework: "使用什么框架？",
-    database: "使用什么数据库？",
-    deployment: "如何部署应用？"
-  },
-  standards: {
-    testCoverage: "测试覆盖率目标是多少？",
-    codeStyle: "使用什么代码格式化工具？",
-    commitStyle: "使用什么提交信息格式？"
-  }
-};
+public class ConfigurationWizard {
+    public static class ProjectInfo {
+        public String name = "项目名称是什么？";
+        public String description = "项目的主要功能是什么？";
+        public String type = "这是什么类型的项目？";
+    }
+
+    public static class TechStack {
+        public String language = "使用什么编程语言？";
+        public String framework = "使用什么框架？";
+        public String database = "使用什么数据库？";
+        public String deployment = "如何部署应用？";
+    }
+
+    public static class Standards {
+        public String testCoverage = "测试覆盖率目标是多少？";
+        public String codeStyle = "使用什么代码格式化工具？";
+        public String commitStyle = "使用什么提交信息格式？";
+    }
+}
 ```
 
 ### 配置验证
 ```bash
 # 验证配置文件
-npm run validate:config
+mvn validate
 
 # 检查配置一致性
-npm run check:consistency
+mvn checkstyle:check
 
 # 测试配置效果
-npm run test:config
+mvn test
 ```
 
 ## 自定义配置
 
 ### 配置文件模板
-```typescript
-// custom-config.json
-{
-  "project": {
-    "name": "自定义项目名称",
-    "type": "web-app",
-    "description": "项目描述"
-  },
-  "techStack": {
-    "language": "TypeScript",
-    "framework": "React",
-    "database": "PostgreSQL",
-    "deployment": "Docker"
-  },
-  "standards": {
-    "testCoverage": 85,
-    "codeStyle": "Biome",
-    "typeChecking": "strict"
-  },
-  "team": {
-    "size": "medium",
-    "workflow": "GitFlow",
-    "reviewPolicy": "require-review"
-  }
-}
+```yaml
+# custom-config.yml
+project:
+  name: "自定义项目名称"
+  type: "microservice"
+  description: "项目描述"
+
+techStack:
+  language: "Java"
+  framework: "Spring Boot"
+  microservice: "Apache Dubbo"
+  database: "MySQL"
+  deployment: "Docker"
+
+standards:
+  testCoverage: 85
+  codeStyle: "Checkstyle"
+  buildTool: "Maven"
+
+team:
+  size: "medium"
+  workflow: "GitFlow"
+  reviewPolicy: "require-review"
 ```
 
 ### 配置扩展
-```typescript
-// 扩展配置接口
-interface ExtendedConfig {
-  security: {
-    auditFrequency: 'weekly' | 'monthly' | 'quarterly';
-    vulnerabilityThreshold: 'moderate' | 'high' | 'critical';
-  };
-  performance: {
-    monitoring: boolean;
-    benchmarking: boolean;
-    alerting: boolean;
-  };
-  documentation: {
-    apiDocs: boolean;
-    userGuide: boolean;
-    developerGuide: boolean;
-  };
+```java
+// 扩展配置类
+public class ExtendedConfig {
+    public static class Security {
+        public String auditFrequency; // weekly, monthly, quarterly
+        public String vulnerabilityThreshold; // moderate, high, critical
+    }
+
+    public static class Performance {
+        public boolean monitoring;
+        public boolean benchmarking;
+        public boolean alerting;
+    }
+
+    public static class Documentation {
+        public boolean apiDocs;
+        public boolean userGuide;
+        public boolean developerGuide;
+    }
 }
 ```
 
@@ -436,7 +438,7 @@ interface ExtendedConfig {
 ## 相关资源
 
 ### 参考文档
-- **`typescript-project-setup`** - TypeScript 配置指南
+- **`springboot-project-setup`** - Spring Boot 配置指南
 - **`quality-assurance`** - 质量保证策略
 
 ### 配置模板
@@ -445,28 +447,29 @@ interface ExtendedConfig {
 - **`examples/configs/library/`** - 库项目配置
 
 ### 工具集成
-- **`scripts/setup-config.js`** - 配置设置脚本
-- **`scripts/validate-config.js`** - 配置验证工具
+- **`scripts/setup-config.sh`** - 配置设置脚本
+- **`scripts/validate-config.sh`** - 配置验证工具
 
 ## 示例工作流
 
 ### 完整项目初始化
 ```bash
 # 创建新项目
-mkdir my-project
-cd my-project
+mkdir my-microservice
+cd my-microservice
 
-# 初始化项目
-npm init -y
+# 初始化 Maven 项目
+mvn archetype:generate -DgroupId=com.example -DartifactId=my-service
 
 # 运行项目注入
-/project-inject --name "我的 Web 应用" --type web-app --stack typescript,react,postgresql
+/project-inject --name "我的微服务" --type microservice --stack java,spring-boot,dubbo,mysql
 
 # 验证配置
-npm run check:all
+mvn validate
+mvn checkstyle:check
 
 # 开始开发
-npm run dev
+mvn spring-boot:run
 ```
 
 通过项目注入命令，您可以快速建立标准化的开发环境，确保团队成员使用一致的配置和开发标准。

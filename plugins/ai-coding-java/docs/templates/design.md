@@ -92,14 +92,15 @@ CREATE TABLE orders (
 ```
 
 ### 数据访问层
-```typescript
+```java
 // Repository 模式示例
-interface UserRepository {
-    create(user: CreateUserDto): Promise<User>;
-    findById(id: string): Promise<User | null>;
-    findByEmail(email: string): Promise<User | null>;
-    update(id: string, data: UpdateUserDto): Promise<User>;
-    delete(id: string): Promise<void>;
+@Repository
+public interface UserRepository {
+    User create(CreateUserDto user);
+    User findById(Long id);
+    User findByEmail(String email);
+    User update(Long id, UpdateUserDto data);
+    void delete(Long id);
 }
 ```
 
@@ -108,56 +109,44 @@ interface UserRepository {
 ### RESTful API 设计
 
 #### 认证相关
-```typescript
-// 用户注册
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "name": "用户姓名",
-  "email": "user@example.com",
-  "password": "password123"
+```java
+// 用户注册 DTO
+public class CreateUserRequest {
+    private String name;
+    private String email;
+    private String password;
+    // getters and setters
 }
 
-// 响应
-{
-  "success": true,
-  "data": {
-    "user": {
-      "id": "uuid",
-      "name": "用户姓名",
-      "email": "user@example.com"
-    },
-    "token": "jwt_token"
-  }
+// 用户注册响应 DTO
+public class AuthResponse {
+    private UserDTO user;
+    private String token;
+    // getters and setters
 }
 ```
 
 #### 用户管理
-```typescript
-// 获取用户信息
-GET /api/users/{id}
-Authorization: Bearer {token}
+```java
+// 用户控制器
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
 
-// 响应
-{
-  "success": true,
-  "data": {
-    "id": "uuid",
-    "name": "用户姓名",
-    "email": "user@example.com",
-    "created_at": "2023-01-01T00:00:00Z"
-  }
-}
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserDTO>> getUser(
+        @PathVariable Long id,
+        @RequestHeader("Authorization") String token) {
+        // 实现获取用户逻辑
+    }
 
-// 更新用户信息
-PUT /api/users/{id}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "name": "新姓名",
-  "email": "new@example.com"
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserDTO>> updateUser(
+        @PathVariable Long id,
+        @RequestBody UpdateUserRequest request,
+        @RequestHeader("Authorization") String token) {
+        // 实现更新用户逻辑
+    }
 }
 ```
 
@@ -170,31 +159,44 @@ Content-Type: application/json
 ## 安全设计
 
 ### 认证和授权
-```typescript
-// JWT Token 结构
-interface JWTPayload {
-    userId: string;
-    email: string;
-    role: 'admin' | 'user';
-    exp: number;
-    iat: number;
+```java
+// JWT Token 实体
+public class JWTPayload {
+    private Long userId;
+    private String email;
+    private String role;
+    private Long exp;
+    private Long iat;
+    // getters and setters
 }
 
-// 权限控制中间件
-const requireAuth = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) {
-        return res.status(401).json({ error: '未提供认证令牌' });
-    }
+// 权限控制拦截器
+@Component
+public class AuthInterceptor implements HandlerInterceptor {
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (error) {
-        return res.status(401).json({ error: '无效的认证令牌' });
+    @Override
+    public boolean preHandle(HttpServletRequest request,
+                           HttpServletResponse response,
+                           Object handler) throws Exception {
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            response.sendError(401, "未提供认证令牌");
+            return false;
+        String cleanToken = token.replace("Bearer ", "");
+
+        try {
+            // 验证 JWT Token
+            Jwts.parserBuilder()
+                .setSigningKey(jwtSecret)
+                .build()
+                .parseClaimsJws(cleanToken);
+            return true;
+        } catch (JwtException e) {
+            response.sendError(401, "无效的认证令牌");
+            return false;
+        }
     }
-};
+}
 ```
 
 ### 数据安全
@@ -206,17 +208,31 @@ const requireAuth = (req: Request, res: Response, next: NextFunction) => {
 ## 性能设计
 
 ### 缓存策略
-```typescript
-// Redis 缓存示例
-interface CacheService {
+```java
+// Redis 缓存服务
+@Service
+public class CacheService {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     // 缓存用户数据（5分钟）
-    cacheUser(userId: string, userData: User): Promise<void>;
+    public void cacheUser(Long userId, User userData) {
+        String key = "user:" + userId;
+        redisTemplate.opsForValue().set(key, userData, 5, TimeUnit.MINUTES);
+    }
 
     // 获取缓存用户
-    getCachedUser(userId: string): Promise<User | null>;
+    @SuppressWarnings("unchecked")
+    public User getCachedUser(Long userId) {
+        String key = "user:" + userId;
+        return (User) redisTemplate.opsForValue().get(key);
+    }
 
     // 缓存查询结果（1小时）
-    cacheQueryResult(key: string, result: any): Promise<void>;
+    public void cacheQueryResult(String key, Object result) {
+        redisTemplate.opsForValue().set(key, result, 1, TimeUnit.HOURS);
+    }
 }
 ```
 
@@ -229,56 +245,72 @@ interface CacheService {
 ## 错误处理
 
 ### 错误分类
-```typescript
-enum ErrorCode {
-    VALIDATION_ERROR = 'VALIDATION_ERROR',
-    AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR',
-    AUTHORIZATION_ERROR = 'AUTHORIZATION_ERROR',
-    NOT_FOUND = 'NOT_FOUND',
-    INTERNAL_ERROR = 'INTERNAL_ERROR',
-    EXTERNAL_SERVICE_ERROR = 'EXTERNAL_SERVICE_ERROR'
+```java
+// 错误代码枚举
+public enum ErrorCode {
+    VALIDATION_ERROR("VALIDATION_ERROR"),
+    AUTHENTICATION_ERROR("AUTHENTICATION_ERROR"),
+    AUTHORIZATION_ERROR("AUTHORIZATION_ERROR"),
+    NOT_FOUND("NOT_FOUND"),
+    INTERNAL_ERROR("INTERNAL_ERROR"),
+    EXTERNAL_SERVICE_ERROR("EXTERNAL_SERVICE_ERROR");
+
+    private final String code;
+
+    ErrorCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }
 
-interface ErrorResponse {
-    success: false;
-    error: {
-        code: ErrorCode;
-        message: string;
-        details?: any;
-        timestamp: string;
-        requestId: string;
-    };
+// 错误响应 DTO
+public class ErrorResponse {
+    private boolean success = false;
+    private ErrorDetail error;
+
+    public static class ErrorDetail {
+        private ErrorCode code;
+        private String message;
+        private Object details;
+        private String timestamp;
+        private String requestId;
+        // getters and setters
+    }
+    // getters and setters
 }
 ```
 
 ### 全局错误处理
-```typescript
-const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
-    const requestId = req.headers['x-request-id'] || generateRequestId();
+```java
+// 全局异常处理器
+@ControllerAdvice
+public class GlobalExceptionHandler {
 
-    // 记录错误日志
-    logger.error({
-        error: error.message,
-        stack: error.stack,
-        requestId,
-        userId: req.user?.id,
-        path: req.path,
-        method: req.method
-    });
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(
+            Exception ex, HttpServletRequest request) {
 
-    // 返回标准化错误响应
-    const response: ErrorResponse = {
-        success: false,
-        error: {
-            code: ErrorCode.INTERNAL_ERROR,
-            message: '服务器内部错误',
-            timestamp: new Date().toISOString(),
-            requestId
-        }
-    };
+        String requestId = request.getHeader("X-Request-ID");
 
-    res.status(500).json(response);
-};
+        // 记录错误日志
+        logger.error("Error occurred - RequestId: {}, Path: {}, Method: {}, Error: {}",
+                requestId, request.getRequestURI(), request.getMethod(), ex.getMessage(), ex);
+
+        // 构建错误响应
+        ErrorResponse response = new ErrorResponse();
+        ErrorResponse.ErrorDetail error = new ErrorResponse.ErrorDetail();
+        error.setCode(ErrorCode.INTERNAL_ERROR);
+        error.setMessage("服务器内部错误");
+        error.setTimestamp(Instant.now().toString());
+        error.setRequestId(requestId);
+        response.setError(error);
+
+        return ResponseEntity.status(500).body(response);
+    }
+}
 ```
 
 ## 测试策略
@@ -368,19 +400,41 @@ jobs:
 - **业务监控**：用户活跃度、功能使用情况
 
 ### 日志策略
-```typescript
-// 结构化日志示例
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' })
-    ]
-});
+```java
+// 结构化日志配置
+@Configuration
+public class LoggingConfig {
+
+    @Bean
+    public Logger structuredLogger() {
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        // 创建 JSON 格式的 appender
+        JsonEncoder<ILoggingEvent> jsonEncoder = new JsonEncoder<>();
+        jsonEncoder.start();
+
+        RollingFileAppender<ILoggingEvent> errorFileAppender = new RollingFileAppender<>();
+        errorFileAppender.setName("ERROR_FILE");
+        errorFileAppender.setFile("logs/error.log");
+        errorFileAppender.setEncoder(jsonEncoder);
+        errorFileAppender.setFilter(new ThresholdFilter(Level.ERROR));
+        errorFileAppender.start();
+
+        RollingFileAppender<ILoggingEvent> combinedFileAppender = new RollingFileAppender<>();
+        combinedFileAppender.setName("COMBINED_FILE");
+        combinedFileAppender.setFile("logs/combined.log");
+        combinedFileAppender.setEncoder(jsonEncoder);
+        combinedFileAppender.start();
+
+        // 配置根 logger
+        ch.qos.logback.classic.Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);
+        rootLogger.addAppender(errorFileAppender);
+        rootLogger.addAppender(combinedFileAppender);
+        rootLogger.setLevel(Level.INFO);
+
+        return LoggerFactory.getLogger("structured-logger");
+    }
+}
 ```
 
 ## 扩展性考虑

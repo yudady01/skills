@@ -24,75 +24,81 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 **基于任务类型选择执行策略**：
 
 #### 修复类任务
-```typescript
+```java
 // Bug 修复流程
-const fixTask = {
-  analysis: {
-    reproduce: "重现问题的步骤",
-    locate: "定位问题代码位置",
-    understand: "理解根本原因"
-  },
-  solution: {
-    design: "设计修复方案",
-    implement: "实施代码修复",
-    test: "验证修复效果"
-  },
-  validation: {
-    regression: "回归测试",
-    verify: "确认无副作用",
-    document: "更新相关文档"
-  }
-};
+public class FixTask {
+    public static class Analysis {
+        public String reproduce = "重现问题的步骤";
+        public String locate = "定位问题代码位置";
+        public String understand = "理解根本原因";
+    }
+
+    public static class Solution {
+        public String design = "设计修复方案";
+        public String implement = "实施代码修复";
+        public String test = "验证修复效果";
+    }
+
+    public static class Validation {
+        public String regression = "回归测试";
+        public String verify = "确认无副作用";
+        public String document = "更新相关文档";
+    }
+}
 ```
 
 #### 功能类任务
-```typescript
+```java
 // 小功能实现流程
-const featureTask = {
-  design: {
-    understand: "理解功能需求",
-    interface: "设计接口",
-    algorithm: "设计算法逻辑"
-  },
-  implement: {
-    core: "实现核心逻辑",
-    error: "添加错误处理",
-    test: "编写单元测试"
-  },
-  integrate: {
-    connect: "集成到现有系统",
-    config: "更新配置",
-    document: "更新文档"
-  }
-};
+public class FeatureTask {
+    public static class Design {
+        public String understand = "理解功能需求";
+        public String interfaceDesign = "设计接口";
+        public String algorithm = "设计算法逻辑";
+    }
+
+    public static class Implement {
+        public String core = "实现核心逻辑";
+        public String error = "添加错误处理";
+        public String test = "编写单元测试";
+    }
+
+    public static class Integrate {
+        public String connect = "集成到现有系统";
+        public String config = "更新配置";
+        public String document = "更新文档";
+    }
+}
 ```
 
 #### 重构类任务
-```typescript
+```java
 // 代码重构流程
-const refactorTask = {
-  analyze: {
-    current: "分析当前实现",
-    issues: "识别问题点",
-    goals: "确定重构目标"
-  },
-  redesign: {
-    structure: "重新设计结构",
-    pattern: "应用设计模式",
-    optimize: "性能优化"
-  },
-  implement: {
-    refactor: "重构代码",
-    test: "验证功能一致性",
-    performance: "性能基准测试"
-  }
-};
+public class RefactorTask {
+    public static class Analyze {
+        public String current = "分析当前实现";
+        public String issues = "识别问题点";
+        public String goals = "确定重构目标";
+    }
+
+    public static class Redesign {
+        public String structure = "重新设计结构";
+        public String pattern = "应用设计模式";
+        public String optimize = "性能优化";
+    }
+
+    public static class Implement {
+        public String refactor = "重构代码";
+        public String test = "验证功能一致性";
+        public String performance = "性能基准测试";
+    }
+}
 ```
 
 ### 3. 质量保证
 
 **任务质量检查清单**：
-- [ ] **类型安全** - TypeScript 编译无错误
+- [ ] **类型安全** - Java 编译无错误
 - [ ] **功能正确** - 按需求正确实现
 - [ ] **边界处理** - 错误和异常情况处理
 - [ ] **性能合理** - 无性能回归
@@ -137,7 +143,7 @@ const implementation = {
   errorHandling: "添加 try-catch 和错误处理",
 
   // 类型定义
-  types: "定义必要的 TypeScript 类型",
+  types: "定义必要的 Java 类型",
 
   // 测试代码
   tests: "编写相应的测试用例"
@@ -185,7 +191,7 @@ const documentation = {
 /task "重构用户验证模块，提高可读性"
 
 # 配置更新
-/task "更新 TypeScript 配置以支持新的路径别名"
+/task "更新 Spring Boot 配置以支持新的模块"
 ```
 
 ### 高级用法
@@ -290,7 +296,7 @@ async function refactorCode(refactorSpec: RefactorSpec) {
 ## 质量标准
 
 ### 代码质量
-- **类型安全**：严格的 TypeScript 类型检查
+- **类型安全**：严格的 Java 类型检查
 - **错误处理**：完善的异常和错误情况处理
 - **性能**：不引入性能回归
 - **可读性**：清晰、易于理解的代码结构
@@ -362,7 +368,7 @@ async function refactorCode(refactorSpec: RefactorSpec) {
 - **`quality-assurance`** - 质量保证策略
 
 ### 相关技能
-- **`typescript-project-setup`** - TypeScript 配置
+- **`springboot-project-setup`** - Spring Boot 配置
 - **`ai-coding-best-practices`** - 开发最佳实践
 
 ### 相关命令
@@ -394,7 +400,7 @@ async function refactorCode(refactorSpec: RefactorSpec) {
 
 # 执行流程
 # 1. 数据库设计 - 添加 last_login_at 字段
-# 2. 模型更新 - 更新 TypeScript 接口
+# 2. 模型更新 - 更新 Java 实体类
 # 3. 服务层更新 - 修改用户服务逻辑
 # 4. API 更新 - 更新相关端点
 # 5. 测试编写 - 添加字段更新和查询测试
