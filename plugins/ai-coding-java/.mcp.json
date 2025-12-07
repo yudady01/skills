@@ -3,7 +3,7 @@
     "context7-doc-server": {
       "command": "python",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/skills/context7-document-server/scripts/context7_server.py"
+        "${CLAUDE_PLUGIN_ROOT}/skills/context7-document-server/scripts/mcp_server.py"
       ],
       "env": {
         "CONTEXT7_CONFIG_PATH": "${HOME}/.claude/context7.json",
