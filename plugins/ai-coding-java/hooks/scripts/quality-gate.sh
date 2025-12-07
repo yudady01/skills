@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Spring Boot Enterprise Quality Gate Script
-# 执行 Spring Boot 企业级代码质量检查的自动化脚本
+# Intelligent Spring Boot 2.7 + Dubbo 3 Enterprise Quality Gate Script
+# 执行Spring Boot 2.7 + Dubbo 3企业级智能代码质量检查的自动化脚本
 
 set -e
 
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
-echo "🔍 Starting Spring Boot enterprise quality gate checks..."
+echo "🤖 Starting Intelligent Spring Boot 2.7 + Dubbo 3 Enterprise Quality Gate checks..."
 
 # 颜色定义
 RED='\033[0;31m'
@@ -36,6 +36,195 @@ increment_counter() {
         PASSED_CHECKS=$((PASSED_CHECKS + 1))
     fi
 }
+
+# 智能预分析检查函数
+intelligent_pre_analysis() {
+    echo ""
+    echo "🧠 Intelligent Pre-Analysis Phase"
+    echo "=================================="
+
+    # 检查项目结构合理性
+    echo "📁 Analyzing project structure..."
+    increment_counter
+    if [ -d "src/main/java" ] && [ -d "src/test/java" ] && [ -d "src/main/resources" ]; then
+        echo -e "${GREEN}✓ Standard Spring Boot project structure detected${NC}"
+
+        # 检查是否有多模块结构
+        if [ -f "pom.xml" ]; then
+            module_count=$(grep -c "<module>" pom.xml 2>/dev/null || echo "0")
+            if [ "$module_count" -gt 1 ]; then
+                echo -e "${BLUE}ℹ Multi-module Maven project detected ($module_count modules)${NC}"
+            fi
+        fi
+
+        increment_counter "passed"
+    else
+        echo -e "${YELLOW}⚠ Non-standard project structure, consider using standard Spring Boot layout${NC}"
+    fi
+
+    # 检查Spring Boot版本
+    echo "🔍 Analyzing Spring Boot version..."
+    increment_counter
+    if [ -f "pom.xml" ]; then
+        spring_boot_version=$(grep -o "<spring-boot.version>[^<]*" pom.xml 2>/dev/null | sed 's/<spring-boot.version>//' || echo "")
+        if [[ "$spring_boot_version" == 2.7.* ]]; then
+            echo -e "${GREEN}✓ Spring Boot 2.7.x detected: $spring_boot_version${NC}"
+            increment_counter "passed"
+        elif [[ -n "$spring_boot_version" ]]; then
+            echo -e "${YELLOW}⚠ Spring Boot version $spring_boot_version detected. Consider upgrading to 2.7.x for optimal compatibility${NC}"
+        else
+            echo -e "${YELLOW}⚠ Spring Boot version not explicitly specified in pom.xml${NC}"
+        fi
+    fi
+
+    # 检查Dubbo 3配置
+    echo "🌐 Analyzing Apache Dubbo 3 configuration..."
+    increment_counter
+    dubbo_found=false
+    if [ -f "pom.xml" ]; then
+        if grep -q "dubbo" pom.xml; then
+            dubbo_found=true
+            dubbo_version=$(grep -o "<dubbo.version>[^<]*" pom.xml 2>/dev/null | sed 's/<dubbo.version>//' || echo "")
+            if [[ "$dubbo_version" == 3.* ]]; then
+                echo -e "${GREEN}✓ Apache Dubbo 3.x detected: $dubbo_version${NC}"
+                increment_counter "passed"
+            else
+                echo -e "${YELLOW}⚠ Dubbo version $dubbo_version detected. Consider upgrading to 3.x for latest features${NC}"
+            fi
+        fi
+    fi
+
+    if [ "$dubbo_found" = false ]; then
+        echo -e "${BLUE}ℹ Apache Dubbo not detected in project${NC}"
+    fi
+
+    # 检查配置文件完整性
+    echo "⚙️ Analyzing configuration files..."
+    increment_counter
+    config_score=0
+
+    if [ -f "src/main/resources/application.yml" ] || [ -f "src/main/resources/application.properties" ]; then
+        config_score=$((config_score + 1))
+    fi
+
+    if [ -f "src/main/resources/application-dev.yml" ] || [ -f "src/main/resources/application-dev.properties" ]; then
+        config_score=$((config_score + 1))
+    fi
+
+    if [ -f "src/main/resources/application-prod.yml" ] || [ -f "src/main/resources/application-prod.properties" ]; then
+        config_score=$((config_score + 1))
+    fi
+
+    if [ "$config_score" -ge 2 ]; then
+        echo -e "${GREEN}✓ Comprehensive configuration setup detected ($config_score config files)${NC}"
+        increment_counter "passed"
+    else
+        echo -e "${YELLOW}⚠ Limited configuration files found. Consider environment-specific configs${NC}"
+    fi
+
+    # 检查测试覆盖率基础要求
+    echo "🧪 Analyzing test coverage foundation..."
+    increment_counter
+    test_files_count=$(find src/test/java -name "*.java" 2>/dev/null | wc -l)
+    main_files_count=$(find src/main/java -name "*.java" 2>/dev/null | wc -l)
+
+    if [ "$main_files_count" -gt 0 ]; then
+        test_ratio=$((test_files_count * 100 / main_files_count))
+        if [ "$test_ratio" -ge 50 ]; then
+            echo -e "${GREEN}✓ Good test coverage ratio: $test_ratio% ($test_files_count test files for $main_files_count main files)${NC}"
+            increment_counter "passed"
+        elif [ "$test_ratio" -ge 25 ]; then
+            echo -e "${YELLOW}⚠ Moderate test coverage: $test_ratio%. Consider adding more tests${NC}"
+        else
+            echo -e "${RED}✗ Low test coverage: $test_ratio%. Test coverage should be improved${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠ No Java source files found in src/main/java${NC}"
+    fi
+}
+
+# 架构合理性检查
+architecture_analysis() {
+    echo ""
+    echo "🏗️ Architecture Analysis"
+    echo "========================"
+
+    # 检查分层架构
+    echo "📊 Analyzing layered architecture..."
+    increment_counter
+    controller_count=$(find src/main/java -name "*Controller.java" 2>/dev/null | wc -l)
+    service_count=$(find src/main/java -name "*Service.java" 2>/dev/null | wc -l)
+    repository_count=$(find src/main/java -name "*Repository.java" -o -name "*Dao.java" 2>/dev/null | wc -l)
+
+    if [ "$controller_count" -gt 0 ] && [ "$service_count" -gt 0 ] && [ "$repository_count" -gt 0 ]; then
+        echo -e "${GREEN}✓ Well-structured layered architecture detected${NC}"
+        echo -e "  Controllers: $controller_count, Services: $service_count, Repositories: $repository_count"
+        increment_counter "passed"
+    elif [ "$controller_count" -gt 0 ] && [ "$service_count" -gt 0 ]; then
+        echo -e "${YELLOW}⚠ Partial layered architecture. Consider adding proper data access layer${NC}"
+    else
+        echo -e "${YELLOW}⚠ Traditional layered architecture pattern not clearly visible${NC}"
+    fi
+
+    # 检查包结构合理性
+    echo "📦 Analyzing package structure..."
+    increment_counter
+    if [ -d "src/main/java" ]; then
+        package_depth=$(find src/main/java -type d -printf '%d\n' | sort -nr | head -1 2>/dev/null || echo "0")
+        if [ "$package_depth" -ge 3 ]; then
+            echo -e "${GREEN}✓ Reasonable package structure depth detected${NC}"
+            increment_counter "passed"
+        else
+            echo -e "${YELLOW}⚠ Shallow package structure. Consider better package organization${NC}"
+        fi
+    fi
+}
+
+# 安全基础检查
+security_analysis() {
+    echo ""
+    echo "🛡️ Security Analysis"
+    echo "===================="
+
+    # 检查Spring Security配置
+    echo "🔐 Analyzing security configuration..."
+    increment_counter
+    if grep -r "spring-boot-starter-security" pom.xml >/dev/null 2>&1; then
+        echo -e "${GREEN}✓ Spring Security dependency detected${NC}"
+
+        # 检查是否有安全配置类
+        security_config_count=$(find src/main/java -name "*Security*.java" -o -name "*Config*.java" | xargs grep -l "EnableWebSecurity\|SecurityFilterChain" 2>/dev/null | wc -l)
+        if [ "$security_config_count" -gt 0 ]; then
+            echo -e "${GREEN}✓ Security configuration classes found${NC}"
+            increment_counter "passed"
+        else
+            echo -e "${YELLOW}⚠ Spring Security enabled but no explicit configuration found${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠ Spring Security not detected. Consider adding security for production applications${NC}"
+    fi
+
+    # 检查敏感信息暴露风险
+    echo "🔍 Analyzing sensitive information exposure..."
+    increment_counter
+    sensitive_patterns=$(grep -r -i "password\|secret\|key" src/main/resources --include="*.properties" --include="*.yml" --include="*.yaml" 2>/dev/null | wc -l)
+    if [ "$sensitive_patterns" -eq 0 ]; then
+        echo -e "${GREEN}✓ No obvious sensitive information patterns found in configuration files${NC}"
+        increment_counter "passed"
+    else
+        echo -e "${YELLOW}⚠ $sensitive_patterns potential sensitive information patterns found. Review configuration files${NC}"
+    fi
+}
+
+# 执行智能分析检查
+echo "🧠 Executing Intelligent Analysis Checks..."
+intelligent_pre_analysis
+architecture_analysis
+security_analysis
+
+echo ""
+echo "📝 Traditional Quality Checks"
+echo "============================="
 
 # 1. Java 编译检查
 echo "📝 Java compilation check..."
@@ -137,22 +326,61 @@ else
     echo -e "${YELLOW}⚠ No build tool found, skipping final build check${NC}"
 fi
 
-# 生成质量报告
+# 生成智能质量报告
 echo ""
-echo -e "${BLUE}📋 Quality Gate Summary${NC}"
-echo "=============================="
+echo -e "${BLUE}🤖 Intelligent Quality Gate Summary${NC}"
+echo "========================================"
 echo -e "Total checks: ${BLUE}$TOTAL_CHECKS${NC}"
 echo -e "Passed checks: ${GREEN}$PASSED_CHECKS${NC}"
 echo -e "Failed checks: ${RED}$((TOTAL_CHECKS - PASSED_CHECKS))${NC}"
-echo "=============================="
+echo -e "Success rate: ${GREEN}$(( PASSED_CHECKS * 100 / TOTAL_CHECKS ))%${NC}"
+echo "========================================"
 
-# 检查是否所有检查都通过
+# 智能建议输出
+echo ""
+echo -e "${BLUE}💡 Intelligent Recommendations${NC}"
+echo "=================================="
+
+# 基于检查结果给出智能建议
 if [ $PASSED_CHECKS -eq $TOTAL_CHECKS ]; then
-    echo -e "${GREEN}🎉 All Spring Boot enterprise quality gate checks passed!${NC}"
-    echo -e "${GREEN}✨ Code is ready for enterprise deployment${NC}"
+    echo -e "${GREEN}🎉 Excellent! All intelligent quality gate checks passed!${NC}"
+    echo -e "${GREEN}✨ Your Spring Boot 2.7 + Dubbo 3 code demonstrates enterprise-grade quality${NC}"
+    echo ""
+    echo -e "${BLUE}🚀 Next Steps:${NC}"
+    echo "  • Consider running '/review --intelligent' for deeper AI analysis"
+    echo "  • Deploy with confidence to staging environment"
+    echo "  • Monitor application performance and security metrics"
+    echo ""
+    echo -e "${BLUE}📊 Quality Metrics Achieved:${NC}"
+    echo "  ✅ Intelligent Architecture Analysis"
+    echo "  ✅ Security Foundation Assessment"
+    echo "  ✅ Code Quality Standards"
+    echo "  ✅ Build and Test Validation"
     exit 0
 else
-    echo -e "${RED}❌ Some quality gate checks failed${NC}"
-    echo -e "${RED}🚫 Code is not ready for deployment${NC}"
+    echo -e "${YELLOW}⚠️ Some intelligent quality gate checks require attention${NC}"
+    echo -e "${YELLOW}🔧 Review the failed checks above and consider improvements${NC}"
+    echo ""
+    echo -e "${BLUE}💊 Intelligent Remediation Suggestions:${NC}"
+
+    # 根据失败检查给出具体建议
+    if [ "$PASSED_CHECKS" -lt "$TOTAL_CHECKS" ]; then
+        failed_count=$((TOTAL_CHECKS - PASSED_CHECKS))
+        if [ "$failed_count" -le 2 ]; then
+            echo "  • Minor issues detected. Quick fixes should resolve most concerns"
+        elif [ "$failed_count" -le 4 ]; then
+            echo "  • Moderate issues found. Consider addressing before production deployment"
+        else
+            echo "  • Multiple issues detected. Comprehensive review recommended"
+        fi
+    fi
+
+    echo ""
+    echo -e "${BLUE}🤖 AI-Powered Analysis Available:${NC}"
+    echo "  • Run '/review --intelligent --auto-diagnose' for AI-driven problem analysis"
+    echo "  • Run '/review --architecture-analysis' for deep architecture evaluation"
+    echo "  • Consult the intelligent-diagnoser agent for root cause analysis"
+    echo ""
+    echo -e "${RED}🚫 Code requires improvements before enterprise deployment${NC}"
     exit 1
 fi

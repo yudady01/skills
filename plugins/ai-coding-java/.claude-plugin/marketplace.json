@@ -1,7 +1,7 @@
 {
   "name": "ai-coding-java",
-  "version": "2.7.1",
-  "description": "Claude Code 专用的 Spring Boot 2.7 + Dubbo 3 企业级微服务项目模板插件，提供完整的 AI 驱动分布式系统开发流程",
+  "version": "2.8.0",
+  "description": "🤖 智能化 Spring Boot 2.7 + Dubbo 3 企业级微服务开发插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能，提供最智能的微服务开发体验",
   "author": {
     "name": "Spring Boot + Dubbo AI Coding Team",
     "email": "dubbo-microservice-support@example.com"
@@ -31,6 +31,18 @@
     "code-generation",
     "sneaky-throws",
     "exception-handling",
-    "development-efficiency"
+    "development-efficiency",
+    "intelligent-code-review",
+    "ai-driven-analysis",
+    "architecture-analysis",
+    "problem-diagnosis",
+    "intelligent-quality-gate",
+    "ddd-principles",
+    "microservices-architecture",
+    "code-smells-detection",
+    "performance-optimization",
+    "security-analysis",
+    "intelligent-suggestions",
+    "automated-refactoring"
   ]
 }
