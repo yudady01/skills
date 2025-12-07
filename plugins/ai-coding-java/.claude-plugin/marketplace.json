@@ -53,6 +53,20 @@
     "mcp-server",
     "document-processor",
     "embedding-search",
-    "knowledge-management"
+    "knowledge-management",
+    "report-generation",
+    "markdown-reports",
+    "code-review-reports",
+    "quality-assessment",
+    "technical-debt",
+    "issue-tracking",
+    "report-automation",
+    "jinja2-templates",
+    "data-aggregation",
+    "intelligent-reporting",
+    "enterprise-reports",
+    "code-quality-metrics",
+    "review-history",
+    "trend-analysis"
   ]
 }

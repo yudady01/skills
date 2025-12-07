@@ -282,4 +282,148 @@ graph TD
 - **企业级缓存策略** - Redis 集群、缓存预热、缓存一致性设计
 - **消息队列架构** - ActiveMQ、Kafka 企业级消息处理和解耦设计
 
-通过专业的 Spring Boot 2.7 + Dubbo 3 微服务代码审查，确保企业级代码质量和分布式系统开发标准的持续改进。
+## 结构化数据输出支持 [新增]
+
+为了支持自动报告生成，code-reviewer代理需要提供结构化数据输出。在生成Markdown报告的同时，代理应该在输出中包含可解析的结构化数据：
+
+### JSON格式输出
+```json
+{
+  "timestamp": "2025-12-07T14:30:25Z",
+  "agent": "code-reviewer",
+  "review_metadata": {
+    "files_analyzed": 15,
+    "lines_of_code": 2500,
+    "duration_seconds": 45,
+    "scope": "Spring Boot 2.7 + Dubbo 3 microservices"
+  },
+  "quality_assessment": {
+    "overall_score": 75.5,
+    "overall_grade": "B",
+    "health_score": 80,
+    "architecture_score": 70,
+    "complexity_level": "medium",
+    "performance_risk": "medium"
+  },
+  "issues": [
+    {
+      "id": "issue_001",
+      "priority": "high",
+      "category": "security",
+      "severity": 8,
+      "description": "潜在的SQL注入风险",
+      "location": {
+        "file": "UserRepository.java",
+        "line": 45,
+        "method": "findByUsername"
+      },
+      "impact": "可能导致数据泄露和安全漏洞",
+      "root_cause": "直接拼接SQL语句，未使用参数化查询",
+      "fix_suggestion": "使用@Query注解和参数化查询",
+      "code_example": "@Query(\"SELECT u FROM User u WHERE u.username = :username\")",
+      "estimated_fix_time": "2-3小时",
+      "related_files": ["UserService.java", "UserController.java"]
+    }
+  ],
+  "architecture_insights": {
+    "service_boundaries": {
+      "assessment": "服务边界基本合理，有少量优化空间",
+      "score": 70,
+      "recommendations": ["考虑进一步拆分UserService", "加强服务间接口定义"]
+    },
+    "patterns_detected": ["微服务架构", "分层架构", "Repository模式"],
+    "anti_patterns": ["潜在的God Class"],
+    "coupling_analysis": {
+      "level": "medium",
+      "hotspots": ["OrderService -> PaymentService"]
+    }
+  },
+  "performance_analysis": {
+    "bottlenecks": [
+      {
+        "location": "OrderService.calculateTotal()",
+        "type": "computational_complexity",
+        "impact": "高并发场景下性能下降",
+        "optimization_suggestion": "使用缓存和异步处理"
+      }
+    ],
+    "resource_usage": {
+      "memory_usage": "medium",
+      "cpu_usage": "low",
+      "database_queries": "high"
+    }
+  },
+  "recommendations": [
+    {
+      "category": "security",
+      "priority": "high",
+      "title": "加强输入验证和SQL安全",
+      "description": "实施数据查询的参数化和输入验证",
+      "implementation_steps": [
+        "替换所有动态SQL拼接为参数化查询",
+        "添加输入验证注解",
+        "实施数据访问层安全检查"
+      ]
+    }
+  ],
+  "metrics": {
+    "code_complexity": {
+      "cyclomatic_complexity": 12.5,
+      "cognitive_complexity": 8.3,
+      "maintainability_index": 75
+    },
+    "test_coverage": {
+      "line_coverage": 65,
+      "branch_coverage": 58,
+      "method_coverage": 72
+    },
+    "duplication": {
+      "duplicate_lines": 125,
+      "duplicate_blocks": 8,
+      "duplication_percentage": 5.2
+    }
+  },
+  "summary": {
+    "total_issues": 12,
+    "high_priority": 3,
+    "medium_priority": 6,
+    "low_priority": 3,
+    "critical_files": ["UserRepository.java", "OrderService.java"],
+    "improvement_areas": ["安全性", "性能优化", "代码可维护性"],
+    "positive_aspects": ["良好的分层架构", "规范的异常处理", "完善的日志记录"]
+  }
+}
+```
+
+### 嵌入式输出格式
+在Markdown输出中嵌入可解析的结构化数据：
+
+```markdown
+<!-- BEGIN_STRUCTURED_DATA -->
+{
+  "agent": "code-reviewer",
+  "quality_assessment": {...},
+  "issues": [...],
+  "recommendations": [...]
+}
+<!-- END_STRUCTURED_DATA -->
+```
+
+### 环境变量输出
+将结构化数据保存到环境变量或临时文件中：
+- `CLAUDE_REVIEW_OUTPUT_JSON`: JSON格式的审查数据
+- `CLAUDE_REVIEW_SUMMARY`: 审查摘要信息
+- `/tmp/claude_review_data.json`: 临时数据文件
+
+### 报告生成集成
+结构化数据将自动被以下组件使用：
+1. **review-report-generation技能**: 数据聚合和报告生成
+2. **PostToolUse钩子**: 自动触发报告生成流程
+3. **generate_review_report.py**: 解析数据并生成Markdown报告
+4. **report_utils.py**: 报告管理和历史追踪
+
+通过提供结构化数据输出，确保代码审查结果能够被自动处理和生成详细的报告文档。
+
+---
+
+通过专业的 Spring Boot 2.7 + Dubbo 3 微服务代码审查和结构化数据输出，确保企业级代码质量和分布式系统开发标准的持续改进，同时支持自动化报告生成和质量追踪。
