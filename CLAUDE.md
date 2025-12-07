@@ -20,7 +20,7 @@
 
 ## 🎯 项目概述
 
-这是一个 Claude Code 专业技能市场，提供六个针对不同开发领域的企业级技能/插件，旨在提升开发效率和质量：
+这是一个 Claude Code 专业技能市场，提供五个针对不同开发领域的企业级技能/插件，旨在提升开发效率和质量：
 
 - **📍 位置**: `./` (项目根目录)
 - **🏗️ 架构**: 市场格式，包含 `.claude-plugin/marketplace.json` 和 `plugins/` 目录中的独立插件
@@ -36,7 +36,6 @@
     ├── 📁 en-to-zh-translator/          # 🔤 技术翻译技能
     ├── 📁 repeatable-sql/               # 🗃️ 数据库迁移脚本生成器
     ├── 📁 thirdparty-pay-channel/       # 💳 支付集成开发技能
-    ├── 📁 skill-list-manager/           # 📋 技能列表管理工具
     ├── 📁 chrome-debug/                 # 🌐 Chrome DevTools 调试插件
     └── 📁 ai-coding-java/               # ☕ Spring Boot + Dubbo 微服务开发技能 ✅
 ```
@@ -93,9 +92,6 @@ python3 plugins/en-to-zh-translator/skills/scripts/validate_translation.py --fil
 python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mcp.py --help
 ./plugins/chrome-debug/scripts/validate-chrome.sh
 
-# 📚 技能列表管理
-python3 plugins/skill-list-manager/skills/scripts/skill_validator.py --validate-all
-```
 
 ## 📦 插件详细指南
 
@@ -156,25 +152,6 @@ python3 plugins/skill-list-manager/skills/scripts/skill_validator.py --validate-
   - 技术术语映射表
   - 翻译质量标准
   - 最佳实践示例
-
-### 📚 技能列表管理插件 (skill-list-manager)
-**🎯 用途**: 动态技能发现、验证、搜索和管理
-
-- **🔑 核心功能**:
-  - 技能自动发现
-  - 配置验证和修复
-  - 智能搜索和过滤
-  - 批量管理操作
-
-- **📁 关键文件**:
-  - `skill_validator.py` - 技能验证器
-  - `skill_search.py` - 技能搜索器
-  - `skill_manager.py` - 技能管理器
-
-- **📋 参考资料**:
-  - 技能模式定义
-  - 验证标准规范
-  - 配置示例
 
 ### 🌐 Chrome 调试插件 (chrome-debug)
 **🎯 用途**: Chrome DevTools 集成，Web 应用调试和自动化
@@ -492,8 +469,6 @@ ai-coding-java 现在是：
 ## 🔗 相关链接
 
 ### 📋 技能和命令参考
-- **可用技能**: `/skill-list-manager:skill-list-enhanced`
-- **插件验证**: `/skill-list-manager:skill-validate --all`
 - **Chrome 调试**: `/chrome-debug --help`
 
 ### 🛠️ 实用工具
