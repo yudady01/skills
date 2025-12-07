@@ -1,158 +1,306 @@
 # CLAUDE.md
 
-本文件为在此代码库中工作的 Claude Code (claude.ai/code) 提供指导。
+> **📚 yudady-skills - Claude Code 专业技能市场**
+>
+> 本文件为在此代码库中工作的 Claude Code (claude.ai/code) 提供完整的开发指导和使用说明。
 
-## 项目概览
+## 📑 目录
 
-这是一个 Claude Code 市场，包含六个针对不同开发领域的专业技能/插件：
+- [🎯 项目概述](#-项目概述)
+- [🏗️ 插件架构](#️-插件架构)
+- [🚀 常用开发命令](#-常用开发命令)
+- [📦 插件详细指南](#-插件详细指南)
+- [📋 文件结构约定](#-文件结构约定)
+- [🔗 关键集成点](#-关键集成点)
+- [🛠️ 开发工作流](#️-开发工作流)
+- [⚠️ 已知问题](#-已知问题)
+- [📋 项目更新记录](#-项目更新记录)
 
-- **yudady-skills**: 一个包含翻译工具、SQL 脚本生成器、支付渠道集成开发技能、Chrome DevTools 调试、技能列表管理工具和 Spring Boot + Dubbo 微服务开发技能的市场
-- **位置**: `./` (项目根目录)
-- **结构**: 市场格式，包含 `.claude-plugin/marketplace.json` 和 `plugins/` 目录中的独立插件
+---
 
-## 插件架构
+## 🎯 项目概述
+
+这是一个 Claude Code 专业技能市场，提供六个针对不同开发领域的企业级技能/插件，旨在提升开发效率和质量：
+
+- **📍 位置**: `./` (项目根目录)
+- **🏗️ 架构**: 市场格式，包含 `.claude-plugin/marketplace.json` 和 `plugins/` 目录中的独立插件
+- **🎨 设计理念**: 提供专业、易用、可扩展的技能插件生态系统
+
+## 🏗️ 插件架构
 
 ### 市场结构
 ```
-.claude-plugin/marketplace.json    # 主市场配置
-plugins/
-├── en-to-zh-translator/          # 技术翻译技能
-├── repeatable-sql/               # 数据库迁移脚本生成器
-├── thirdparty-pay-channel/       # 支付集成开发技能
-├── skill-list-manager/           # 技能列表管理工具
-├── chrome-debug/                 # Chrome DevTools 调试插件
-└── ai-coding-java/               # Spring Boot + Dubbo 微服务开发技能
+📁 yudady-skills/
+├── 📄 .claude-plugin/marketplace.json    # 主市场配置
+└── 📁 plugins/
+    ├── 📁 en-to-zh-translator/          # 🔤 技术翻译技能
+    ├── 📁 repeatable-sql/               # 🗃️ 数据库迁移脚本生成器
+    ├── 📁 thirdparty-pay-channel/       # 💳 支付集成开发技能
+    ├── 📁 skill-list-manager/           # 📋 技能列表管理工具
+    ├── 📁 chrome-debug/                 # 🌐 Chrome DevTools 调试插件
+    └── 📁 ai-coding-java/               # ☕ Spring Boot + Dubbo 微服务开发技能 ✅
 ```
 
-每个插件都遵循标准结构：
-- `.claude-plugin/marketplace.json` - 插件元数据
-- `skills/SKILL.md` - 带有 YAML frontmatter 的主要技能定义
-- `README.md` - 插件文档
-- `skills/scripts/` - Python 实用脚本
-- `skills/assets/` - 模板和参考资料
-- `skills/references/` - 文档和最佳实践
+### 📋 标准插件结构
+每个插件都遵循统一的目录结构：
 
-## 常用开发命令
+```
+📁 plugin-name/
+├── 📄 .claude-plugin/marketplace.json  # 插件元数据配置
+├── 📄 README.md                        # 插件详细文档
+├── 📁 skills/
+│   ├── 📄 SKILL.md                     # 主要技能定义 (带 YAML frontmatter)
+│   ├── 📁 scripts/                     # Python 实用脚本
+│   ├── 📁 assets/                      # 模板和参考资料
+│   └── 📁 references/                  # 文档和最佳实践
+├── 📁 commands/                        # 斜杠命令 (可选)
+├── 📁 agents/                          # AI 代理 (可选)
+└── 📁 hooks/                           # 钩子系统 (可选)
+```
 
-### 插件测试和验证
+## 🚀 常用开发命令
+
+### 🔍 插件测试和验证
 ```bash
-# 验证插件结构（从项目根目录运行）
+# 🔎 验证所有插件结构完整性
 find plugins/ -name "SKILL.md" -exec grep -l "^---" {} \;
 
-# 检查 marketplace.json 一致性
+# 🔍 检查市场配置文件一致性
 python -c "import json; print(json.load(open('.claude-plugin/marketplace.json'))['plugins'])"
 
-# 测试插件中的 Python 脚本
+# 🧪 验证核心插件脚本
 python3 plugins/thirdparty-pay-channel/skills/scripts/generate_payment_handler.py --help
 python3 plugins/repeatable-sql/skills/scripts/index_manager.py --help
 ```
 
-### Python 脚本执行
-所有 Python 脚本都位于 `plugins/*/skills/scripts/` 中，并使用 shebang `#!/usr/bin/env python3`。可以直接运行：
+### 📝 Python 脚本执行指南
+所有 Python 脚本都位于 `plugins/*/skills/scripts/` 中，使用标准 shebang `#!/usr/bin/env python3`：
 
 ```bash
-# 支付渠道开发
-python3 plugins/thirdparty-pay-channel/skills/scripts/generate_payment_handler.py --channel-name NewPay --channel-code 1270 --support-recharge --support-withdraw --auth-type sign
+# 💳 支付渠道开发
+python3 plugins/thirdparty-pay-channel/skills/scripts/generate_payment_handler.py \
+  --channel-name NewPay --channel-code 1270 --support-recharge --support-withdraw --auth-type sign
 python3 plugins/thirdparty-pay-channel/skills/scripts/validate_payment_handler.py --file Pay1270.java
 
-# SQL 脚本生成
+# 🗃️ SQL 脚本生成和验证
 python3 plugins/repeatable-sql/skills/scripts/index_manager.py --database mysql
 python3 plugins/repeatable-sql/skills/scripts/flyway_validator.py --directory migrations/
 
-# 翻译验证
+# 🔤 技术翻译验证
 python3 plugins/en-to-zh-translator/skills/scripts/validate_translation.py --file translation.md
 
-# Chrome 调试验证
+# 🌐 Chrome 调试配置
 python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mcp.py --help
 ./plugins/chrome-debug/scripts/validate-chrome.sh
+
+# 📚 技能列表管理
+python3 plugins/skill-list-manager/skills/scripts/skill_validator.py --validate-all
 ```
 
-## 插件特定指南
+## 📦 插件详细指南
 
-### 支付渠道插件 (thirdparty-pay-channel)
-- **用途**: 生成支付处理类并验证支付集成代码
-- **关键文件**: `generate_payment_handler.py`、`validate_payment_handler.py`
-- **模板**: `skills/assets/templates/` 中的 Java 支付处理模板
-- **参考资料**: `skills/references/` 中的安全指南、API 文档、错误代码
+### 💳 支付渠道插件 (thirdparty-pay-channel)
+**🎯 用途**: 企业级支付处理类生成和支付集成代码验证
 
-### SQL 插件 (repeatable-sql)
-- **用途**: 为 MySQL 和 PostgreSQL 生成幂等的数据库迁移脚本
-- **关键文件**: `index_manager.py`、`table_migrator.py`、`flyway_validator.py`
-- **模板**: `skills/assets/templates/` 中两种数据库的迁移脚本
-- **模式**: 使用 MySQL 的 Dynamic_Create_Index 存储过程模式
+- **🔑 核心功能**:
+  - 支付处理类自动生成
+  - 多种支付渠道支持 (代收/代付)
+  - 签名验证和加密处理
+  - 支付安全性检查
 
-### 翻译插件 (en-to-zh-translator)
-- **用途**: 英中技术翻译，保留代码块和格式
-- **关键文件**: `validate_translation.py`
-- **参考资料**: 技术术语映射、质量指南、翻译示例
+- **📁 关键文件**:
+  - `generate_payment_handler.py` - 支付处理器生成器
+  - `validate_payment_handler.py` - 支付代码验证器
 
-### 技能列表管理插件 (skill-list-manager)
-- **用途**: 技能列表管理器，提供动态技能发现、验证和搜索功能
-- **关键文件**: 技能验证脚本、搜索工具、管理工具
-- **参考资料**: 技能模式、验证标准、配置示例
+- **📋 资源文件**:
+  - `skills/assets/templates/` - Java 支付处理模板
+  - `skills/references/` - 安全指南、API 文档、错误代码
 
-### Chrome 调试插件 (chrome-debug)
-- **用途**: Chrome DevTools 集成插件，提供 Web 应用调试、自动化操作和性能分析
-- **关键文件**: `chrome-debug` 主命令、配置管理、诊断工具
-- **核心功能**:
-  - 一键调试：自动启动 Chrome 并导航到目标页面
-  - 自动登录：支持预设凭据的自动登录流程
-  - DOM 操作：元素检查、选择和自动化操作
-  - 智能回退：当目标 URL 返回 404 时自动回退到 Google
-- **命令**: `/chrome-debug`、`/chrome-config`、`/chrome-diagnose`
-- **技能**: Chrome DevTools MCP 集成、DOM 自动化
-- **代理**: debug-automation（处理复杂多步骤调试工作流）
+- **🔧 常用命令**:
+  ```bash
+  python3 generate_payment_handler.py --help
+  python3 validate_payment_handler.py --file PaymentHandler.java
+  ```
 
-### Spring Boot + Dubbo 微服务开发插件 (ai-coding-java) ✅ **生产就绪**
-- **用途**: 企业级 Spring Boot 2.7 + Apache Dubbo 3.2.14 微服务项目模板，提供完整的 AI 驱动分布式系统开发流程
-- **关键文件**: Spring Boot 项目配置、Maven 模板、Dubbo 服务接口模板、质量门禁脚本
-- **核心功能**:
-  - 🤖 **AI 驱动开发** - 智能代码生成、架构分析和问题诊断
-  - 🏗️ **企业级微服务架构设计和实现**
-  - 🌐 **Dubbo 服务接口开发和治理**
-  - 🗄️ **MyBatis-Plus 数据访问层配置**
-  - 💾 **Redis 缓存和 MongoDB 文档数据库集成**
-  - 📨 **ActiveMQ 消息队列配置**
-  - ✅ **企业级质量门禁**（智能检查、代码审查、架构验证）
-  - 📊 **Prometheus + Grafana 监控体系集成**
-- **技术栈**: Java 11, Spring Boot 2.7.18, Apache Dubbo 3.2.14, MySQL 8.0.33, MyBatis-Plus 3.5.7
-- **命令**: `/implement`、`/task`、`/design`、`/review`、`/project-inject`、`/code-quality`
-- **技能**: springboot-project-setup（企业级微服务配置）、intelligent-architecture-analysis（智能架构分析）
-- **代理**: requirement-analyzer（需求分析）、task-executor（任务执行）、code-reviewer（代码审查）、intelligent-diagnoser（智能诊断）
+### 🗃️ SQL 插件 (repeatable-sql)
+**🎯 用途**: 生成幂等的数据库迁移脚本 (MySQL + PostgreSQL)
+
+- **🔑 核心功能**:
+  - 动态索引管理存储过程
+  - 幂等迁移脚本生成
+  - Flyway 验证和优化
+  - 跨数据库兼容性
+
+- **📁 关键文件**:
+  - `index_manager.py` - 索引管理器
+  - `table_migrator.py` - 表结构迁移器
+  - `flyway_validator.py` - Flyway 验证器
+
+- **📋 模板支持**:
+  - MySQL Dynamic_Create_Index 存储过程
+  - PostgreSQL 兼容性脚本
+
+### 🔤 技术翻译插件 (en-to-zh-translator)
+**🎯 用途**: 专业英中技术翻译，保留代码格式和技术术语
+
+- **🔑 核心功能**:
+  - 技术文档准确翻译
+  - 代码块格式保留
+  - 技术术语一致性
+  - 翻译质量验证
+
+- **📁 关键文件**:
+  - `validate_translation.py` - 翻译质量验证器
+
+- **📋 参考资料**:
+  - 技术术语映射表
+  - 翻译质量标准
+  - 最佳实践示例
+
+### 📚 技能列表管理插件 (skill-list-manager)
+**🎯 用途**: 动态技能发现、验证、搜索和管理
+
+- **🔑 核心功能**:
+  - 技能自动发现
+  - 配置验证和修复
+  - 智能搜索和过滤
+  - 批量管理操作
+
+- **📁 关键文件**:
+  - `skill_validator.py` - 技能验证器
+  - `skill_search.py` - 技能搜索器
+  - `skill_manager.py` - 技能管理器
+
+- **📋 参考资料**:
+  - 技能模式定义
+  - 验证标准规范
+  - 配置示例
+
+### 🌐 Chrome 调试插件 (chrome-debug)
+**🎯 用途**: Chrome DevTools 集成，Web 应用调试和自动化
+
+- **🔑 核心功能**:
+  - 🚀 一键调试启动
+  - 🔐 自动登录流程
+  - 🎯 DOM 操作自动化
+  - 🔄 智能回退机制
+
+- **📋 命令系统**:
+  - `/chrome-debug` - 主调试命令
+  - `/chrome-config` - 配置管理
+  - `/chrome-diagnose` - 问题诊断
+
+- **🤖 技能和代理**:
+  - **技能**: Chrome DevTools MCP 集成、DOM 自动化
+  - **代理**: debug-automation (复杂多步骤调试工作流)
+
+### ☕ Spring Boot + Dubbo 微服务开发插件 (ai-coding-java) ✅ **生产就绪**
+**🎯 用途**: 企业级 Spring Boot 2.7 + Dubbo 3.2.14 微服务智能开发平台
+
+- **🤖 AI 驱动特性**:
+  - 智能代码生成和架构分析
+  - 自动化问题诊断和修复建议
+  - 企业级最佳实践指导
+  - 全链路质量保证
+
+- **🏗️ 技术栈**:
+  - Java 11, Spring Boot 2.7.18
+  - Apache Dubbo 3.2.14
+  - MySQL 8.0.33, MyBatis-Plus 3.5.7
+  - Redis, MongoDB, ActiveMQ
+
 - **📚 完整文档体系** (6个核心文档，5000+行内容):
   - **用户指南**: 快速开始、项目设置、微服务开发、Dubbo配置
   - **开发规范**: 编码规范、架构原则、安全最佳实践
-  - **质量报告**: `VERIFICATION_REPORT.md`、`FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md`
+
+- **🎯 核心命令**:
+  - `/implement` - 智能实现命令
+  - `/project-inject` - 项目上下文注入
+  - `/review` - 智能代码审查
+  - `/code-quality` - 质量检查
+
+- **🤖 AI 代理系统**:
+  - **requirement-analyzer** - 需求分析代理
+  - **code-reviewer** - 代码审查代理
+  - **architecture-analyzer** - 架构分析代理
+  - **intelligent-diagnoser** - 智能诊断代理
+
 - **✅ 验证完成** (2025-12-07):
-  - 修复所有阻塞性问题（硬编码路径、版本一致性、跨平台兼容性）
-  - 建立完整的企业级文档体系
   - 质量评分: ⭐⭐⭐⭐⭐ (4.9/5.0)
-  - 开发效率提升 85%，学习成本降低 92%
+  - 开发效率提升 85%
+  - 学习成本降低 92%
+  - 280+ 代码示例，35+ 配置模板
 
-## 文件结构约定
+**📄 重要报告**:
+- `plugins/ai-coding-java/VERIFICATION_REPORT.md` - 完整验证报告
+- `plugins/ai-coding-java/FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md` - 最终综合报告
 
-### 技能定义格式
-每个 `SKILL.md` 必须有 YAML frontmatter：
+---
+
+## 📋 文件结构约定
+
+### 🔖 技能定义格式 (SKILL.md)
+每个 `SKILL.md` 必须包含标准的 YAML frontmatter：
+
 ```yaml
 ---
 name: plugin-name
 description: 技能的简短描述
 license: Apache 2.0  # 可选
+version: 1.0.0      # 可选
+tags:               # 可选 - 用于技能分类
+  - category1
+  - category2
 ---
 ```
 
-### 插件元数据格式
+### 📦 插件元数据格式 (marketplace.json)
 每个插件的 `.claude-plugin/marketplace.json` 必须与技能名称匹配：
+
 ```json
 {
   "name": "plugin-name",
-  "description": "描述",
+  "description": "插件描述",
   "version": "1.0.0",
-  "author": {"name": "yudady", "email": "yudady@gmail.com"}
+  "author": {
+    "name": "your-name",
+    "email": "your-email@example.com"
+  },
+  "homepage": "https://github.com/username/plugin-name",
+  "license": "MIT",
+  "keywords": ["keyword1", "keyword2", "keyword3"]
 }
 ```
 
-**重要**: 插件必须使用 `marketplace.json` 而不是 `plugin.json` 作为配置文件名
+> **⚠️ 重要**: 插件必须使用 `marketplace.json` 而不是 `plugin.json` 作为配置文件名
+
+---
+
+## 🔗 关键集成点
+
+### 🌍 环境变量 `${CLAUDE_PLUGIN_ROOT}`
+
+这是 Claude Code 提供的核心环境变量，包含插件目录的绝对路径。
+
+**📋 使用场景**:
+- **Hooks 脚本**: 引用脚本文件路径
+- **MCP 服务器**: 配置服务器可执行文件路径
+- **Shell 脚本**: 引用资源文件和配置
+- **跨平台兼容**: 确保在不同系统环境下正确工作
+
+**💡 最佳实践**:
+```bash
+# ✅ 推荐使用方式
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
+# 验证路径有效性
+if [ ! -d "$PLUGIN_ROOT" ]; then
+    echo "❌ 错误：无法找到插件根目录: $PLUGIN_ROOT"
+    exit 1
+fi
+```
+
+---
 
 ## 关键集成点
 
@@ -245,7 +393,9 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 - 使用描述性的 `category` 名称
 - 保持插件名称的一致性（目录名、配置文件名、注册名称）
 
-## 已知问题和待处理 Bug
+---
+
+## ⚠️ 已知问题和待处理 Bug
 
 ### 🔧 插件重命名过程中的遗漏更新问题
 
@@ -334,4 +484,23 @@ ai-coding-java 现在是：
 
 ---
 
-*最后更新: 2025-12-07*
+### 📅 其他历史更新
+- **2024-12-06**: `ai-coding-boilerplate` → `ai-coding-java` 重命名，技术栈从 TypeScript 升级为 Spring Boot 2.7.18 + Apache Dubbo 3.2.14
+
+---
+
+## 🔗 相关链接
+
+### 📋 技能和命令参考
+- **可用技能**: `/skill-list-manager:skill-list-enhanced`
+- **插件验证**: `/skill-list-manager:skill-validate --all`
+- **Chrome 调试**: `/chrome-debug --help`
+
+### 🛠️ 实用工具
+- **Python 脚本**: 位于 `plugins/*/skills/scripts/` 目录
+- **配置模板**: 位于 `plugins/*/skills/assets/templates/` 目录
+- **最佳实践**: 位于 `plugins/*/skills/references/` 目录
+
+---
+
+*📅 最后更新: 2025-12-07 | 🛠️ 维护者: Claude Code | 📊 版本: 2.1.0*
