@@ -1,39 +1,39 @@
 ---
 name: chrome-devtools-integration
-description: This skill should be used when the user asks to "configure Chrome DevTools MCP", "set up chrome debugging", "fix chrome connection issues", "install chrome devtools", or mentions Chrome DevTools MCP server configuration. Provides comprehensive guidance for Chrome DevTools Model Context Protocol integration.
+description: 当用户要求"配置 Chrome DevTools MCP"、"设置 chrome 调试"、"修复 chrome 连接问题"、"安装 chrome devtools"或提及 Chrome DevTools MCP 服务器配置时使用此技能。提供 Chrome DevTools 模型上下文协议集成的全面指导。
 version: 1.0.0
 ---
 
-# Chrome DevTools Integration Skill
+# Chrome DevTools 集成技能
 
-This skill provides comprehensive guidance for integrating Chrome DevTools MCP (Model Context Protocol) with Claude Code, enabling powerful browser automation and debugging capabilities.
+此技能提供将 Chrome DevTools MCP（模型上下文协议）与 Claude Code 集成的全面指导，实现强大的浏览器自动化和调试功能。
 
-## Core Concepts
+## 核心概念
 
-Chrome DevTools MCP is a Model Context Protocol server that allows AI agents to control and inspect live Chrome browsers. It provides programmatic access to Chrome's powerful debugging capabilities through a standardized interface.
+Chrome DevTools MCP 是一个模型上下文协议服务器，允许 AI 代理控制和检查实时 Chrome 浏览器。它通过标准化接口提供对 Chrome 强大调试功能的程序化访问。
 
-### Key Capabilities
+### 关键能力
 
-- **Performance Analysis**: Record and analyze browser performance traces
-- **Network Monitoring**: Inspect HTTP requests, responses, and timing
-- **Console Management**: Execute JavaScript and capture console output
-- **Visual Debugging**: Take screenshots and page snapshots
-- **DOM Manipulation**: Inspect and modify page elements
-- **Automation**: Click, type, navigate, and wait for elements
+- **性能分析**：记录和分析浏览器性能轨迹
+- **网络监控**：检查 HTTP 请求、响应和时间
+- **控制台管理**：执行 JavaScript 并捕获控制台输出
+- **可视化调试**：截图和页面快照
+- **DOM 操作**：检查和修改页面元素
+- **自动化**：点击、输入、导航和等待元素
 
-## MCP Server Configuration
+## MCP 服务器配置
 
-### Standard Installation
+### 标准安装
 
-Install Chrome DevTools MCP globally:
+全局安装 Chrome DevTools MCP：
 
 ```bash
 npm install -g chrome-devtools-mcp@latest
 ```
 
-### Claude Code Integration
+### Claude Code 集成
 
-Configure MCP server in `.mcp.json`:
+在 `.mcp.json` 中配置 MCP 服务器：
 
 ```json
 {
@@ -50,171 +50,171 @@ Configure MCP server in `.mcp.json`:
 }
 ```
 
-### Environment Variables
+### 环境变量
 
-Set these environment variables to customize behavior:
+设置这些环境变量以自定义行为：
 
-- `CHROME_PATH`: Custom Chrome executable path
-- `HEADLESS`: Run Chrome in headless mode (true/false)
-- `DEBUG_TIMEOUT`: Default timeout for operations (seconds)
+- `CHROME_PATH`：自定义 Chrome 可执行文件路径
+- `HEADLESS`：在无头模式下运行 Chrome（true/false）
+- `DEBUG_TIMEOUT`：操作默认超时时间（秒）
 
-## Prerequisites and Setup
+## 先决条件和设置
 
-### System Requirements
+### 系统要求
 
-- **Node.js**: v20.19 or higher
-- **Chrome**: Stable version or newer
-- **npm**: For package management
+- **Node.js**：v20.19 或更高版本
+- **Chrome**：稳定版本或更新版本
+- **npm**：用于包管理
 
-### Chrome Installation Validation
+### Chrome 安装验证
 
-Verify Chrome installation and version:
+验证 Chrome 安装和版本：
 
 ```bash
-# Check Chrome version
+# 检查 Chrome 版本
 google-chrome --version  # Linux
 chrome --version        # macOS
 
-# Verify Chrome accepts remote debugging
+# 验证 Chrome 接受远程调试
 chrome --remote-debugging-port=9222 --no-sandbox
 ```
 
-### Network and Port Configuration
+### 网络和端口配置
 
-Chrome DevTools MCP uses these default configurations:
+Chrome DevTools MCP 使用这些默认配置：
 
-- **Debugging Port**: 9222 (default)
-- **WebSocket**: For real-time communication
-- **HTTP Endpoint**: For DevTools protocol access
+- **调试端口**：9222（默认）
+- **WebSocket**：用于实时通信
+- **HTTP 端点**：用于 DevTools 协议访问
 
-## Connection and Troubleshooting
+## 连接和故障排除
 
-### Common Connection Issues
+### 常见连接问题
 
-#### Chrome Not Responding
+#### Chrome 无响应
 ```
 Error: Failed to connect to Chrome DevTools Protocol
 ```
 
-**Solutions:**
-1. Verify Chrome is running with remote debugging enabled
-2. Check if port 9222 is available
-3. Ensure Chrome version compatibility
+**解决方案：**
+1. 验证 Chrome 正在运行并启用了远程调试
+2. 检查端口 9222 是否可用
+3. 确保 Chrome 版本兼容
 
-#### MCP Server Startup Failure
+#### MCP 服务器启动失败
 ```
 Error: chrome-devtools-mcp package not found
 ```
 
-**Solutions:**
-1. Run `npm install -g chrome-devtools-mcp@latest`
-2. Check Node.js version compatibility
-3. Verify npm registry access
+**解决方案：**
+1. 运行 `npm install -g chrome-devtools-mcp@latest`
+2. 检查 Node.js 版本兼容性
+3. 验证 npm 注册表访问
 
-### Diagnostic Commands
+### 诊断命令
 
-Use the validation script to diagnose issues:
+使用验证脚本诊断问题：
 
 ```bash
-# Run comprehensive diagnostics
+# 运行全面诊断
 python3 ./plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mcp.py
 
-# Quick validation check
+# 快速验证检查
 ./plugins/chrome-debug/scripts/validate-chrome.sh
 ```
 
-## Performance Analysis Setup
+## 性能分析设置
 
-### Trace Recording
+### 轨迹记录
 
-Start performance trace recording:
+开始性能轨迹记录：
 
 ```bash
-# Begin trace collection
+# 开始轨迹收集
 mcp call performance_start_trace
 
-# Execute user interactions
-# ... user performs actions ...
+# 执行用户交互
+# ... 用户执行操作 ...
 
-# Stop and analyze trace
+# 停止并分析轨迹
 mcp call performance_stop_trace
 mcp call performance_analyze_insight
 ```
 
-### Performance Metrics
+### 性能指标
 
-Chrome DevTools MCP provides these performance metrics:
+Chrome DevTools MCP 提供这些性能指标：
 
-- **Loading Metrics**: First Contentful Paint, Largest Contentful Paint
-- **Runtime Metrics**: JavaScript execution time, memory usage
-- **Network Metrics**: Request timing, response sizes
-- **Rendering Metrics**: Frame rate, layout shifts
+- **加载指标**：首次内容绘制、最大内容绘制
+- **运行时指标**：JavaScript 执行时间、内存使用
+- **网络指标**：请求时间、响应大小
+- **渲染指标**：帧率、布局偏移
 
-## Security Considerations
+## 安全考虑
 
-### Remote Debugging Security
+### 远程调试安全
 
-Chrome's remote debugging exposes powerful capabilities:
+Chrome 的远程调试暴露了强大功能：
 
-1. **Network Exposure**: Remote debugging port should be firewalled
-2. **Code Execution**: Arbitrary JavaScript execution is possible
-3. **Data Access**: Full page content and cookies are accessible
+1. **网络暴露**：远程调试端口应设置防火墙
+2. **代码执行**：可能执行任意 JavaScript
+3. **数据访问**：可访问完整的页面内容和 Cookie
 
-### Best Practices
+### 最佳实践
 
-- Use local connections only (localhost)
-- Disable remote debugging in production
-- Implement authentication for remote access
-- Regular Chrome security updates
+- 仅使用本地连接（localhost）
+- 在生产环境中禁用远程调试
+- 为远程访问实施身份验证
+- 定期进行 Chrome 安全更新
 
-## Integration Patterns
+## 集成模式
 
-### Automated Testing Workflow
+### 自动化测试工作流
 
 ```python
-# Example: Automated login testing
+# 示例：自动化登录测试
 async def test_login_flow(mcp_client):
-    # Navigate to login page
+    # 导航到登录页面
     await mcp_client.call("navigate", {"url": "http://localhost:8193/login"})
 
-    # Wait for page load
+    # 等待页面加载
     await mcp_client.call("wait_for_load")
 
-    # Fill credentials
+    # 填写凭据
     await mcp_client.call("type", {"selector": "#username", "text": "superadmin"})
     await mcp_client.call("type", {"selector": "#password", "text": "abc123456"})
 
-    # Submit form
+    # 提交表单
     await mcp_client.call("click", {"selector": "#login-button"})
 
-    # Verify success
+    # 验证成功
     await mcp_client.call("wait_for_selector", {"selector": ".dashboard"})
     screenshot = await mcp_client.call("take_screenshot")
     return screenshot
 ```
 
-### Performance Monitoring
+### 性能监控
 
 ```python
-# Example: Performance monitoring setup
+# 示例：性能监控设置
 async def setup_performance_monitoring(mcp_client):
-    # Start performance trace
+    # 开始性能轨迹
     await mcp_client.call("performance_start_trace")
 
-    # Monitor network requests
+    # 监控网络请求
     await mcp_client.call("list_network_requests")
 
-    # Set up console logging
+    # 设置控制台日志记录
     await mcp_client.call("list_console_messages")
 ```
 
-## Error Handling and Recovery
+## 错误处理和恢复
 
-### Common Error Scenarios
+### 常见错误场景
 
-#### Chrome Crashes
+#### Chrome 崩溃
 ```javascript
-// Restart Chrome and restore session
+// 重启 Chrome 并恢复会话
 {
   "action": "restart_chrome",
   "restore_session": true,
@@ -222,9 +222,9 @@ async def setup_performance_monitoring(mcp_client):
 }
 ```
 
-#### Page Load Failures
+#### 页面加载失败
 ```javascript
-// Handle page load timeouts
+// 处理页面加载超时
 {
   "action": "handle_load_timeout",
   "retry_count": 3,
@@ -232,9 +232,9 @@ async def setup_performance_monitoring(mcp_client):
 }
 ```
 
-#### Element Not Found
+#### 元素未找到
 ```javascript
-// Robust element selection
+// 健壮的元素选择
 {
   "action": "wait_for_element",
   "selectors": ["#primary-id", ".fallback-class", "[data-testid]"],
@@ -242,11 +242,11 @@ async def setup_performance_monitoring(mcp_client):
 }
 ```
 
-## Advanced Configuration
+## 高级配置
 
-### Custom Chrome Flags
+### 自定义 Chrome 标志
 
-Configure Chrome with specific flags for debugging:
+使用特定标志配置 Chrome 进行调试：
 
 ```bash
 chrome \
@@ -257,9 +257,9 @@ chrome \
   --user-data-dir=/tmp/chrome-debug
 ```
 
-### Multi-Instance Management
+### 多实例管理
 
-Run multiple Chrome instances for parallel debugging:
+运行多个 Chrome 实例进行并行调试：
 
 ```json
 {
@@ -280,44 +280,44 @@ Run multiple Chrome instances for parallel debugging:
 }
 ```
 
-## Additional Resources
+## 其他资源
 
-### Reference Files
+### 参考文件
 
-For detailed technical specifications and troubleshooting guides:
-- **`references/api-reference.md`** - Complete MCP API documentation
-- **`references/troubleshooting.md`** - Common issues and solutions
-- **`references/performance-patterns.md`** - Performance analysis patterns
+详细技术规范和故障排除指南：
+- **`references/api-reference.md`** - 完整的 MCP API 文档
+- **`references/troubleshooting.md`** - 常见问题和解决方案
+- **`references/performance-patterns.md`** - 性能分析模式
 
-### Example Scripts
+### 示例脚本
 
-Working automation examples in `examples/`:
-- **`examples/login-automation.js`** - Complete login flow automation
-- **`examples/performance-analysis.js`** - Performance monitoring setup
-- **`examples/network-monitoring.js`** - Network request analysis
+`examples/` 中的工作自动化示例：
+- **`examples/login-automation.js`** - 完整的登录流程自动化
+- **`examples/performance-analysis.js`** - 性能监控设置
+- **`examples/network-monitoring.js`** - 网络请求分析
 
-### Utility Scripts
+### 实用脚本
 
-Helper scripts in `scripts/`:
-- **`scripts/setup-mcp.py`** - Automated MCP server setup
-- **`scripts/validate-chrome.sh`** - Chrome installation validation
-- **`scripts/diagnose-mcp.py`** - Comprehensive diagnostic tool
+`scripts/` 中的辅助脚本：
+- **`scripts/setup-mcp.py`** - 自动化 MCP 服务器设置
+- **`scripts/validate-chrome.sh`** - Chrome 安装验证
+- **`scripts/diagnose-mcp.py`** - 全面诊断工具
 
-## Best Practices
+## 最佳实践
 
-### Development Workflow
+### 开发工作流
 
-1. **Start Chrome**: Launch with remote debugging enabled
-2. **Connect MCP**: Verify MCP server connection
-3. **Navigate**: Load target application
-4. **Debug**: Use DevTools capabilities for analysis
-5. **Automate**: Implement repeatable testing patterns
-6. **Monitor**: Track performance and errors continuously
+1. **启动 Chrome**：启用远程调试启动
+2. **连接 MCP**：验证 MCP 服务器连接
+3. **导航**：加载目标应用程序
+4. **调试**：使用 DevTools 功能进行分析
+5. **自动化**：实施可重复的测试模式
+6. **监控**：持续跟踪性能和错误
 
-### Code Organization
+### 代码组织
 
-- Separate configuration from automation logic
-- Use descriptive selector strategies
-- Implement robust error handling
-- Log actions for debugging and audit trails
-- Clean up resources after each session
+- 将配置与自动化逻辑分离
+- 使用描述性的选择器策略
+- 实施健壮的错误处理
+- 记录操作用于调试和审计跟踪
+- 每次会话后清理资源

@@ -1,207 +1,207 @@
 ---
 name: chrome-config
-description: Configure Chrome DevTools MCP server, check status, and manage plugin settings
+description: 配置 Chrome DevTools MCP 服务器、检查状态和管理插件设置
 argument-hint: [--install] [--status] [--reset] [--verify]
 allowed-tools: [Read, Write, Bash, mcp__ide__*]
 ---
 
-# Chrome Config Command
+# Chrome 配置命令
 
-This command manages Chrome DevTools MCP server configuration, verifies installation status, and handles plugin settings.
+此命令管理 Chrome DevTools MCP 服务器配置、验证安装状态并处理插件设置。
 
-## Parameters
+## 参数
 
-- `--install`: Install Chrome DevTools MCP server and dependencies
-- `--status`: Check current configuration and server status
-- `--reset`: Reset configuration to default values
-- `--verify`: Verify all components are working correctly
+- `--install`: 安装 Chrome DevTools MCP 服务器和依赖项
+- `--status`: 检查当前配置和服务器状态
+- `--reset`: 将配置重置为默认值
+- `--verify`: 验证所有组件是否正常工作
 
-## Execution Steps
+## 执行步骤
 
-### --install Mode
-1. **Check System Requirements**
-   - Verify Node.js version (requires v20.19+)
-   - Check Chrome browser installation
-   - Validate npm package manager availability
+### --install 模式
+1. **检查系统要求**
+   - 验证 Node.js 版本（需要 v20.19+）
+   - 检查 Chrome 浏览器安装
+   - 验证 npm 包管理器可用性
 
-2. **Install MCP Server**
-   - Install chrome-devtools-mcp globally via npm
-   - Verify installation success
-   - Test basic functionality
+2. **安装 MCP 服务器**
+   - 通过 npm 全局安装 chrome-devtools-mcp
+   - 验证安装成功
+   - 测试基本功能
 
-3. **Create Configuration Files**
-   - Generate .mcp.json with server configuration
-   - Create local configuration template
-   - Set up default settings
+3. **创建配置文件**
+   - 生成带服务器配置的 .mcp.json
+   - 创建本地配置模板
+   - 设置默认设置
 
-4. **Validate Setup**
-   - Test MCP server connection
-   - Verify Chrome DevTools protocol access
-   - Run basic functionality tests
+4. **验证设置**
+   - 测试 MCP 服务器连接
+   - 验证 Chrome DevTools 协议访问
+   - 运行基本功能测试
 
-### --status Mode
-1. **Check System Status**
-   - Node.js version check
-   - Chrome browser detection
-   - MCP server installation verification
+### --status 模式
+1. **检查系统状态**
+   - Node.js 版本检查
+   - Chrome 浏览器检测
+   - MCP 服务器安装验证
 
-2. **Configuration Analysis**
-   - Validate .mcp.json format
-   - Check local configuration settings
-   - Verify environment variables
+2. **配置分析**
+   - 验证 .mcp.json 格式
+   - 检查本地配置设置
+   - 验证环境变量
 
-3. **Connectivity Test**
-   - Test MCP server startup
-   - Verify Chrome remote debugging
-   - Check port accessibility
+3. **连接测试**
+   - 测试 MCP 服务器启动
+   - 验证 Chrome 远程调试
+   - 检查端口可访问性
 
-4. **Report Generation**
-   - Generate comprehensive status report
-   - Identify potential issues
-   - Provide recommendations
+4. **报告生成**
+   - 生成全面的状态报告
+   - 识别潜在问题
+   - 提供建议
 
-### --reset Mode
-1. **Backup Current Settings**
-   - Save existing configuration files
-   - Document current settings
-   - Create rollback capability
+### --reset 模式
+1. **备份当前设置**
+   - 保存现有配置文件
+   - 记录当前设置
+   - 创建回滚能力
 
-2. **Reset Configuration**
-   - Remove corrupted configuration files
-   - Reset to default settings
-   - Clean up temporary files
+2. **重置配置**
+   - 删除损坏的配置文件
+   - 重置为默认设置
+   - 清理临时文件
 
-3. **Recreate Defaults**
-   - Generate fresh .mcp.json
-   - Create new local config template
-   - Set standard defaults
+3. **重新创建默认值**
+   - 生成新的 .mcp.json
+   - 创建新的本地配置模板
+   - 设置标准默认值
 
-4. **Validate Reset**
-   - Test new configuration
-   - Verify basic functionality
-   - Confirm reset success
+4. **验证重置**
+   - 测试新配置
+   - 验证基本功能
+   - 确认重置成功
 
-### --verify Mode
-1. **Component Verification**
-   - Test all plugin components
-   - Validate skill configurations
-   - Check command integration
+### --verify 模式
+1. **组件验证**
+   - 测试所有插件组件
+   - 验证技能配置
+   - 检查命令集成
 
-2. **Integration Testing**
-   - Test MCP server communication
-   - Verify Chrome DevTools access
-   - Validate automation workflows
+2. **集成测试**
+   - 测试 MCP 服务器通信
+   - 验证 Chrome DevTools 访问
+   - 验证自动化工作流
 
-3. **Performance Check**
-   - Measure response times
-   - Check resource usage
-   - Validate stability
+3. **性能检查**
+   - 测量响应时间
+   - 检查资源使用
+   - 验证稳定性
 
-4. **Generate Report**
-   - Comprehensive verification report
-   - Performance metrics
-   - Recommendations for optimization
+4. **生成报告**
+   - 全面的验证报告
+   - 性能指标
+   - 优化建议
 
-## Error Handling
+## 错误处理
 
-### Installation Errors
-- Node.js version incompatible: Provide upgrade instructions
-- Chrome not found: Suggest installation paths
-- npm permissions: Guide permission fixes
-- Network issues: Provide offline installation options
+### 安装错误
+- Node.js 版本不兼容：提供升级说明
+- Chrome 未找到：建议安装路径
+- npm 权限：指导权限修复
+- 网络问题：提供离线安装选项
 
-### Configuration Errors
-- Invalid JSON: Fix syntax errors
-- Missing fields: Add required configuration
-- Path issues: Correct file paths
-- Permission problems: Resolve access rights
+### 配置错误
+- 无效 JSON：修复语法错误
+- 缺少字段：添加必需的配置
+- 路径问题：更正文件路径
+- 权限问题：解决访问权限
 
-### Connection Errors
-- Port conflicts: Suggest alternative ports
-- Chrome launch failures: Provide troubleshooting
-- MCP server errors: Restart services
-- Protocol mismatches: Update configurations
+### 连接错误
+- 端口冲突：建议替代端口
+- Chrome 启动失败：提供故障排除
+- MCP 服务器错误：重启服务
+- 协议不匹配：更新配置
 
-## Usage Examples
+## 使用示例
 
-### Install MCP Server
+### 安装 MCP 服务器
 ```bash
 /chrome-config --install
 ```
-Complete installation of Chrome DevTools MCP server with all dependencies.
+完成 Chrome DevTools MCP 服务器及所有依赖项的安装。
 
-### Check Status
+### 检查状态
 ```bash
 /chrome-config --status
 ```
-Display comprehensive status of all components and configurations.
+显示所有组件和配置的全面状态。
 
-### Reset Configuration
+### 重置配置
 ```bash
 /chrome-config --reset
 ```
-Reset all configuration files to default values.
+将所有配置文件重置为默认值。
 
-### Verify Installation
+### 验证安装
 ```bash
 /chrome-config --verify
 ```
-Run comprehensive verification of all plugin components.
+运行所有插件组件的全面验证。
 
-## Output Format
+## 输出格式
 
-### Installation Output
+### 安装输出
 ```
-🚀 Chrome DevTools MCP Installation
-✅ Node.js version: v20.19.0 (compatible)
-✅ Chrome browser found: Google Chrome 120.0.6099.129
-📦 Installing chrome-devtools-mcp@latest...
-✅ MCP server installed successfully
-📄 Creating .mcp.json configuration...
-✅ Configuration created
-🔍 Testing MCP server connection...
-✅ Installation completed successfully
+🚀 Chrome DevTools MCP 安装
+✅ Node.js 版本: v20.19.0 (兼容)
+✅ Chrome 浏览器已找到: Google Chrome 120.0.6099.129
+📦 正在安装 chrome-devtools-mcp@latest...
+✅ MCP 服务器安装成功
+📄 正在创建 .mcp.json 配置...
+✅ 配置已创建
+🔍 正在测试 MCP 服务器连接...
+✅ 安装成功完成
 ```
 
-### Status Output
+### 状态输出
 ```
-📊 Chrome Debug Plugin Status
-✅ System Requirements Met
+📊 Chrome 调试插件状态
+✅ 系统要求已满足
   Node.js: v20.19.0 (✓)
   Chrome: 120.0.6099.129 (✓)
   npm: 10.2.3 (✓)
 
-✅ MCP Server Status
-  Installation: Complete (✓)
-  Version: chrome-devtools-mcp@1.2.0 (✓)
-  Configuration: Valid (✓)
+✅ MCP 服务器状态
+  安装: 完成 (✓)
+  版本: chrome-devtools-mcp@1.2.0 (✓)
+  配置: 有效 (✓)
 
-✅ Configuration Files
-  .mcp.json: Found and valid (✓)
-  chrome-debug.local.md: Found (✓)
-  Environment variables: Set (✓)
+✅ 配置文件
+  .mcp.json: 已找到且有效 (✓)
+  chrome-debug.local.md: 已找到 (✓)
+  环境变量: 已设置 (✓)
 
-🔗 Connectivity
-  MCP Server: Reachable (✓)
-  Chrome Debug Port: 9222 (✓)
-  DevTools Protocol: Accessible (✓)
+🔗 连接性
+  MCP 服务器: 可访问 (✓)
+  Chrome 调试端口: 9222 (✓)
+  DevTools 协议: 可访问 (✓)
 ```
 
-### Reset Output
+### 重置输出
 ```
-🔄 Chrome Debug Configuration Reset
-💾 Backing up current configuration...
-✅ Backup created: .claude/chrome-debug-backup-20241205.json
-🗑️  Removing old configuration files...
-📄 Creating new default configuration...
-✅ Configuration reset to defaults
-🔍 Validating new configuration...
-✅ Reset completed successfully
+🔄 Chrome 调试配置重置
+💾 正在备份当前配置...
+✅ 备份已创建: .claude/chrome-debug-backup-20241205.json
+🗑️  正在移除旧的配置文件...
+📄 正在创建新的默认配置...
+✅ 配置已重置为默认值
+🔍 正在验证新配置...
+✅ 重置成功完成
 ```
 
-## Configuration Files
+## 配置文件
 
-### .mcp.json Structure
+### .mcp.json 结构
 ```json
 {
   "mcpServers": {
@@ -217,7 +217,7 @@ Run comprehensive verification of all plugin components.
 }
 ```
 
-### chrome-debug.local.md Template
+### chrome-debug.local.md 模板
 ```yaml
 ---
 target_url: "http://localhost:8193/x_mgr/start/index.html#/user/login"
@@ -230,80 +230,80 @@ debug_mode: false
 ---
 ```
 
-## Troubleshooting
+## 故障排除
 
-### Common Issues
+### 常见问题
 
-**MCP Server Not Found**
+**MCP 服务器未找到**
 ```bash
-# Reinstall MCP server
+# 重新安装 MCP 服务器
 /chrome-config --install
 
-# Check npm global packages
+# 检查 npm 全局包
 npm list -g chrome-devtools-mcp
 ```
 
-**Chrome Path Issues**
+**Chrome 路径问题**
 ```bash
-# Set Chrome path environment variable
+# 设置 Chrome 路径环境变量
 export CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
-# Update configuration
+# 更新配置
 /chrome-config --reset
 ```
 
-**Port Conflicts**
+**端口冲突**
 ```bash
-# Kill existing Chrome processes
+# 终止现有 Chrome 进程
 pkill -f "chrome.*remote-debugging"
 
-# Use different port
+# 使用不同端口
 export CHROME_DEBUG_PORT=9223
 ```
 
-### Manual Verification
+### 手动验证
 
-Test MCP server manually:
+手动测试 MCP 服务器：
 ```bash
 npx -y chrome-devtools-mcp@latest --help
 ```
 
-Test Chrome remote debugging:
+测试 Chrome 远程调试：
 ```bash
 chrome --remote-debugging-port=9222 --no-sandbox
 ```
 
-## Best Practices
+## 最佳实践
 
-### Maintenance
-- Regular status checks with `--status`
-- Keep MCP server updated
-- Monitor Chrome version compatibility
-- Backup configurations before changes
+### 维护
+- 使用 `--status` 定期检查状态
+- 保持 MCP 服务器更新
+- 监控 Chrome 版本兼容性
+- 更改前备份配置
 
-### Security
-- Use HTTPS URLs when possible
-- Secure local configuration files
-- Avoid hardcoded credentials
-- Regular security updates
+### 安全
+- 尽可能使用 HTTPS URL
+- 保护本地配置文件
+- 避免硬编码凭据
+- 定期安全更新
 
-### Performance
-- Monitor resource usage
-- Optimize Chrome startup flags
-- Use appropriate timeout values
-- Clean up temporary files
+### 性能
+- 监控资源使用
+- 优化 Chrome 启动标志
+- 使用适当的超时值
+- 清理临时文件
 
-## Integration
+## 集成
 
-This command integrates with:
-- chrome-debug command: Uses configuration for debugging sessions
-- chrome-diagnose command: Leverages status information for diagnostics
-- chrome-devtools-integration skill: Provides MCP server expertise
-- dom-automation skill: Uses configuration for automation workflows
+此命令与以下组件集成：
+- chrome-debug 命令：使用配置进行调试会话
+- chrome-diagnose 命令：利用状态信息进行诊断
+- chrome-devtools-integration 技能：提供 MCP 服务器专业知识
+- dom-automation 技能：使用配置进行自动化工作流
 
-## Related Commands
+## 相关命令
 
-- `/chrome-debug`: Main debugging command using this configuration
-- `/chrome-diagnose`: Diagnose issues using configuration data
-- `/skill chrome-devtools-integration`: Get MCP configuration help
-- `/skill dom-automation`: Get automation setup guidance
+- `/chrome-debug`: 使用此配置的主要调试命令
+- `/chrome-diagnose`: 使用配置数据诊断问题
+- `/skill chrome-devtools-integration`: 获取 MCP 配置帮助
+- `/skill dom-automation`: 获取自动化设置指导

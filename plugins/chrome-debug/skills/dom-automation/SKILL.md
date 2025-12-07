@@ -1,93 +1,93 @@
 ---
 name: dom-automation
-description: This skill should be used when the user asks to "automate login", "fill forms", "click buttons", "select elements", "take screenshots", "wait for elements", or needs to perform DOM manipulation and page automation. Provides comprehensive guidance for web page automation using Chrome DevTools.
+description: 当用户要求"自动登录"、"填写表单"、"点击按钮"、"选择元素"、"截图"、"等待元素"或需要执行 DOM 操作和页面自动化时使用此技能。提供使用 Chrome DevTools 进行网页自动化的全面指导。
 version: 1.0.0
 ---
 
-# DOM Automation Skill
+# DOM 自动化技能
 
-This skill provides comprehensive guidance for automating web page interactions, DOM manipulation, and user interface testing using Chrome DevTools MCP integration.
+此技能提供使用 Chrome DevTools MCP 集成进行网页交互自动化、DOM 操作和用户界面测试的全面指导。
 
-## Core Automation Patterns
+## 核心自动化模式
 
-### Element Selection Strategies
+### 元素选择策略
 
-Use robust selector strategies for reliable element identification:
+使用健壮的选择器策略进行可靠的元素识别：
 
-#### Priority Order (Most Reliable to Least)
-1. **ID Selectors**: `#username`, `#login-button`
-2. **Test IDs**: `[data-testid="login-form"]`, `[data-cy="submit"]`
-3. **Semantic Classes**: `.btn-primary`, `.form-input`
-4. **Attribute Selectors**: `[name="password"]`, `[type="submit"]`
-5. **CSS Combinations**: `.container .btn:first-child`
-6. **XPath**: `//button[contains(text(), "Submit")]`
+#### 优先级顺序（从最可靠到最不可靠）
+1. **ID 选择器**：`#username`、`#login-button`
+2. **测试 ID**：`[data-testid="login-form"]`、`[data-cy="submit"]`
+3. **语义化类名**：`.btn-primary`、`.form-input`
+4. **属性选择器**：`[name="password"]`、`[type="submit"]`
+5. **CSS 组合器**：`.container .btn:first-child`
+6. **XPath**：`//button[contains(text(), "Submit")]`
 
 ```javascript
-// Example: Robust element selection
+// 示例：健壮的元素选择
 const selectors = [
-  '#login-button',           // Primary ID
-  '[data-testid="login"]',   // Test ID fallback
-  '.btn[type="submit"]',     // Semantic class
-  'button[type="submit"]'    // Generic fallback
+  '#login-button',           // 主要 ID
+  '[data-testid="login"]',   // 测试 ID 备用方案
+  '.btn[type="submit"]',     // 语义化类名
+  'button[type="submit"]'    // 通用备用方案
 ];
 ```
 
-### Wait Strategies
+### 等待策略
 
-Implement proper waiting to handle dynamic content:
+实施适当的等待机制以处理动态内容：
 
-#### Wait Types
-- **Wait for Load**: Page completely loaded
-- **Wait for Element**: Specific element appears
-- **Wait for Visible**: Element becomes visible
-- **Wait for Clickable**: Element can be clicked
-- **Wait for Text**: Element contains specific text
+#### 等待类型
+- **等待加载**：页面完全加载
+- **等待元素**：特定元素出现
+- **等待可见**：元素变为可见
+- **等待可点击**：元素可以被点击
+- **等待文本**：元素包含特定文本
 
 ```javascript
-// Example: Wait patterns
-await mcp.call("wait_for_load");                    // Page load
-await mcp.call("wait_for_selector", {               // Element appears
+// 示例：等待模式
+await mcp.call("wait_for_load");                    // 页面加载
+await mcp.call("wait_for_selector", {               // 元素出现
   selector: ".dashboard",
   timeout: 10000
 });
-await mcp.call("wait_for_text", {                   // Text appears
+await mcp.call("wait_for_text", {                   // 文本出现
   selector: ".status",
   text: "Success"
 });
 ```
 
-## Form Automation
+## 表单自动化
 
-### Login Automation Pattern
+### 登录自动化模式
 
-Complete login workflow with error handling:
+带错误处理的完整登录工作流：
 
 ```javascript
-// Automated login function
+// 自动登录函数
 async function performLogin(mcp, config) {
   try {
-    // Navigate to login page
+    // 导航到登录页面
     await mcp.call("navigate", { url: config.target_url });
 
-    // Wait for login form
+    // 等待登录表单
     await mcp.call("wait_for_selector", {
       selector: "#username, [name='username'], input[type='text']",
       timeout: 5000
     });
 
-    // Fill username field
+    // 填写用户名字段
     await mcp.call("type", {
       selector: "#username, [name='username']",
       text: config.username
     });
 
-    // Fill password field
+    // 填写密码字段
     await mcp.call("type", {
       selector: "#password, [name='password']",
       text: config.password
     });
 
-    // Submit form (try multiple selectors)
+    // 提交表单（尝试多个选择器）
     const submitSelectors = [
       "#login-button",
       "#submit",
@@ -98,13 +98,13 @@ async function performLogin(mcp, config) {
     for (const selector of submitSelectors) {
       try {
         await mcp.call("click", { selector });
-        break; // Success, exit loop
+        break; // 成功，退出循环
       } catch (e) {
-        continue; // Try next selector
+        continue; // 尝试下一个选择器
       }
     }
 
-    // Wait for successful login
+    // 等待登录成功
     await mcp.call("wait_for_selector", {
       selector: ".dashboard, .main-content, [data-testid='dashboard']",
       timeout: 10000
@@ -118,12 +118,12 @@ async function performLogin(mcp, config) {
 }
 ```
 
-### Form Data Patterns
+### 表单数据模式
 
-Handle various form input types:
+处理各种表单输入类型：
 
 ```javascript
-// Form filling strategies
+// 表单填写策略
 const formActions = {
   text: (selector, value) => mcp.call("type", { selector, text: value }),
   select: (selector, value) => mcp.call("select", { selector, value }),
@@ -137,7 +137,7 @@ const formActions = {
   file: (selector, filepath) => mcp.call("upload_file", { selector, filepath })
 };
 
-// Generic form filler
+// 通用表单填写器
 async function fillForm(mcp, formData) {
   for (const [selector, value] of Object.entries(formData)) {
     const inputType = await mcp.call("get_element_type", { selector });
@@ -146,46 +146,46 @@ async function fillForm(mcp, formData) {
     if (action) {
       await action(selector, value);
     } else {
-      throw new Error(`Unsupported input type: ${inputType}`);
+      throw new Error(`不支持的输入类型: ${inputType}`);
     }
   }
 }
 ```
 
-## Interactive Actions
+## 交互操作
 
-### Click and Navigation
+### 点击和导航
 
-Handle various click scenarios:
+处理各种点击场景：
 
 ```javascript
-// Click strategies
+// 点击策略
 async function smartClick(mcp, selector) {
-  // Wait for element to be clickable
+  // 等待元素可点击
   await mcp.call("wait_for_clickable", { selector });
 
-  // Get element position for debugging
+  // 获取元素位置用于调试
   const position = await mcp.call("get_element_position", { selector });
 
-  // Scroll element into view if needed
+  // 如需要则滚动元素到视图中
   if (position.y > window.innerHeight) {
     await mcp.call("scroll_to", { selector });
   }
 
-  // Perform click
+  // 执行点击
   await mcp.call("click", { selector });
 
-  // Wait for any navigation
+  // 等待任何导航
   await mcp.call("wait_for_navigation_or_timeout", { timeout: 3000 });
 }
 ```
 
-### Keyboard Actions
+### 键盘操作
 
-Handle keyboard interactions:
+处理键盘交互：
 
 ```javascript
-// Keyboard automation
+// 键盘自动化
 const keyboardActions = {
   tab: () => mcp.call("press_key", { key: "Tab" }),
   enter: () => mcp.call("press_key", { key: "Enter" }),
@@ -194,24 +194,24 @@ const keyboardActions = {
   ctrlA: () => mcp.call("hotkey", { keys: ["Ctrl", "A"] })
 };
 
-// Example: Form navigation with keyboard
+// 示例：使用键盘导航表单
 async function navigateFormWithKeyboard(mcp) {
-  await keyboardActions.tab(); // Move to next field
+  await keyboardActions.tab(); // 移动到下一个字段
   await mcp.call("type", { text: "username" });
-  await keyboardActions.tab(); // Move to password field
+  await keyboardActions.tab(); // 移动到密码字段
   await mcp.call("type", { text: "password" });
-  await keyboardActions.enter(); // Submit form
+  await keyboardActions.enter(); // 提交表单
 }
 ```
 
-## Visual Debugging
+## 可视化调试
 
-### Screenshot Strategies
+### 截图策略
 
-Capture screenshots for debugging:
+为调试捕获截图：
 
 ```javascript
-// Comprehensive screenshot capture
+// 全面的截图捕获
 async function captureDebugScreenshots(mcp, testName) {
   const screenshots = {
     fullPage: await mcp.call("take_screenshot", {
@@ -231,12 +231,12 @@ async function captureDebugScreenshots(mcp, testName) {
 }
 ```
 
-### Element Inspection
+### 元素检查
 
-Inspect DOM elements for debugging:
+检查 DOM 元素进行调试：
 
 ```javascript
-// Element debugging information
+// 元素调试信息
 async function inspectElement(mcp, selector) {
   const info = await mcp.call("inspect_element", { selector });
 
@@ -255,14 +255,14 @@ async function inspectElement(mcp, selector) {
 }
 ```
 
-## Error Handling and Recovery
+## 错误处理和恢复
 
-### Robust Error Handling
+### 健壮的错误处理
 
-Implement comprehensive error handling:
+实施全面的错误处理：
 
 ```javascript
-// Retry mechanism with exponential backoff
+// 带指数退避的重试机制
 async function retryOperation(operation, maxRetries = 3, baseDelay = 1000) {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -273,22 +273,22 @@ async function retryOperation(operation, maxRetries = 3, baseDelay = 1000) {
       }
 
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.log(`Attempt ${attempt} failed, retrying in ${delay}ms...`);
+      console.log(`第 ${attempt} 次尝试失败，${delay}ms 后重试...`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 }
 
-// Usage example
+// 使用示例
 await retryOperation(() => mcp.call("click", { selector: "#button" }));
 ```
 
-### State Validation
+### 状态验证
 
-Verify page state before and after actions:
+在操作前后验证页面状态：
 
 ```javascript
-// State validation
+// 状态验证
 async function validatePageState(mcp, expectedState) {
   const actualState = {
     url: await mcp.call("get_current_url"),
@@ -296,7 +296,7 @@ async function validatePageState(mcp, expectedState) {
     elements: {}
   };
 
-  // Check expected elements
+  // 检查预期元素
   for (const [name, selector] of Object.entries(expectedState.elements)) {
     actualState.elements[name] = {
       exists: await mcp.call("element_exists", { selector }),
@@ -309,22 +309,22 @@ async function validatePageState(mcp, expectedState) {
 }
 ```
 
-## Performance Considerations
+## 性能考虑
 
-### Efficient Automation
+### 高效自动化
 
-Optimize automation scripts for performance:
+优化自动化脚本的性能：
 
 ```javascript
-// Batch operations for better performance
+// 批量操作以获得更好的性能
 async function batchOperations(mcp, operations) {
   const results = [];
 
-  // Group similar operations
+  // 分组相似操作
   const clicks = operations.filter(op => op.type === 'click');
   const types = operations.filter(op => op.type === 'type');
 
-  // Execute batched operations
+  // 执行批量操作
   for (const click of clicks) {
     await mcp.call("click", { selector: click.selector });
   }
@@ -336,7 +336,7 @@ async function batchOperations(mcp, operations) {
   return results;
 }
 
-// Parallel waits when possible
+// 可能时并行等待
 async function parallelWaits(mcp, selectors) {
   const waitPromises = selectors.map(selector =>
     mcp.call("wait_for_selector", { selector, timeout: 5000 })
@@ -346,34 +346,34 @@ async function parallelWaits(mcp, selectors) {
 }
 ```
 
-## Testing Patterns
+## 测试模式
 
-### Test Workflow Automation
+### 测试工作流自动化
 
-Create automated test workflows:
+创建自动化测试工作流：
 
 ```javascript
-// Complete test workflow
+// 完整的测试工作流
 async function runTestSuite(mcp, tests) {
   const results = [];
 
   for (const test of tests) {
-    console.log(`Running test: ${test.name}`);
+    console.log(`运行测试: ${test.name}`);
 
     try {
-      // Setup
+      // 设置
       await mcp.call("navigate", { url: test.setup.url });
 
-      // Execute test steps
+      // 执行测试步骤
       for (const step of test.steps) {
         await executeStep(mcp, step);
       }
 
-      // Validation
+      // 验证
       const result = await validateTest(mcp, test.expected);
       results.push({ name: test.name, passed: result.success, details: result });
 
-      // Screenshot on failure
+      // 失败时截图
       if (!result.success) {
         await mcp.call("take_screenshot", {
           filename: `${test.name}-failure.png`
@@ -389,48 +389,48 @@ async function runTestSuite(mcp, tests) {
 }
 ```
 
-## Additional Resources
+## 其他资源
 
-### Reference Files
+### 参考文件
 
-For detailed automation patterns and best practices:
-- **`references/automation-patterns.md`** - Comprehensive automation patterns
-- **`references/selector-strategies.md`** - Element selection best practices
-- **`references/error-handling.md`** - Advanced error handling techniques
+详细的自动化模式和最佳实践：
+- **`references/automation-patterns.md`** - 全面的自动化模式
+- **`references/selector-strategies.md`** - 元素选择最佳实践
+- **`references/error-handling.md`** - 高级错误处理技术
 
-### Example Scripts
+### 示例脚本
 
-Working automation examples in `examples/`:
-- **`examples/login-automation.js`** - Complete login flow with error handling
-- **`examples/form-filling.js`** - Various form input automation
-- **`examples/dynamic-content.js`** - Handling AJAX and dynamic content
-- **`examples/multi-page-workflow.js`** - Complex multi-page automation
+`examples/` 中的工作自动化示例：
+- **`examples/login-automation.js`** - 带错误处理的完整登录流程
+- **`examples/form-filling.js`** - 各种表单输入自动化
+- **`examples/dynamic-content.js`** - 处理 AJAX 和动态内容
+- **`examples/multi-page-workflow.js`** - 复杂的多页面自动化
 
-### Test Data
+### 测试数据
 
-Sample test configurations:
-- **`examples/test-configs/`** - Test data and configuration files
-- **`examples/page-objects/`** - Page object model implementations
+示例测试配置：
+- **`examples/test-configs/`** - 测试数据和配置文件
+- **`examples/page-objects/`** - 页面对象模型实现
 
-## Best Practices
+## 最佳实践
 
-### Reliable Automation
-1. **Use explicit waits** instead of fixed delays
-2. **Implement retry mechanisms** for flaky operations
-3. **Validate element state** before interactions
-4. **Use multiple selector strategies** for robustness
-5. **Capture screenshots** for debugging failures
+### 可靠的自动化
+1. **使用显式等待** 而不是固定延迟
+2. **实施重试机制** 处理不稳定的操作
+3. **验证元素状态** 在交互之前
+4. **使用多种选择器策略** 提高健壮性
+5. **捕获截图** 用于调试失败
 
-### Maintainable Code
-1. **Separate test data** from test logic
-2. **Use page object model** for complex applications
-3. **Implement reusable functions** for common operations
-4. **Add comprehensive logging** for debugging
-5. **Use descriptive names** for selectors and functions
+### 可维护的代码
+1. **分离测试数据** 和测试逻辑
+2. **使用页面对象模型** 处理复杂应用程序
+3. **实施可重用函数** 用于常见操作
+4. **添加全面日志** 用于调试
+5. **使用描述性名称** 为选择器和函数命名
 
-### Performance Optimization
-1. **Batch operations** when possible
-2. **Minimize unnecessary waits**
-3. **Reuse browser sessions** across tests
-4. **Optimize selector queries**
-5. **Clean up resources** after each test
+### 性能优化
+1. **批量操作** 当可能时
+2. **最小化不必要的等待**
+3. **重用浏览器会话** 跨测试
+4. **优化选择器查询**
+5. **清理资源** 每次测试后
