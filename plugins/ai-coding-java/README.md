@@ -53,11 +53,7 @@
 - `/implement` - 端到端 Spring Boot 2.7 + Dubbo 3 微服务开发
 - `/task` - 单一任务精确执行，支持分布式业务逻辑
 - `/design` - 创建微服务架构设计文档和服务边界图
-- `/review` - **智能代码审查**，支持 AI 驱动的架构分析和问题诊断
-  - `--intelligent` - 启用 AI 驱动的智能审查
-  - `--architecture-analysis` - 深度架构分析和优化建议
-  - `--auto-diagnose` - 自动问题诊断和修复建议
-  - `--full` - 完整智能审查（包含所有功能）
+- `/review` - **完整智能代码审查** - 自动启用所有高级分析功能，包括AI驱动的架构分析、问题诊断和企业级最佳实践检查
 - `/project-inject` - Spring Boot 2.7 + Dubbo 3 项目上下文配置
 - `/code-quality` - 微服务代码质量和分布式系统性能检查
 - `/microservice` - Dubbo 3 微服务架构设计和实现
@@ -150,11 +146,8 @@ claude
 # 微服务架构设计
 /design "设计高并发的秒杀系统微服务架构，包含缓存和消息队列"
 
-# 🤖 智能代码审查（推荐使用）
-/review --intelligent                    # AI 驱动的智能审查
-/review --architecture-analysis         # 深度架构分析
-/review --auto-diagnose                  # 自动问题诊断
-/review --full                          # 完整智能审查
+# 🤖 智能代码审查（一键完整审查）
+/review                                  # 执行完整智能代码审查
 
 # 微服务代码质量和分布式系统检查
 /code-quality
@@ -173,20 +166,14 @@ claude
 /implement "实现用户管理微服务，支持分布式会话和权限控制"
 
 # 步骤3: 深度智能审查
-/review --full --suggestions 15
-# 输出包含：
+/review
+# 自动输出完整分析报告：
 # - 整体健康度评分
 # - 智能架构分析
 # - 问题诊断报告
 # - 具体修复建议
-
-# 步骤4: 针对性架构优化
-/review --architecture-analysis --focus performance
-# 重点关注性能相关的架构优化建议
-
-# 步骤5: 问题深度诊断
-/review --auto-diagnose --severity high
-# 专注于高优先级问题的深度诊断
+# - 性能优化方案
+# - 安全加固建议
 
 # 步骤6: 持续智能监控
 # 每次代码提交前运行智能质量检查
@@ -274,9 +261,7 @@ MIT License - 详见 [LICENSE](LICENSE) 文件。
 ## 🎯 使用场景
 
 ### 企业级微服务开发
-- **代码审查**: `/review --intelligent` - 获得AI驱动的代码质量分析
-- **架构评估**: `/review --architecture-analysis` - 深度微服务架构分析
-- **问题诊断**: `/review --auto-diagnose` - 自动识别和解决代码问题
+- **完整智能审查**: `/review` - 一键执行包含AI驱动分析、架构评估和问题诊断的完整代码审查
 
 ### 持续集成/持续部署
 - **质量门**: 增强的质量检查脚本，包含智能预分析
