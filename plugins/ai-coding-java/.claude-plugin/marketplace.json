@@ -1,6 +1,6 @@
 {
   "name": "ai-coding-java",
-  "version": "2.8.0",
+  "version": "2.7.0",
   "description": "🤖 智能化 Spring Boot 2.7 + Dubbo 3 企业级微服务开发插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能，提供最智能的微服务开发体验",
   "author": {
     "name": "Spring Boot + Dubbo AI Coding Team",

@@ -5,7 +5,7 @@
 
 set -e
 
-PLUGIN_ROOT="/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
 echo "📚 Starting documentation validation..."
 
