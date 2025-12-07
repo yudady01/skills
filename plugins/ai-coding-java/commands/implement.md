@@ -132,14 +132,10 @@ Task implementation = Task.builder()
 // Spring Boot 2.7 质量检查清单
 List<String> qualityChecks = Arrays.asList(
     "Java 编译和语法检查",
-    "Checkstyle 代码规范检查",
-    "PMD 代码质量检查",
-    "SpotBugs 缺陷检测",
     "单元测试执行",
     "集成测试验证",
     "数据库迁移验证",
-    "API 文档更新",
-    "安全漏洞扫描"
+    "API 文档更新"
 );
 
 // 执行质量检查
@@ -158,7 +154,7 @@ for (String check : qualityChecks) {
 ```java
 // 微服务特定检查
 List<String> microserviceChecks = Arrays.asList(
-    "Spring Boot 2.7 Actuator 健康检查",
+    "Spring Boot 2.7 应用启动验证",
     "数据库连接池配置",
     "Redis 缓存配置",
     "Spring Security 配置验证",
@@ -251,9 +247,6 @@ List<String> microserviceChecks = Arrays.asList(
 
 ### 5. 质量标准
 - 80%+ 测试覆盖率
-- 零 Checkstyle 错误
-- 零 PMD 违规
-- 零 SpotBugs 警告
 - 完整的 API 文档
 
 ### 6. 部署标准

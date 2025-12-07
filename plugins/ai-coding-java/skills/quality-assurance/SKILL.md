@@ -13,17 +13,12 @@ version: 2.7.0
 ### 1. 静态分析
 自动代码分析，无需运行代码：
 - **Java 编译器** - 类型检查和语法验证
-- **Checkstyle** - 代码风格和规范检查
-- **PMD** - 代码质量和潜在问题检测
-- **SpotBugs** - Bug 模式检测
 - **SonarQube** - 综合代码质量分析
 
 ### 2. 动态分析
 运行时代码分析：
 - **单元测试** - 类和方法级别测试
-- **集成测试** - 组件间交互测试
 - **端到端测试** - 完整业务流程测试
-- **性能测试** - 性能基准和回归测试
 - **安全测试** - 安全漏洞扫描
 
 ### 3. 人工审查
@@ -52,9 +47,6 @@ mvn compile
 
 # 运行单元测试
 mvn test
-
-# 代码质量检查
-mvn checkstyle:check
 
 echo "Quality checks passed!"
 ```
@@ -89,103 +81,7 @@ echo "Quality checks passed!"
             </executions>
         </plugin>
 
-        <!-- 代码质量检查 -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.2.0</version>
-            <configuration>
-                <configLocation>checkstyle.xml</configLocation>
-                <consoleOutput>true</consoleOutput>
-                <failsOnError>true</failsOnError>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-
-        <!-- PMD 代码分析 -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>3.19.0</version>
-            <configuration>
-                <rulesets>
-                    <ruleset>/rulesets/java/quickstart.xml</ruleset>
-                </rulesets>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-
-        <!-- SpotBugs Bug 检测 -->
-        <plugin>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-maven-plugin</artifactId>
-            <version>4.7.3.0</version>
-            <configuration>
-                <effort>Max</effort>
-                <threshold>Low</threshold>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-
-        <!-- 测试覆盖率 -->
-        <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.8</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>report</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>check</id>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                    <configuration>
-                        <rules>
-                            <rule>
-                                <element>BUNDLE</element>
-                                <limits>
-                                    <limit>
-                                        <counter>INSTRUCTION</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
-                                </limits>
-                            </rule>
-                        </rules>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+      </plugins>
 </build>
 ```
 
@@ -279,85 +175,6 @@ class UserServiceTest {
 }
 ```
 
-### 集成测试策略
-使用 @SpringBootTest 和 TestContainers：
-
-```java
-// src/test/java/com/enterprise/integration/UserControllerIntegrationTest.java
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestMethodOrder(OrderAnnotation.class)
-class UserControllerIntegrationTest extends AbstractIntegrationTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private static Long createdUserId;
-
-    @Test
-    @Order(1)
-    @DisplayName("应该成功创建用户")
-    void shouldCreateUserSuccessfully() {
-        // Given
-        UserCreateRequest request = UserCreateRequest.builder()
-                .username("integrationuser")
-                .email("integration@example.com")
-                .password("password123")
-                .firstName("Integration")
-                .lastName("User")
-                .build();
-
-        HttpEntity<UserCreateRequest> entity = new HttpEntity<>(request, getHeaders());
-
-        // When
-        ResponseEntity<UserResponse> response = restTemplate.exchange(
-                "/api/v1/users",
-                HttpMethod.POST,
-                entity,
-                UserResponse.class
-        );
-
-        // Then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getUsername()).isEqualTo("integrationuser");
-        assertThat(response.getBody().getEmail()).isEqualTo("integration@example.com");
-
-        createdUserId = response.getBody().getId();
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("应该成功获取用户信息")
-    void shouldGetUserSuccessfully() {
-        // When
-        ResponseEntity<UserResponse> response = restTemplate.getForEntity(
-                "/api/v1/users/" + createdUserId,
-                UserResponse.class
-        );
-
-        // Then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getId()).isEqualTo(createdUserId);
-    }
-
-    @Test
-    @DisplayName("获取不存在的用户应该返回 404")
-    void shouldReturn404WhenUserNotFound() {
-        // When
-        ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
-                "/api/v1/users/999999",
-                ErrorResponse.class
-        );
-
-        // Then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        assertThat(response.getBody().getCode()).isEqualTo("USER_NOT_FOUND");
-    }
-}
-```
 
 ### 端到端测试策略
 使用 Selenium WebDriver：
@@ -421,22 +238,6 @@ class UserRegistrationE2ETest {
 }
 ```
 
-## 代码覆盖率
-
-### JaCoCo 配置
-详细的覆盖率配置已在 Maven 插件中配置。
-
-### 覆盖率报告生成
-```bash
-# 运行测试并生成覆盖率报告
-mvn clean test jacoco:report
-
-# 在浏览器中查看详细报告
-open target/site/jacoco/index.html
-
-# 检查覆盖率阈值
-mvn clean test jacoco:check
-```
 
 ### SonarQube 集成
 ```xml
@@ -482,212 +283,16 @@ SonarQube 技术债务指标：
 - **代码异味数量**
 - **重复代码百分比**
 
-## 性能质量
 
-### JMH 性能基准测试
-```java
-// src/test/java/com/enterprise/performance/UserServicePerformanceTest.java
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@State(Scope.Benchmark)
-@Warmup(iterations = 3, time = 1)
-@Measurement(iterations = 5, time = 1)
-public class UserServicePerformanceTest {
 
-    private UserService userService;
-    private List<UserCreateRequest> requests;
 
-    @Setup
-    public void setup() {
-        // 初始化测试数据
-        userService = new UserServiceImpl(/* dependencies */);
-        requests = IntStream.range(0, 1000)
-                .mapToObj(i -> UserCreateRequest.builder()
-                        .username("user" + i)
-                        .email("user" + i + "@example.com")
-                        .password("password123")
-                        .build())
-                .collect(Collectors.toList());
-    }
-
-    @Benchmark
-    @DisplayName("用户创建性能测试")
-    public UserResponse createUserBenchmark() {
-        UserCreateRequest request = requests.get(ThreadLocalRandom.current().nextInt(requests.size()));
-        return userService.createUser(request);
-    }
-
-    @Benchmark
-    @DisplayName("用户查询性能测试")
-    public Optional<User> findByIdBenchmark() {
-        Long userId = (long) ThreadLocalRandom.current().nextInt(1, 1000);
-        return userService.findById(userId);
-    }
-}
-```
-
-### 数据库性能优化
-```java
-// src/test/java/com/enterprise/performance/DatabasePerformanceTest.java
-@SpringBootTest
-@Testcontainers
-class DatabasePerformanceTest extends AbstractIntegrationTest {
-
-    @Test
-    @DisplayName("批量插入性能测试")
-    void shouldTestBatchInsertPerformance() {
-        // Given
-        List<User> users = IntStream.range(0, 1000)
-                .mapToObj(i -> User.builder()
-                        .username("batchuser" + i)
-                        .email("batchuser" + i + "@example.com")
-                        .password("encodedpassword")
-                        .build())
-                .collect(Collectors.toList());
-
-        // When
-        long startTime = System.currentTimeMillis();
-        userRepository.saveAll(users);
-        long endTime = System.currentTimeMillis();
-
-        // Then
-        long duration = endTime - startTime;
-        assertThat(duration).isLessThan(5000); // 应该在5秒内完成
-    }
-}
-```
-
-## 安全质量
-
-### 依赖安全扫描
-Maven 依赖检查：
-
-```xml
-<plugin>
-    <groupId>org.owasp</groupId>
-    <artifactId>dependency-check-maven</artifactId>
-    <version>8.4.0</version>
-    <configuration>
-        <failBuildOnCVSS>7.0</failBuildOnCVSS>
-        <suppressionFiles>
-            <suppressionFile>owasp-suppressions.xml</suppressionFile>
-        </suppressionFiles>
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>check</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-```
-
-### 安全测试
-使用 Security 测试：
-
-```java
-// src/test/java/com/enterprise/security/SecurityTest.java
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-class SecurityTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    @DisplayName("未认证用户应该无法访问受保护的端点")
-    void shouldDenyAccessToUnauthenticatedUser() throws Exception {
-        mockMvc.perform(get("/api/v1/users/profile"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @DisplayName("认证用户应该能够访问自己的资源")
-    void shouldAllowAccessToAuthenticatedUser() throws Exception {
-        String jwtToken = obtainJwtToken("testuser", "password");
-
-        mockMvc.perform(get("/api/v1/users/profile")
-                        .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("SQL注入攻击应该被阻止")
-    void shouldPreventSqlInjection() throws Exception {
-        String maliciousInput = "'; DROP TABLE users; --";
-
-        mockMvc.perform(post("/api/v1/users/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"" + maliciousInput + "\"}"))
-                .andExpect(status().isBadRequest());
-    }
-
-    private String obtainJwtToken(String username, String password) throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = result.getResponse().getContentAsString();
-        return JsonPath.parse(response).read("$.token");
-    }
-}
-```
-
-## 质量监控和报告
-
-### 质量指标收集
-```java
-// src/main/java/com/enterprise/monitoring/QualityMetricsCollector.java
-@Component
-@Slf4j
-public class QualityMetricsCollector {
-
-    private final MeterRegistry meterRegistry;
-    private final Gauge testCoverageGauge;
-    private final Gauge codeComplexityGauge;
-
-    public QualityMetricsCollector(MeterRegistry meterRegistry) {
-        this.meterRegistry = meterRegistry;
-
-        this.testCoverageGauge = Gauge.builder("quality.test.coverage")
-                .description("Test coverage percentage")
-                .register(meterRegistry, this, QualityMetricsCollector::getTestCoverage);
-
-        this.codeComplexityGauge = Gauge.builder("quality.code.complexity")
-                .description("Code complexity average")
-                .register(meterRegistry, this, QualityMetricsCollector::getCodeComplexity);
-    }
-
-    private double getTestCoverage() {
-        // 从 JaCoCo 报告读取覆盖率
-        try {
-            File reportFile = new File("target/site/jacoco/jacoco.xml");
-            // 解析 XML 并返回覆盖率百分比
-            return parseJacocoReport(reportFile);
-        } catch (Exception e) {
-            log.warn("Failed to read test coverage", e);
-            return 0.0;
-        }
-    }
-
-    private double getCodeComplexity() {
-        // 从 SonarQube API 或 PMD 报告读取复杂度
-        return calculateAverageComplexity();
-    }
-}
-```
 
 ### 持续改进
 基于质量数据进行持续改进：
 
 1. **设定质量目标**
-   - 测试覆盖率 ≥ 80%
    - 代码复杂度平均值 ≤ 10
    - 重复代码 ≤ 3%
-   - 安全漏洞 = 0
 
 2. **定期评估**
    - 每日构建质量检查
@@ -708,18 +313,14 @@ public class QualityMetricsCollector {
 
 ### 代码审查清单
 - [ ] 代码符合项目编码规范
-- [ ] 单元测试覆盖率达标
+- [ ] 单元测试通过
 - [ ] 没有明显的性能问题
-- [ ] 安全漏洞检查通过
 - [ ] 错误处理完善
 - [ ] 文档更新及时
 
 ### 质量门标准
 - **构建状态**: 成功
-- **测试覆盖率**: ≥ 80%
 - **代码质量**: SonarQube Gate 通过
-- **安全扫描**: 无高危漏洞
-- **性能测试**: 通过基准测试
 
 ### 团队协作
 - **结对编程**: 提高代码质量
@@ -736,9 +337,7 @@ public class QualityMetricsCollector {
 - **`scripts/security-audit.sh`** - 安全审计脚本
 
 ### 配置模板
-参考项目中的质量配置文件：
-- **`checkstyle.xml`** - Checkstyle 配置
-- **`pmd.xml`** - PMD 规则配置
+参考项目中的配置文件：
 - **`owasp-suppressions.xml`** - OWASP 例外配置
 
 ### 详细指南

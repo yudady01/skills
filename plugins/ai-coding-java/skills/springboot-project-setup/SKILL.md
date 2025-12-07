@@ -113,16 +113,7 @@ version: 2.7.0
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
-        <!-- Monitoring -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-
+  
         <!-- Documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -184,31 +175,7 @@ version: 2.7.0
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.2.0</version>
-            </plugin>
-        </plugins>
+          </plugins>
     </build>
 </project>
 ```
@@ -332,21 +299,6 @@ mybatis-plus:
       id-type: auto
   mapper-locations: classpath*:mapper/*.xml
 
-# 监控配置
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus,dubbo
-  endpoint:
-    health:
-      show-details: when-authorized
-    dubbo:
-      enabled: true
-  metrics:
-    export:
-      prometheus:
-        enabled: true
 
 # 日志配置
 logging:
@@ -687,81 +639,6 @@ public abstract class AbstractIntegrationTest {
 }
 ```
 
-### 4. 代码质量工具
-
-#### Checkstyle 配置
-创建 `checkstyle.xml`：
-
-```xml
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-    "https://checkstyle.org/dtds/configuration_1_3.dtd">
-
-<module name="Checker">
-    <property name="charset" value="UTF-8"/>
-    <property name="severity" value="warning"/>
-    <property name="fileExtensions" value="java, properties, xml"/>
-
-    <module name="TreeWalker">
-        <!-- 命名规范 -->
-        <module name="ConstantName"/>
-        <module name="LocalFinalVariableName"/>
-        <module name="LocalVariableName"/>
-        <module name="MemberName"/>
-        <module name="MethodName"/>
-        <module name="PackageName"/>
-        <module name="ParameterName"/>
-        <module name="StaticVariableName"/>
-        <module name="TypeName"/>
-
-        <!-- 导入规范 -->
-        <module name="AvoidStarImport"/>
-        <module name="IllegalImport"/>
-        <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
-
-        <!-- 长度规范 -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
-        <module name="MethodLength">
-            <property name="max" value="50"/>
-        </module>
-        <module name="ParameterNumber">
-            <property name="max" value="7"/>
-        </module>
-
-        <!-- 空白规范 -->
-        <module name="EmptyForIteratorPad"/>
-        <module name="EmptyStatement"/>
-        <module name="WhitespaceAfter"/>
-        <module name="WhitespaceAround"/>
-
-        <!-- 修饰符规范 -->
-        <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
-
-        <!-- 代码块规范 -->
-        <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
-        <module name="LeftCurly"/>
-        <module name="NeedBraces"/>
-        <module name="RightCurly"/>
-
-        <!-- 类设计规范 -->
-        <module name="DesignForExtension"/>
-        <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
-        <module name="InterfaceIsType"/>
-
-        <!-- 复杂度规范 -->
-        <module name="CyclomaticComplexity">
-            <property name="max" value="10"/>
-        </module>
-    </module>
-</module>
-```
 
 ## 项目结构最佳实践
 
@@ -776,8 +653,7 @@ src/
 │   │   │   ├── WebConfig.java
 │   │   │   └── RedisConfig.java
 │   │   ├── controller/                # 控制器层
-│   │   │   ├── UserController.java
-│   │   │   └── HealthController.java
+│   │   │   └── UserController.java
 │   │   ├── service/                   # 服务层
 │   │   │   ├── UserService.java
 │   │   │   └── impl/
@@ -1201,7 +1077,6 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/health/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
             );
@@ -1395,9 +1270,6 @@ USER spring:spring
 
 EXPOSE 8080
 
-# 健康检查
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/api/v1/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 ```
@@ -1455,29 +1327,6 @@ networks:
 
 ## 监控和日志
 
-### Prometheus 配置
-```yaml
-# application-prod.yml
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: always
-    metrics:
-      enabled: true
-  metrics:
-    export:
-      prometheus:
-        enabled: true
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-      percentiles:
-        http.server.requests: 0.5,0.75,0.95,0.99
-```
 
 ### 日志配置 (logback-spring.xml)
 ```xml
@@ -1533,10 +1382,9 @@ management:
 - **数据库连接池耗尽**: 优化连接池配置和查询性能
 
 ### 调试技巧
-- 使用 Actuator 端点监控应用状态
 - 配置详细日志记录关键业务流程
 - 使用 AOP 切面记录方法执行时间
-- 集成 APM 工具进行分布式追踪
+- 验证 Spring Boot 应用启动状态
 
 ## 升级和维护
 
@@ -1545,8 +1393,6 @@ management:
 - **依赖版本管理**: 定期更新安全补丁，测试兼容性
 - **数据库迁移**: 使用 Flyway 进行版本化数据库变更
 
-### 监控和维护
-- **应用监控**: 使用 Prometheus + Grafana 监控关键指标
+### 维护
 - **日志聚合**: 使用 ELK Stack 集中管理日志
-- **健康检查**: 配置 Liveness 和 Readiness 探针
 - **备份策略**: 定期备份数据库和重要配置文件

@@ -28,7 +28,6 @@
 | MyBatis-Plus | 3.5.7 | ORM框架 |
 | HikariCP | - | 连接池 |
 | Zookeeper | - | 注册中心 |
-| Spring Actuator | + Prometheus | 监控 |
 
 ### 前端技术栈
 | 技术 | 版本 | 说明 |
@@ -66,14 +65,12 @@
 - Spring Boot 2.7 + Apache Dubbo 3.2.14 框架集成
 - Maven 构建工具和依赖管理
 - JUnit 5 + Mockito 微服务测试框架
-- Checkstyle 代码质量工具和 Dubbo 3 规范检查
 - SonarQube 集成和代码质量监控
 - Docker 容器化和 Kubernetes 部署支持
 - Spring Security + JWT 分布式安全框架
 - MyBatis-Plus 数据访问层和多数据源支持
 - Zookeeper 服务发现和配置中心
 - Redis 缓存和 ActiveMQ 消息队列
-- Prometheus + Grafana 监控体系
 - **Lombok 简化开发** - 自动生成样板代码，提升开发效率
 - **@SneakyThrows 错误处理** - 简化异常处理代码，避免冗长的 try-catch
 

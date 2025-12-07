@@ -147,6 +147,52 @@ license: Apache 2.0  # 可选
 ## 关键集成点
 
 ### 环境变量
+
+#### ${CLAUDE_PLUGIN_ROOT} 环境变量
+
+`${CLAUDE_PLUGIN_ROOT}` 是 Claude Code 提供的重要环境变量，包含插件目录的绝对路径。此变量在以下场景中至关重要：
+
+**使用场景**:
+- **Hooks 脚本**: 在 hooks.json 中引用脚本文件时，确保路径正确性
+- **MCP 服务器**: 配置 .mcp.json 文件时，提供服务器可执行文件的绝对路径
+- **Shell 脚本**: 在插件脚本中引用资源文件、模板或配置文件
+- **跨平台兼容性**: 确保插件在不同系统环境下都能找到正确的文件路径
+
+**最佳实践**:
+```bash
+# 在 hooks.json 中使用
+{
+  "hooks": [
+    {
+      "type": "PreToolUse",
+      "script": "${CLAUDE_PLUGIN_ROOT}/scripts/pre-tool-check.sh",
+      "enabled": true
+    }
+  ]
+}
+
+# 在 .mcp.json 中使用
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/server.js",
+      "args": ["--config", "${CLAUDE_PLUGIN_ROOT}/config.json"]
+    }
+  }
+}
+
+# 在 shell 脚本中使用
+#!/bin/bash
+TEMPLATE_DIR="${CLAUDE_PLUGIN_ROOT}/templates"
+CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
+```
+
+**注意事项**:
+- `${CLAUDE_PLUGIN_ROOT}` 指向的是插件根目录（包含 .claude-plugin/plugin.json 或 marketplace.json 的目录）
+- 在市场插件中，此变量指向每个独立插件的目录，而非市场根目录
+- 路径拼接时建议使用双引号避免空格路径问题
+- 在 Windows 环境下也使用正斜杠格式，Claude Code 会自动处理路径转换
+
 部署时，脚本使用 `${CLAUDE_PLUGIN_ROOT}` 来实现可移植路径
 
 ### 插件间依赖

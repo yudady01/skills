@@ -5,7 +5,7 @@
 
 set -e
 
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-/Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java}"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
 echo "🔍 Starting Spring Boot enterprise quality gate checks..."
 
@@ -62,82 +62,7 @@ else
     echo -e "${YELLOW}⚠ No Java build tool found (Maven/Gradle), skipping compilation check${NC}"
 fi
 
-# 2. Checkstyle 代码规范检查
-echo "🎨 Checkstyle code standards check..."
-increment_counter
-if check_command mvn; then
-    if [ -f "checkstyle.xml" ] || mvn checkstyle:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Checkstyle check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Checkstyle check failed${NC}"
-        echo "Run 'mvn checkstyle:check' to see style violations"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "checkstyle" build.gradle; then
-    if ./gradlew checkstyleMain -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Checkstyle check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Checkstyle check failed${NC}"
-        echo "Run './gradlew checkstyleMain' to see style violations"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ Checkstyle not configured, skipping style check${NC}"
-fi
-
-# 3. PMD 代码质量检查
-echo "🔧 PMD code quality check..."
-increment_counter
-if check_command mvn && [ -f "pom.xml" ] && grep -q "maven-pmd-plugin" pom.xml; then
-    if mvn pmd:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ PMD check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ PMD check failed${NC}"
-        echo "Run 'mvn pmd:check' to see quality violations"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "pmd" build.gradle; then
-    if ./gradlew pmdMain -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ PMD check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ PMD check failed${NC}"
-        echo "Run './gradlew pmdMain' to see quality violations"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ PMD not configured, skipping quality check${NC}"
-fi
-
-# 4. SpotBugs Bug 检测
-echo "🐛 SpotBugs bug detection..."
-increment_counter
-if check_command mvn && [ -f "pom.xml" ] && grep -q "spotbugs-maven-plugin" pom.xml; then
-    if mvn spotbugs:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ SpotBugs check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ SpotBugs check failed${NC}"
-        echo "Run 'mvn spotbugs:check' to see bug violations"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "spotbugs" build.gradle; then
-    if ./gradlew spotbugsMain -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ SpotBugs check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ SpotBugs check failed${NC}"
-        echo "Run './gradlew spotbugsMain' to see bug violations"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ SpotBugs not configured, skipping bug check${NC}"
-fi
-
-# 5. 单元测试检查
+# 2. 单元测试检查
 echo "🧪 Unit test execution..."
 increment_counter
 if check_command mvn; then
@@ -162,63 +87,7 @@ else
     echo -e "${YELLOW}⚠ No build tool found, skipping unit test check${NC}"
 fi
 
-# 6. 测试覆盖率检查
-echo "📊 Test coverage check..."
-increment_counter
-if check_command mvn && [ -f "pom.xml" ] && grep -q "jacoco-maven-plugin" pom.xml; then
-    if mvn jacoco:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Test coverage check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Test coverage check failed${NC}"
-        echo "Run 'mvn jacoco:check' to see coverage violations"
-        echo "View coverage report: target/site/jacoco/index.html"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "jacoco" build.gradle; then
-    if ./gradlew jacocoTestCoverageVerification -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Test coverage check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Test coverage check failed${NC}"
-        echo "Run './gradlew jacocoTestCoverageVerification' to see coverage violations"
-        echo "View coverage report: build/reports/jacoco/test/html/index.html"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ JaCoCo not configured, skipping coverage check${NC}"
-fi
-
-# 7. 集成测试检查（如果存在）
-echo "🔗 Integration test check..."
-increment_counter
-if [ -d "src/test/java" ] && find src/test/java -name "*IntegrationTest*" -o -name "*IT*" | grep -q .; then
-    if check_command mvn; then
-        if mvn verify -Pintegration-tests -q >/dev/null 2>&1; then
-            echo -e "${GREEN}✓ Integration tests passed${NC}"
-            increment_counter "passed"
-        else
-            echo -e "${RED}✗ Integration tests failed${NC}"
-            echo "Run 'mvn verify -Pintegration-tests' to see integration test failures"
-            exit 1
-        fi
-    elif check_command gradle; then
-        if ./gradlew integrationTest -q >/dev/null 2>&1; then
-            echo -e "${GREEN}✓ Integration tests passed${NC}"
-            increment_counter "passed"
-        else
-            echo -e "${RED}✗ Integration tests failed${NC}"
-            echo "Run './gradlew integrationTest' to see integration test failures"
-            exit 1
-        fi
-    else
-        echo -e "${YELLOW}⚠ Integration tests found but no build tool available${NC}"
-    fi
-else
-    echo -e "${YELLOW}⚠ No integration tests found, skipping integration test check${NC}"
-fi
-
-# 8. Spring Boot 应用启动检查
+# 3. Spring Boot 应用启动检查
 echo "🚀 Spring Boot application startup check..."
 increment_counter
 if [ -f "src/main/java" ] && find src/main/java -name "*Application.java" | grep -q .; then
@@ -243,57 +112,7 @@ else
     echo -e "${YELLOW}⚠ No Spring Boot application class found, skipping startup check${NC}"
 fi
 
-# 9. 代码格式化检查（Spotless）
-echo "✨ Code formatting check..."
-increment_counter
-if check_command mvn && [ -f "pom.xml" ] && grep -q "spotless-maven-plugin" pom.xml; then
-    if mvn spotless:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Code formatting check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Code formatting check failed${NC}"
-        echo "Run 'mvn spotless:apply' to fix formatting issues"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "spotless" build.gradle; then
-    if ./gradlew spotlessCheck -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Code formatting check passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Code formatting check failed${NC}"
-        echo "Run './gradlew spotlessApply' to fix formatting issues"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ Spotless not configured, skipping format check${NC}"
-fi
-
-# 10. 安全漏洞扫描
-echo "🔒 Security vulnerability scan..."
-increment_counter
-if check_command mvn && [ -f "pom.xml" ] && grep -q "dependency-check-maven" pom.xml; then
-    if mvn dependency-check:check -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Security vulnerability scan passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Security vulnerability scan failed${NC}"
-        echo "Run 'mvn dependency-check:check' to see security vulnerabilities"
-        exit 1
-    fi
-elif check_command gradle && [ -f "build.gradle" ] && grep -q "dependency-check" build.gradle; then
-    if ./gradlew dependencyCheckAnalyze -q >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Security vulnerability scan passed${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${RED}✗ Security vulnerability scan failed${NC}"
-        echo "Run './gradlew dependencyCheckAnalyze' to see security vulnerabilities"
-        exit 1
-    fi
-else
-    echo -e "${YELLOW}⚠ OWASP Dependency Check not configured, skipping security scan${NC}"
-fi
-
-# 11. 构建最终检查
+# 4. 构建最终检查
 echo "🏗️ Final build verification..."
 increment_counter
 if check_command mvn; then

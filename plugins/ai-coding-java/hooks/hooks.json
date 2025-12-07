@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java/scripts/quality-gate.sh",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/quality-gate.sh",
             "timeout": 30
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/tommy/.claude/plugins/marketplace/claude-code-plugins/plugins/ai-coding-java/scripts/documentation-validator.sh",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/documentation-validator.sh",
             "timeout": 15
           }
         ]

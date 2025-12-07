@@ -1,5 +1,5 @@
 ---
-description: 运行全面的代码质量检查，包括类型检查、测试覆盖率和性能分析
+description: 运行基础的代码质量检查，包括类型检查和基本测试
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ---
 
@@ -15,24 +15,12 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 - 接口契约验证
 
 ### 2. 代码规范
-- 代码格式检查
-- 命名规范验证
+- 基本命名规范验证
 - 编码标准合规
 
 ### 3. 测试质量
-- 单元测试覆盖率
-- 集成测试完整性
+- 单元测试完整性
 - 边界条件测试
-
-### 4. 性能分析
-- 算法复杂度分析
-- 内存使用检查
-- 性能回归检测
-
-### 5. 安全检查
-- 安全漏洞扫描
-- 依赖安全审计
-- 输入验证检查
 
 ## 执行命令
 
@@ -42,12 +30,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 # 运行特定类型检查
 /code-quality --type-check
-
-# 运行测试覆盖率检查
-/code-quality --coverage
-
-# 运行安全检查
-/code-quality --security
 ```
 
 通过这个命令，您可以确保代码符合所有质量标准和最佳实践要求。

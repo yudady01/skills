@@ -131,7 +131,7 @@ public class LargeScaleMicroservice {
 
     Map<String, List<String>> documentation = Map.of(
         "required", Arrays.asList("PRD", "技术设计文档", "工作计划"),
-        "optional", Arrays.asList("ADR", "性能测试文档", "部署文档")
+        "optional", Arrays.asList("ADR", "部署文档")
     );
 }
 ```
@@ -251,7 +251,6 @@ public class ImplementationStrategy {
     Map<String, String> deployment = Map.of(
         "staging", "预发布环境验证",
         "rollback", "微服务回滚策略",
-        "monitoring", "Prometheus + Grafana 监控",
         "logging", "ELK 日志聚合",
         "tracing", "Dubbo 3 分布式追踪"
     );

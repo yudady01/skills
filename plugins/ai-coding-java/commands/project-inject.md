@@ -60,7 +60,7 @@ public class MicroserviceTechStack {
 // 企业级开发规则标准
 public class EnterpriseDevelopmentRules {
     public enum CodeStyle {
-        CHECKSTYLE, GOOGLE_STYLE, ALI_STYLE
+        GOOGLE_STYLE, ALI_STYLE
     }
 
     public enum QualityGate {
@@ -157,29 +157,9 @@ dubbo:
     port: ${dubboPort}
 ```
 
-### 4. 质量门禁配置
+### 4. 基础配置
 
-**Maven 质量检查配置**：
-
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-checkstyle-plugin</artifactId>
-    <version>3.2.0</version>
-</plugin>
-
-<plugin>
-    <groupId>com.github.spotbugs</groupId>
-    <artifactId>spotbugs-maven-plugin</artifactId>
-    <version>4.7.3.0</version>
-</plugin>
-
-<plugin>
-    <groupId>org.jacoco</groupId>
-    <artifactId>jacoco-maven-plugin</artifactId>
-    <version>0.8.8</version>
-</plugin>
-```
+**项目基础配置完成**
 
 ### 5. 文档模板生成
 
@@ -296,7 +276,6 @@ ${testingRequirements}
 ├── pom.xml               # Maven 配置
 ├── application.yml       # Spring Boot 2.7 配置
 ├── dubbo.properties      # Dubbo 配置
-└── checkstyle.xml        # 代码质量工具配置
 ```
 
 ### 3. 文档文件
@@ -336,7 +315,7 @@ public class ConfigurationWizard {
 
     public static class Standards {
         public String testCoverage = "测试覆盖率目标是多少？";
-        public String codeStyle = "使用什么代码格式化工具？";
+        public String codeStyle = "使用什么命名规范？";
         public String commitStyle = "使用什么提交信息格式？";
     }
 }
@@ -347,8 +326,6 @@ public class ConfigurationWizard {
 # 验证配置文件
 mvn validate
 
-# 检查配置一致性
-mvn checkstyle:check
 
 # 测试配置效果
 mvn test
@@ -373,7 +350,7 @@ techStack:
 
 standards:
   testCoverage: 85
-  codeStyle: "Checkstyle"
+  codeStyle: "Standard"
   buildTool: "Maven"
 
 team:
@@ -466,7 +443,6 @@ mvn archetype:generate -DgroupId=com.example -DartifactId=my-service
 
 # 验证配置
 mvn validate
-mvn checkstyle:check
 
 # 开始开发
 mvn spring-boot:run
