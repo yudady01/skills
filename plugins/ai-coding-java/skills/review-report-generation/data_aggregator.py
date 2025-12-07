@@ -123,7 +123,8 @@ class ReviewDataAggregator:
                             code_reviewer_output: str,
                             architecture_analyzer_output: str = "",
                             intelligent_diagnoser_output: str = "",
-                            quality_gate_output: str = "") -> Dict[str, Any]:
+                            quality_gate_output: str = "",
+                            git_summary: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """聚合所有代理的审查数据"""
 
         # 解析各代理输出
@@ -161,6 +162,7 @@ class ReviewDataAggregator:
                 "risk_assessment": self._assess_risks(all_issues, quality_metrics)
             },
             "recommendations": code_review_data.get("recommendations", []),
+            "git_summary": git_summary or {},  # 添加Git摘要数据
             "agent_outputs": {
                 "code_reviewer": code_reviewer_output,
                 "architecture_analyzer": architecture_analyzer_output,

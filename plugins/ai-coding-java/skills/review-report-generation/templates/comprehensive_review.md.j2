@@ -1,5 +1,36 @@
 # 📋 AI 智能代码审查报告
 
+## 📊 Git 更改摘要
+
+{% if git_summary and git_summary.repository %}
+### 📝 修改范围
+- **分支**: {{ git_summary.repository.current_branch or "未知" }}
+- **修改文件**: {{ git_summary.changes.total_files_changed or 0 }} 个
+- **代码变更**: +{{ git_summary.changes.total_additions or 0 }} 行 / -{{ git_summary.changes.total_deletions or 0 }} 行
+
+### 📁 文件变更列表
+| 文件 | 状态 | + / - | 类型 |
+|------|------|-------|------|
+{% if git_summary.changes.file_changes %}
+{% for file_change in git_summary.changes.file_changes %}
+| `{{ file_change.filename }}` | {{ file_change.status }} | +{{ file_change.additions }} / -{{ file_change.deletions }} | {{ file_change.type }} |
+{% endfor %}
+{% else %}
+| 无变更 | - | - | - |
+{% endif %}
+
+### 📈 变更分析
+- **变更范围**: {{ git_summary.analysis.change_scope or "未知" }}
+- **影响级别**: {{ git_summary.analysis.impact_level or "未知" }}
+- **未提交更改**: {{ git_summary.repository.uncommitted_changes or 0 }} 个文件
+{% else %}
+### 📝 Git 状态
+- **当前目录**: 非Git仓库或Git分析失败
+- **建议**: 在Git仓库中运行以获得更精确的代码变更分析
+{% endif %}
+
+---
+
 ## 📊 审查概述
 
 | 项目 | 内容 |

@@ -62,6 +62,31 @@ should_generate_report() {
     return 0
 }
 
+# 获取Git数据
+get_git_data() {
+    log_debug "开始收集Git数据..."
+
+    local git_script="${PLUGIN_ROOT}/hooks/scripts/git-analyzer.sh"
+    local git_data=""
+
+    if [[ -f "$git_script" ]]; then
+        # 尝试获取Git数据
+        git_data=$("$git_script" json 2>/dev/null || echo '{"error": "git_analysis_failed"}')
+
+        if [[ "$git_data" =~ error ]]; then
+            log_debug "Git分析失败: $git_data"
+            git_data='{"error": "not_a_git_repository", "message": "非Git环境或Git分析失败"}'
+        else
+            log_debug "成功获取Git数据"
+        fi
+    else
+        log_debug "Git分析器脚本不存在: $git_script"
+        git_data='{"error": "git_analyzer_not_found", "message": "Git分析器脚本未找到"}'
+    fi
+
+    echo "$git_data"
+}
+
 # 获取审查数据
 get_review_data() {
     # 这里需要从上下文或环境变量中获取审查数据
@@ -118,7 +143,15 @@ get_review_data() {
         log_debug "使用模拟审查数据"
     fi
 
-    echo "$temp_data"
+    # 获取Git数据并集成到审查数据中
+    local git_data
+    git_data=$(get_git_data)
+
+    # 将Git数据集成到审查数据中
+    local combined_data
+    combined_data=$(echo "$temp_data" | jq --argjson git_data "$git_data" '. + {git_summary: $git_data}' 2>/dev/null || echo "$temp_data")
+
+    echo "$combined_data"
 }
 
 # 生成报告
@@ -189,12 +222,19 @@ show_report_summary() {
 
     log_info "📊 报告摘要:"
 
-    # 提取关键信息
+    # 显示Git摘要信息（如果有的话）
     if command -v python3 &> /dev/null && [[ -f "${PLUGIN_ROOT}/scripts/report_utils.py" ]]; then
         local validation=$(python3 "${PLUGIN_ROOT}/scripts/report_utils.py" validate "$report_path" 2>/dev/null)
         if [[ $? -eq 0 ]]; then
-            echo "$validation" | grep -E "(评分|健康度|文件大小)" || true
+            echo "$validation" | grep -E "(评分|健康度|文件大小|Git)" || true
         fi
+    fi
+
+    # 如果有Git分析器，显示Git摘要
+    local git_script="${PLUGIN_ROOT}/hooks/scripts/git-analyzer.sh"
+    if [[ -f "$git_script" ]]; then
+        echo
+        "$git_script" summary 2>/dev/null || log_debug "Git摘要显示失败"
     fi
 
     # 显示文件大小
