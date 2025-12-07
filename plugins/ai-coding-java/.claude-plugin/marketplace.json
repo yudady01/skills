@@ -43,6 +43,16 @@
     "performance-optimization",
     "security-analysis",
     "intelligent-suggestions",
-    "automated-refactoring"
+    "automated-refactoring",
+    "context7",
+    "document-search",
+    "knowledge-retrieval",
+    "vector-search",
+    "semantic-search",
+    "intelligent-documentation",
+    "mcp-server",
+    "document-processor",
+    "embedding-search",
+    "knowledge-management"
   ]
 }
