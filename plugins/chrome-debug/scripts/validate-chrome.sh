@@ -5,8 +5,15 @@
 
 set -e
 
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(dirname "$(dirname "$0")")}"
+# Get script directory and resolve plugin root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(dirname "$SCRIPT_DIR")}"
+
+# Validate plugin root path
+if [ ! -f "$PLUGIN_ROOT/.claude-plugin/marketplace.json" ] && [ ! -f "$PLUGIN_ROOT/.claude-plugin/plugin.json" ]; then
+    echo "⚠️  Warning: Plugin configuration files not found in $PLUGIN_ROOT"
+    echo "   Expected: marketplace.json or plugin.json in .claude-plugin/ directory"
+fi
 
 # Colors for output
 RED='\033[0;31m'
@@ -182,18 +189,29 @@ check_plugin_config() {
         print_status "WARN" ".mcp.json not found"
     fi
 
-    # Check plugin.json
-    local plugin_config="$PLUGIN_ROOT/.claude-plugin/plugin.json"
+    # Check marketplace.json (for marketplace plugins)
+    local plugin_config="$PLUGIN_ROOT/.claude-plugin/marketplace.json"
     if [[ -f "$plugin_config" ]]; then
         if python3 -c "import json; json.load(open('$plugin_config'))" 2>/dev/null; then
-            print_status "OK" "plugin.json configuration valid"
+            print_status "OK" "marketplace.json configuration valid"
         else
-            print_status "ERROR" "plugin.json contains invalid JSON"
+            print_status "ERROR" "marketplace.json contains invalid JSON"
             return 1
         fi
     else
-        print_status "ERROR" "plugin.json not found"
-        return 1
+        # Fallback check for plugin.json (for legacy plugins)
+        local legacy_config="$PLUGIN_ROOT/.claude-plugin/plugin.json"
+        if [[ -f "$legacy_config" ]]; then
+            if python3 -c "import json; json.load(open('$legacy_config'))" 2>/dev/null; then
+                print_status "OK" "plugin.json configuration valid (legacy format)"
+            else
+                print_status "ERROR" "plugin.json contains invalid JSON"
+                return 1
+            fi
+        else
+            print_status "ERROR" "Neither marketplace.json nor plugin.json found"
+            return 1
+        fi
     fi
 
     # Check local configuration template
