@@ -164,7 +164,6 @@ public class AdrCriteria {
         "Spring Boot 2.7 微服务架构变更（服务拆分、合并）",
         "数据库模式变更（MyBatis-Plus 实体、数据库分库分表）",
         "微服务通信变更（REST API、消息队列、服务发现）",
-        "安全架构变更（Spring Security、认证授权）",
         "性能要求变更（缓存策略、数据库优化、并发处理）",
         "技术栈变更（Spring Boot 2.7 版本、依赖库）",
         "部署架构变更（容器化、编排、云平台）"
@@ -303,7 +302,6 @@ public class ImplementationStrategy {
 - **开发阶段**：[建议的微服务开发阶段分解]
 - **技术选型**：[Spring Boot 2.7、Dubbo 3 组件选择]
 - **数据库设计**：[MyBatis-Plus、数据库选择建议]
-- **安全设计**：[Spring Security、认证授权方案]
 - **性能设计**：[缓存、并发、扩展性方案]
 - **优先级**：[高/中/低]
 - **下一步行动**：[具体的下一步]

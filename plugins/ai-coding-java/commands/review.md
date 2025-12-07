@@ -67,7 +67,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite, Task]
 ```json
 {
   "intelligent_analysis": true,
-  "focus_areas": ["architecture", "performance", "security"],
+  "focus_areas": ["architecture", "performance"],
   "severity_threshold": "medium",
   "suggestions_limit": 15
 }

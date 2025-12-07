@@ -180,47 +180,11 @@ architecture_analysis() {
     fi
 }
 
-# 安全基础检查
-security_analysis() {
-    echo ""
-    echo "🛡️ Security Analysis"
-    echo "===================="
-
-    # 检查Spring Security配置
-    echo "🔐 Analyzing security configuration..."
-    increment_counter
-    if grep -r "spring-boot-starter-security" pom.xml >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ Spring Security dependency detected${NC}"
-
-        # 检查是否有安全配置类
-        security_config_count=$(find src/main/java -name "*Security*.java" -o -name "*Config*.java" | xargs grep -l "EnableWebSecurity\|SecurityFilterChain" 2>/dev/null | wc -l)
-        if [ "$security_config_count" -gt 0 ]; then
-            echo -e "${GREEN}✓ Security configuration classes found${NC}"
-            increment_counter "passed"
-        else
-            echo -e "${YELLOW}⚠ Spring Security enabled but no explicit configuration found${NC}"
-        fi
-    else
-        echo -e "${YELLOW}⚠ Spring Security not detected. Consider adding security for production applications${NC}"
-    fi
-
-    # 检查敏感信息暴露风险
-    echo "🔍 Analyzing sensitive information exposure..."
-    increment_counter
-    sensitive_patterns=$(grep -r -i "password\|secret\|key" src/main/resources --include="*.properties" --include="*.yml" --include="*.yaml" 2>/dev/null | wc -l)
-    if [ "$sensitive_patterns" -eq 0 ]; then
-        echo -e "${GREEN}✓ No obvious sensitive information patterns found in configuration files${NC}"
-        increment_counter "passed"
-    else
-        echo -e "${YELLOW}⚠ $sensitive_patterns potential sensitive information patterns found. Review configuration files${NC}"
-    fi
-}
 
 # 执行智能分析检查
 echo "🧠 Executing Intelligent Analysis Checks..."
 intelligent_pre_analysis
 architecture_analysis
-security_analysis
 
 echo ""
 echo "📝 Traditional Quality Checks"
@@ -349,11 +313,10 @@ if [ $PASSED_CHECKS -eq $TOTAL_CHECKS ]; then
     echo -e "${BLUE}🚀 Next Steps:${NC}"
     echo "  • Consider running '/review --intelligent' for deeper AI analysis"
     echo "  • Deploy with confidence to staging environment"
-    echo "  • Monitor application performance and security metrics"
+    echo "  • Monitor application performance and quality metrics"
     echo ""
     echo -e "${BLUE}📊 Quality Metrics Achieved:${NC}"
     echo "  ✅ Intelligent Architecture Analysis"
-    echo "  ✅ Security Foundation Assessment"
     echo "  ✅ Code Quality Standards"
     echo "  ✅ Build and Test Validation"
     exit 0

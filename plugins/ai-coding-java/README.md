@@ -92,7 +92,6 @@
 - JUnit 5 + Mockito 微服务测试框架
 - SonarQube 集成和代码质量监控
 - Docker 容器化和 Kubernetes 部署支持
-- Spring Security + JWT 分布式安全框架
 - MyBatis-Plus 数据访问层和多数据源支持
 - Zookeeper 服务发现和配置中心
 - Redis 缓存和 ActiveMQ 消息队列

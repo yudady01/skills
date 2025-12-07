@@ -334,11 +334,9 @@ SonarQube 技术债务指标：
 使用 `scripts/` 目录中的自动化工具：
 - **`scripts/quality-gate.sh`** - 质量门检查脚本
 - **`scripts/coverage-report.sh`** - 覆盖率报告生成
-- **`scripts/security-audit.sh`** - 安全审计脚本
 
 ### 配置模板
 参考项目中的配置文件：
-- **`owasp-suppressions.xml`** - OWASP 例外配置
 
 ### 详细指南
 参考企业级开发最佳实践：
