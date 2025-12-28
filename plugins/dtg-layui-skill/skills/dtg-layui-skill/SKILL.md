@@ -1,16 +1,20 @@
 ---
-name: layui-helper
-description: This skill should be used when the user asks to "create a layui form", "build a data table", "design admin layout", "add date picker", "create modal dialog", "create file upload", "build navigation menu", or similar Layui 2.3.0 frontend development tasks. Provides code generation templates and API reference for Layui framework.
-version: 1.0.0
+name: dtg-layui-skill
+description: This skill should be used when the user asks to "create a layui form", "build a data table", "design admin layout", "add date picker", "create modal dialog", "create file upload", "build navigation menu", "create admin page", "order management page", or similar Layui 2.3.0 / LayuiAdmin frontend development tasks. Provides code generation templates and API reference for Layui framework and LayuiAdmin enterprise solutions.
+version: 2.0.0
 ---
 
-# layui-helper
+# dtg-layui-skill
 
-Layui 代码生成助手，帮助快速构建使用 Layui 2.3.0 的网页。
+Layui 代码生成助手，帮助快速构建使用 Layui 2.3.0 和 LayuiAdmin 的网页。
 
 ## 关于 Layui
 
 Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架，遵循原生 HTML/CSS/JS 的书写与组织形式，门槛极低，拿来即用。外在极简，却又不失饱满的内在，体积轻盈，组件丰盈。
+
+## 关于 LayuiAdmin
+
+LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页面应用（SPA）架构、完善的路由系统、模块化开发支持和内置权限控制。
 
 ## 核心能力
 
@@ -47,7 +51,19 @@ Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架�
 - 评分、进度条、徽章
 - 代码修饰器、流加载
 
+### 6. LayuiAdmin 企业级支持
+
+- LayuiAdmin 后台管理页面模板
+- 订单管理页面（复杂搜索、数据统计、导出功能）
+- 配置管理页面（权限控制、状态切换）
+- 对账管理页面（简洁布局、数据表格）
+- 数据统计仪表板（ECharts 图表、轮播组件）
+- ECharts 数据可视化集成
+- 企业级工具函数库
+
 ## 触发短语
+
+### 标准 Layui 模块
 
 | 触发短语 | 功能模块 |
 |----------|----------|
@@ -61,6 +77,18 @@ Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架�
 | "carousel", "slider" | 轮播组件 |
 | "tab panel", "accordion" | 选项卡/折叠面板 |
 | "tree structure", "tree menu" | 树形组件 |
+
+### LayuiAdmin 企业级模块
+
+| 触发短语 | 功能模块 |
+|----------|----------|
+| "create admin page", "layuiadmin page" | LayuiAdmin 后台页面 |
+| "order management page", "order list" | 订单管理页面 |
+| "config management page", "payment config" | 配置管理页面 |
+| "reconciliation page" | 对账管理页面 |
+| "data dashboard", "statistics dashboard" | 数据统计仪表板 |
+| "echarts chart", "data visualization" | ECharts 图表 |
+| "permission control", "auth check" | 权限控制 |
 
 ## 17 个核心模块速查
 
@@ -122,6 +150,8 @@ Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架�
 
 ### 模板文件 (assets/templates/)
 
+#### 标准 Layui 模板
+
 | 文件 | 用途 |
 |------|------|
 | basic-page.html | 基础 HTML 页面结构 |
@@ -130,7 +160,19 @@ Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架�
 | table-template.html | 数据表格模板 |
 | login-page.html | 登录页面模板 |
 
+#### LayuiAdmin 企业级模板
+
+| 文件 | 用途 |
+|------|------|
+| layui-admin-page.html | LayuiAdmin 后台管理页面 |
+| layui-order-page.html | 订单管理页面（含搜索、统计、导出） |
+| layui-config-page.html | 配置管理页面（含权限控制） |
+| layui-reconciliation-page.html | 对账管理页面 |
+| layui-dashboard.html | 数据统计仪表板（含 ECharts） |
+
 ### 参考文档 (references/)
+
+#### 标准 Layui 文档
 
 | 文件 | 内容 |
 |------|------|
@@ -147,12 +189,32 @@ Layui 是一款采用自身模块规范编写的经典模块化前端 UI 框架�
 | 11-best-practices.md | 最佳实践 |
 | 12-troubleshooting.md | 常见问题解答 |
 
+#### LayuiAdmin 企业级文档
+
+| 文件 | 内容 |
+|------|------|
+| 13-layuiadmin-guide.md | LayuiAdmin 开发指南 |
+| 14-echarts-integration.md | ECharts 集成指南 |
+| 15-enterprise-table.md | 企业级表格开发 |
+| 16-payment-system-patterns.md | 支付系统页面模式 |
+| 17-utility-functions.md | 工具函数库 |
+
 ### 示例代码 (examples/)
+
+#### 标准 Layui 示例
 
 | 目录 | 内容 |
 |------|------|
 | simple-page/ | 简单页面示例 |
 | admin-dashboard/ | 后台仪表板示例 |
+
+#### LayuiAdmin 企业级示例
+
+| 目录 | 内容 |
+|------|------|
+| order-management/ | 订单管理完整示例 |
+| payment-config/ | 支付配置完整示例 |
+| dashboard/ | 数据统计仪表板完整示例 |
 
 ## 快速开始
 

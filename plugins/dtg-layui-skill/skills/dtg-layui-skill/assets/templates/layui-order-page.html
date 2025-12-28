@@ -1,0 +1,220 @@
+{#
+  订单管理页面模板
+  基于实际项目代码：x_mgr/src/views/order/pay/index.html
+
+  功能：
+  - 复杂搜索表单（时间范围、商户ID、订单号、状态下拉）
+  - 数据统计展示（使用 blockquote）
+  - 数据表格配置
+  - 行操作工具栏（查看、补单、修改、查单）
+  - 导出功能按钮
+#}
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="">主页</a>
+    <a><cite>{{pageTitle}}</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-tab layui-tab-brief">
+      <ul class="layui-tab-title">
+        <li class="layui-this">{{tabTitle}}</li>
+      </ul>
+      <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+          <div class="layui-row">
+            <!-- 搜索表单 -->
+            <div class="layui-form" style="float:right; margin-bottom: 10px;">
+              <div class="layui-form-item" style="margin:0;">
+                <div class="layui-input-inline">
+                  <input type="text" name="createTimeStart" id="createTimeStart" autocomplete="off" placeholder="开始时间" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                  <input type="text" name="createTimeEnd" id="createTimeEnd" autocomplete="off" placeholder="结束时间" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                  <input type="text" name="mchId" id="mchId" placeholder="商户ID" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                  <input type="text" name="orderId" id="orderId" placeholder="订单号" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                  <select name="status" id="status" lay-search="">
+                    <option value="-99">订单状态</option>
+                    {{statusOptions}}
+                  </select>
+                </div>
+                <button id="search" class="layui-btn" data-type="reload">搜索</button>
+                <button id="exportBtn" class="layui-btn">导出</button>
+                {{extraButtons}}
+              </div>
+            </div>
+
+            <!-- 数据统计展示（可选） -->
+            {{#if showStatistics}}
+            <div class="layui-form-item" id="statisticsArea" style="display: none">
+              <blockquote class="layui-elem-quote" id="statisticsTip">
+                {{statisticsContent}}
+              </blockquote>
+            </div>
+            {{/if}}
+          </div>
+
+          <!-- 数据表格 -->
+          <table id="{{tableId}}" lay-filter="{{tableFilter}}"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 行操作工具栏模板 -->
+<script type="text/html" id="{{toolbarId}}">
+  {{toolbarContent}}
+</script>
+
+<script>
+layui.use(['admin', 'table', 'util', 'laydate', 'form'], function(){
+  var $ = layui.$
+    ,admin = layui.admin
+    ,table = layui.table
+    ,laydate = layui.laydate
+    ,form = layui.form;
+
+  // 渲染面包屑导航
+  layui.element.render('breadcrumb', 'breadcrumb');
+
+  // 时间选择器配置
+  laydate.render({
+    elem: '#createTimeStart',
+    type: 'datetime',
+    format: 'yyyy-MM-dd HH:mm:ss',
+    value: new Date()
+  });
+
+  laydate.render({
+    elem: '#createTimeEnd',
+    type: 'datetime',
+    format: 'yyyy-MM-dd HH:mm:ss',
+    value: new Date()
+  });
+
+  // 表格渲染配置
+  table.render({
+    elem: '#{{tableId}}',
+    url: layui.setter.baseUrl + '{{dataUrl}}',
+    where: {
+      access_token: layui.data(layui.setter.tableName).access_token
+    },
+    id: '{{tableReloadId}}',
+    cols: [[
+      {{tableColumns}}
+    ]],
+    page: true,
+    skin: 'line'
+  });
+
+  // 搜索功能
+  var active = {
+    reload: function(){
+      var createTimeStart = $('#createTimeStart').val();
+      var createTimeEnd = $('#createTimeEnd').val();
+      var mchId = $('#mchId').val();
+      var orderId = $('#orderId').val();
+      var status = $('#status').val();
+
+      // 重载表格
+      table.reload('{{tableReloadId}}', {
+        page: { curr: 1 },
+        where: {
+          createTimeStart: createTimeStart,
+          createTimeEnd: createTimeEnd,
+          mchId: mchId,
+          orderId: orderId,
+          status: status
+        }
+      });
+
+      {{#if showStatistics}}
+      // 加载统计数据
+      $.loadStatistics(createTimeStart, createTimeEnd, mchId, orderId, status);
+      {{/if}}
+    }
+  };
+
+  $('#search').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+
+  // 行操作事件监听
+  table.on('tool({{tableFilter}})', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+      // 查看详情
+      location.href = layui.setter.baseLocal + "{{detailPath}}?" + data.id;
+    } else if(obj.event === 'edit'){
+      // 编辑
+      location.href = layui.setter.baseLocal + "{{editPath}}/id=" + data.id;
+    } else if(obj.event === 'delete'){
+      // 删除
+      layer.confirm('确定删除吗？', function(index){
+        admin.req({
+          type: 'post',
+          url: layui.setter.baseUrl + '{{deleteUrl}}',
+          data: { id: data.id },
+          success: function(res){
+            if(res.code == 0){
+              layer.close(index);
+              table.reload('{{tableReloadId}}');
+            }
+          }
+        });
+      });
+    }
+  });
+
+  {{#if showStatistics}}
+  // 统计数据加载函数
+  $.loadStatistics = function(createTimeStart, createTimeEnd, mchId, orderId, status) {
+    admin.req({
+      type: 'get',
+      url: layui.setter.baseUrl + '{{statisticsUrl}}',
+      data: {
+        createTimeStart: createTimeStart,
+        createTimeEnd: createTimeEnd,
+        mchId: mchId,
+        orderId: orderId,
+        status: status
+      },
+      success: function(res){
+        if(res.code == 0){
+          // 更新统计数据
+          $('#totalCount').html(res.data.totalCount || 0);
+          $('#totalAmount').html('￥' + (res.data.totalAmount || 0));
+          $('#statisticsArea').show();
+        }
+      }
+    });
+  };
+  {{/if}}
+
+  // 导出功能（可选）
+  {{#if showExport}}
+  $('#exportBtn').on('click', function(){
+    var queryParams = {
+      createTimeStart: $('#createTimeStart').val(),
+      createTimeEnd: $('#createTimeEnd').val(),
+      mchId: $('#mchId').val(),
+      orderId: $('#orderId').val(),
+      status: $('#status').val()
+    };
+    // 实现导出逻辑
+    window.open(layui.setter.baseUrl + '{{exportUrl}}?' + $.param(queryParams));
+  });
+  {{/if}}
+});
+</script>
