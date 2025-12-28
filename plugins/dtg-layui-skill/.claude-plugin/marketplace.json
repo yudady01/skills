@@ -1,8 +1,8 @@
 {
   "name": "dtg-layui-skill",
-  "version": "2.0.0",
-  "description": "Layui 2.3.0 + LayuiAdmin 企业级代码生成助手，帮助快速构建使用 Layui 和 LayuiAdmin 的网页",
+  "version": "3.0.0",
+  "description": "企业级 LayuiAdmin 代码生成助手，基于 716+ 个实际项目 HTML 文件分析，提供完整的 API 集成、权限控制、数据统计等企业级开发模板",
   "author": "tommy",
-  "keywords": ["layui", "layuiadmin", "echarts", "frontend", "admin", "dashboard", "table", "form"],
+  "keywords": ["layui", "layuiadmin", "enterprise", "api", "admin", "payment", "reconciliation", "frontend", "echarts"],
   "skills": ["dtg-layui-skill"]
 }

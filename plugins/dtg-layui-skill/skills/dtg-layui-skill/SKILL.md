@@ -1,12 +1,12 @@
 ---
 name: dtg-layui-skill
-description: This skill should be used when the user asks to "create a layui form", "build a data table", "design admin layout", "add date picker", "create modal dialog", "create file upload", "build navigation menu", "create admin page", "order management page", or similar Layui 2.3.0 / LayuiAdmin frontend development tasks. Provides code generation templates and API reference for Layui framework and LayuiAdmin enterprise solutions.
-version: 2.0.0
+description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, and payment system patterns.
+version: 3.0.0
 ---
 
 # dtg-layui-skill
 
-Layui 代码生成助手，帮助快速构建使用 Layui 2.3.0 和 LayuiAdmin 的网页。
+企业级 LayuiAdmin 代码生成助手，基于 716+ 个实际支付系统项目 HTML 文件分析，帮助快速构建企业级 LayuiAdmin 应用。
 
 ## 关于 Layui
 
@@ -63,6 +63,17 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 
 ## 触发短语
 
+### 企业级页面模板（基于 716+ 实际项目）
+
+| 触发短语 | 功能模块 |
+|----------|----------|
+| "create enterprise list page", "admin list page" | 企业级列表页面 |
+| "create detail page", "view page" | 详情页面模板 |
+| "create edit page", "update form" | 编辑页面模板 |
+| "data summary card", "statistics card" | 数据统计卡片 |
+| "batch operation", "bulk action" | 批量操作工具栏 |
+| "admin.req API", "API integration" | API 集成模板 |
+
 ### 标准 Layui 模块
 
 | 触发短语 | 功能模块 |
@@ -74,18 +85,15 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 | "modal dialog", "popup layer" | 弹层组件 |
 | "file upload", "image upload" | 上传组件 |
 | "navigation menu", "nav bar" | 导航组件 |
-| "carousel", "slider" | 轮播组件 |
-| "tab panel", "accordion" | 选项卡/折叠面板 |
-| "tree structure", "tree menu" | 树形组件 |
 
 ### LayuiAdmin 企业级模块
 
 | 触发短语 | 功能模块 |
 |----------|----------|
 | "create admin page", "layuiadmin page" | LayuiAdmin 后台页面 |
-| "order management page", "order list" | 订单管理页面 |
+| "order management page", "order list", "trade page" | 订单管理页面 |
 | "config management page", "payment config" | 配置管理页面 |
-| "reconciliation page" | 对账管理页面 |
+| "reconciliation page", "bill check page" | 对账管理页面 |
 | "data dashboard", "statistics dashboard" | 数据统计仪表板 |
 | "echarts chart", "data visualization" | ECharts 图表 |
 | "permission control", "auth check" | 权限控制 |
@@ -112,32 +120,33 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 
 ## 使用方式
 
-当用户请求创建 Layui 相关功能时：
+当用户请求创建企业级 LayuiAdmin 功能时：
 
-1. **询问具体需求**
-   - 组件类型
-   - 样式偏好
-   - 功能要求（如分页、验证等）
+1. **分析具体需求**
+   - 页面类型（列表/详情/编辑）
+   - API 集成需求
+   - 功能要求（搜索、统计、导出、权限等）
 
 2. **选择合适模板**
-   - `assets/templates/basic-page.html` - 基础页面
-   - `assets/templates/admin-layout.html` - 后台布局
-   - `assets/templates/form-template.html` - 表单
-   - `assets/templates/table-template.html` - 表格
-   - `assets/templates/login-page.html` - 登录页
+   - `assets/templates/enterprise-list-page.html` - 企业级列表页面
+   - `assets/templates/enterprise-detail-page.html` - 详情页面模板
+   - `assets/templates/enterprise-edit-page.html` - 编辑页面模板
+   - `assets/templates/api-integration-template.html` - API 集成模板
+   - `assets/templates/data-summary-card.html` - 数据统计卡片
 
 3. **查询详细文档**
    - 从 `references/` 获取完整 API 文档
-   - 查看配置选项和参数说明
+   - 查看 API 集成指南和权限控制文档
+   - 参考实际项目最佳实践
 
 4. **生成完整代码**
    - 基于 Layui 2.3.0 规范
-   - 包含 HTML/CSS/JS
-   - 支持模块化和非模块化两种方式
+   - 包含标准 admin.req API 调用
+   - 支持完整的 CRUD 操作
 
 5. **提供使用说明**
    - 配置步骤
-   - 数据格式要求
+   - API 接口规范
    - 注意事项
 
 ## 代码生成工作流程
@@ -150,20 +159,23 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 
 ### 模板文件 (assets/templates/)
 
-#### 标准 Layui 模板
+#### 企业级页面模板（基于 716+ 实际项目）
 
 | 文件 | 用途 |
 |------|------|
-| basic-page.html | 基础 HTML 页面结构 |
-| admin-layout.html | 经典后台布局 |
-| form-template.html | 表单模板 |
-| table-template.html | 数据表格模板 |
-| login-page.html | 登录页面模板 |
+| enterprise-list-page.html | 企业级列表页面（导航、搜索、统计、表格） |
+| enterprise-detail-page.html | 详情页面模板（表单展示、只读字段） |
+| enterprise-edit-page.html | 编辑页面模板（表单验证、API 提交） |
+| enterprise-search-form.html | 标准搜索表单 |
+| api-integration-template.html | API 集成模板（admin.req 模式） |
+| data-summary-card.html | 数据统计卡片组件 |
+| batch-operation-toolbar.html | 批量操作工具栏 |
 
 #### LayuiAdmin 企业级模板
 
 | 文件 | 用途 |
 |------|------|
+| admin-layout.html | LayuiAdmin 标准后台布局 |
 | layui-admin-page.html | LayuiAdmin 后台管理页面 |
 | layui-order-page.html | 订单管理页面（含搜索、统计、导出） |
 | layui-config-page.html | 配置管理页面（含权限控制） |
@@ -199,19 +211,32 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 | 16-payment-system-patterns.md | 支付系统页面模式 |
 | 17-utility-functions.md | 工具函数库 |
 
+#### 企业级开发文档（新增）
+
+| 文件 | 内容 |
+|------|------|
+| 18-api-integration-guide.md | API 集成完整指南 |
+| 22-permission-system.md | 权限控制系统 |
+| 23-data-visualization.md | 数据可视化组件 |
+| 24-performance-optimization.md | 性能优化建议 |
+| 25-security-best-practices.md | 安全最佳实践 |
+
 ### 示例代码 (examples/)
 
-#### 标准 Layui 示例
+#### 企业级页面示例（基于 716+ 实际项目）
 
 | 目录 | 内容 |
 |------|------|
-| simple-page/ | 简单页面示例 |
-| admin-dashboard/ | 后台仪表板示例 |
+| enterprise-order-management/ | 企业级订单管理完整示例 |
+| payment-config-management/ | 支付配置管理示例 |
+| reconciliation-management/ | 对账管理示例 |
+| user-management/ | 用户管理示例 |
 
 #### LayuiAdmin 企业级示例
 
 | 目录 | 内容 |
 |------|------|
+| admin-dashboard/ | 企业级仪表板示例 |
 | order-management/ | 订单管理完整示例 |
 | payment-config/ | 支付配置完整示例 |
 | dashboard/ | 数据统计仪表板完整示例 |
