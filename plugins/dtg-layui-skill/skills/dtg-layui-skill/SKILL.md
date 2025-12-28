@@ -1,7 +1,7 @@
 ---
 name: dtg-layui-skill
-description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, and payment system patterns.
-version: 3.0.0
+description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", "add internationalization i18n", "implement multi-language support", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, payment system patterns, and complete i18n (internationalization) support.
+version: 3.1.0
 ---
 
 # dtg-layui-skill
@@ -73,6 +73,15 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 | "data summary card", "statistics card" | 数据统计卡片 |
 | "batch operation", "bulk action" | 批量操作工具栏 |
 | "admin.req API", "API integration" | API 集成模板 |
+
+### 国际化 (i18n) 支持
+
+| 触发短语 | 功能模块 |
+|----------|----------|
+| "add i18n", "internationalization", "multi-language" | 添加国际化支持 |
+| "i18ndata attribute", "translateMessageByPath" | HTML 翻译属性 |
+| "initializeI18n", "updateI18nfortable" | i18n 初始化和更新 |
+| "language file", "translation json" | 语言文件配置 |
 
 ### 标准 Layui 模块
 
@@ -220,6 +229,7 @@ LayuiAdmin 是基于 Layui 框架的企业级后台管理模板，提供单页�
 | 23-data-visualization.md | 数据可视化组件 |
 | 24-performance-optimization.md | 性能优化建议 |
 | 25-security-best-practices.md | 安全最佳实践 |
+| 26-i18n-guide.md | 国际化 (i18n) 完整指南 |
 
 ### 示例代码 (examples/)
 
