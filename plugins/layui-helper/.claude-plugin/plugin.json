@@ -1,0 +1,7 @@
+{
+  "name": "layui-helper",
+  "version": "1.0.0",
+  "description": "Layui 2.3.0 代码生成助手，帮助快速构建使用 Layui 的网页",
+  "author": "tommy",
+  "skills": ["layui-helper"]
+}
