@@ -43,8 +43,12 @@
 | i18n, internationalization, multi-language | 26-i18n-guide.md | 国际化完整指南 |
 | i18ndata, translateMessageByPath | 26-i18n-guide.md | HTML 翻译属性 |
 | language file, translation json | 26-i18n-guide.md | 语言文件配置 |
+| validate i18n json, sync translation keys | i18n_manager.py | 语言文件管理工具 |
+| extract i18n from html, generate language files | i18n_manager.py | 语言文件生成工具 |
+| updateI18nfortable, initializeI18n | 26-i18n-guide.md | i18n 核心函数 |
 
 **关联模板**：`assets/templates/i18n-page-template.html`, `assets/templates/enterprise-list-page-with-i18n.html`
+**工具脚本**：`assets/scripts/i18n_manager.py`
 
 ### API 集成
 

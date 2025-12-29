@@ -1,7 +1,7 @@
 ---
 name: dtg-layui-skill
-description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", "add internationalization i18n", "implement multi-language support", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, payment system patterns, and complete i18n (internationalization) support.
-version: 3.2.0
+description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", "add internationalization i18n", "implement multi-language support", "validate i18n json", "sync translation keys", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, payment system patterns, complete i18n (internationalization) support, and i18n language file management tools.
+version: 3.3.0
 ---
 
 # dtg-layui-skill
@@ -18,6 +18,10 @@ version: 3.2.0
 | "build a table", "data table" | 表格模块 | references/INDEX.md#table |
 | "laytpl template", "动态模版" | 模板引擎 | references/INDEX.md#laytpl |
 | "i18n", "internationalization" | 国际化 | references/INDEX.md#i18n |
+| "i18ndata attribute", "add i18n to page" | 国际化属性 | references/INDEX.md#i18n |
+| "generate language files", "validate i18n json" | 语言文件管理 | assets/scripts/i18n_manager.py |
+| "translateMessageByPath", "updateI18nfortable" | 国际化函数 | references/INDEX.md#i18n |
+| "sync translation keys", "extract i18n from html" | 语言文件工具 | assets/scripts/i18n_manager.py |
 | "create enterprise list page" | 企业页面 | assets/INDEX.md#enterprise |
 | "admin.req API" | API集成 | references/INDEX.md#api |
 | "echarts", "data visualization" | 数据可视化 | references/INDEX.md#echarts |
