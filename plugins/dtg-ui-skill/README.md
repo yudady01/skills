@@ -1,4 +1,4 @@
-# dtg-layui-skill
+# dtg-ui-skill
 
 > **企业级 LayuiAdmin 代码生成助手** - 基于 716+ 实际项目 HTML 文件分析
 
@@ -90,11 +90,11 @@
 ## 目录结构
 
 ```
-dtg-layui-skill/
+dtg-ui-skill/
 ├── .claude-plugin/
 │   └── marketplace.json        # 插件配置 (v3.0.0)
 ├── skills/
-│   └── dtg-layui-skill/
+│   └── dtg-ui-skill/
 │       ├── SKILL.md            # 技能定义 (v3.0.0)
 │       ├── assets/
 │       │   └── templates/      # HTML 模板

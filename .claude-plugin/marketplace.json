@@ -40,9 +40,9 @@
       "category": "development"
     },
     {
-      "name": "dtg-layui-skill",
+      "name": "dtg-ui-skill",
       "description": "Layui 2.3.0 代码生成助手，帮助快速构建使用 Layui 的网页",
-      "source": "./plugins/dtg-layui-skill",
+      "source": "./plugins/dtg-ui-skill",
       "category": "frontend"
     }
   ]

@@ -1,10 +1,10 @@
 ---
-name: dtg-layui-skill
+name: dtg-ui-skill
 description: This skill should be used when the user asks to "create enterprise admin page", "build data table with API", "design payment system UI", "implement reconciliation page", "add data statistics dashboard", "integrate admin.req API", "create CRUD operations", "add internationalization i18n", "implement multi-language support", "validate i18n json", "sync translation keys", or similar LayuiAdmin enterprise-level frontend development tasks. Provides enterprise-level code generation templates based on 716+ real project HTML files analysis, including API integration, permission control, data visualization, payment system patterns, complete i18n (internationalization) support, and i18n language file management tools.
 version: 3.3.0
 ---
 
-# dtg-layui-skill
+# dtg-ui-skill
 
 企业级 LayuiAdmin 代码生成助手，基于 716+ 个实际支付系统项目分析。
 
