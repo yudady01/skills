@@ -49,14 +49,14 @@
 | 模块名称 | 模块类型 | 对应技能 |
 |---------|---------|---------|
 | xxpay-service | dubbo-provider | dubbo-provider-development |
-| xxpay-pay | payment-core | payment-core-development |
-| xxpay-manage | admin-panel | admin-panel-development |
-| xxpay-agent | admin-panel | admin-panel-development |
-| xxpay-merchant | admin-panel | admin-panel-development |
+| xxpay-pay | payment-core | dtg-payment-core-development |
+| xxpay-manage | admin-panel | dtg-admin-panel-development |
+| xxpay-agent | admin-panel | dtg-admin-panel-development |
+| xxpay-merchant | admin-panel | dtg-admin-panel-development |
 | xxpay-task | scheduled-task | scheduled-task-development |
 | xxpay-consumer | message-consumer | message-consumer-development |
 | rbgi | bank-gateway | bank-gateway-development |
-| xxpay-core | common-module | common-module-development |
+| xxpay-core | common-module | dtg-common-module-development |
 
 ### 4. 依赖关系分析
 
@@ -80,7 +80,7 @@
 当前工作目录: /dtg-pay/xxpay-manage
 模块类型: 运营管理平台接口
 端口: 8193 (HTTP) / 28193 (Dubbo)
-模块技能: admin-panel-development
+模块技能: dtg-admin-panel-development
 
 已载入模块文档:
   ✓ /dtg-pay/xxpay-manage/CLAUDE.md (当前模块)
@@ -195,7 +195,7 @@ dtg-pay 项目模块列表:
 代理: [检测到模块切换]
 当前模块: xxpay-manage (运营管理平台接口)
 已载入: /dtg-pay/xxpay-manage/CLAUDE.md
-应用技能: admin-panel-development
+应用技能: dtg-admin-panel-development
 
 让我帮你添加订单查询接口...
 ```
@@ -227,11 +227,11 @@ dtg-pay 项目模块列表:
 
 ## 相关技能
 
-- multi-module-management - 多模块项目管理技能
+- dtg-multi-module-management - 多模块项目管理技能
 - dubbo-provider-development - Dubbo 服务提供者开发
-- payment-core-development - 支付核心开发
-- admin-panel-development - 管理后台开发
+- dtg-payment-core-development - 支付核心开发
+- dtg-admin-panel-development - 管理后台开发
 - scheduled-task-development - 定时任务开发
 - message-consumer-development - 消息消费者开发
 - bank-gateway-development - 银行网关开发
-- common-module-development - 公共模块开发
+- dtg-common-module-development - 公共模块开发

@@ -191,7 +191,7 @@ model: sonnet
 graph TD
     A[code-reviewer 主代理] --> B[architecture-analyzer 代理]
     A --> C[intelligent-diagnoser 代理]
-    A --> D[springboot-project-setup 技能]
+    A --> D[dtg-springboot-project-setup 技能]
 
     B --> E[架构分析报告]
     C --> F[问题诊断报告]
