@@ -1,13 +1,13 @@
 ---
 name: common-module-development
-description: xxpay-core 公共模块开发技能。提供实体 Bean、Dubbo 服务接口、常量、工具类等核心组件的创建指导。
+description: xxpay-core 公共模块开发技能
 version: 1.0.0
 tags: ["common-module", "entity", "service-interface", "utilities", "constants"]
 ---
 
 # xxpay-core 公共模块开发技能
 
-xxpay-core 是 DTG-Pay 支付系统的核心模块，作为公共库被其他服务模块引用。
+xxpay-core 是 DTG-Pay 支付系统的核心公共模块。
 
 ## 模块信息
 
@@ -18,7 +18,7 @@ xxpay-core 是 DTG-Pay 支付系统的核心模块，作为公共库被其他服
 | 打包方式 | jar |
 | 主要职责 | 实体 Bean、Dubbo 服务接口定义、常量、工具类 |
 
-## 核心技术栈
+## 技术栈
 
 | 技术 | 版本 |
 |------|------|
@@ -47,19 +47,18 @@ mvn clean install -Dmaven.test.skip=true
 ```
 org.xxpay.core/
 ├── common/           # 公共组件
-│   ├── annotation/   # 注解 (@I18n 国际化, @MethodLog 方法日志)
+│   ├── annotation/   # 注解 (@I18n, @MethodLog)
 │   ├── constant/     # 常量定义
 │   ├── domain/       # 通用领域对象 (RpcBaseParam, RpcBaseResult)
 │   ├── enumm/        # 枚举类
 │   ├── Exception/    # 自定义异常
-│   ├── util/         # 工具类 (签名, 加密, 日期等)
-│   └── vo/           # 值对象 (VO)
+│   ├── util/         # 工具类
+│   └── vo/           # 值对象
 ├── dto/              # 数据传输对象
-├── entity/           # 数据库实体 (MyBatis-Plus注解)
-├── service/          # Dubbo服务接口定义 (IService)
+├── entity/           # 数据库实体
+├── service/          # Dubbo服务接口定义
 ├── document/         # MongoDB文档定义
-├── springboot/       # Spring配置 (OkHttp客户端工厂)
-└── mdc/              # MDC日志上下文工具
+└── springboot/       # Spring配置
 ```
 
 ## 核心概念
@@ -67,7 +66,6 @@ org.xxpay.core/
 ### RPC 通信模型
 - `RpcBaseParam` - RPC 调用入参基类
 - `RpcBaseResult` - RPC 返回值基类
-- 参考 `references/code-examples.md`
 
 ### 返回码枚举
 - `RetEnum` - 业务返回码定义
@@ -76,7 +74,7 @@ org.xxpay.core/
 ### 实体类特点
 - `@TableName` 指定表名
 - `@TableId` 指定主键（通常为 `IdType.INPUT`）
-- `@TableField` 映射字段名（支持驼峰转下划线）
+- `@TableField` 映射字段名
 - 使用 Lombok 注解简化代码
 
 ### 服务接口定义
@@ -116,14 +114,12 @@ org.xxpay.core/
 | `DateUtils` | 时间戳、流水号生成 |
 | `OkHttpClientUtil` | HTTP POST 请求 |
 
-详细代码见 `references/code-examples.md`
-
 ## 开发指南
 
 ### 添加新实体
 1. 在 `xxpay-generator` 生成 MyBatis 代码
 2. 将 Model 拷贝到 `xxpay-core/entity`
-3. 将 Mapper 拷贝到 `xxpay-service`（需比对是否有修改）
+3. 将 Mapper 拷贝到 `xxpay-service`
 4. 在 `xxpay-core/service` 创建服务接口
 5. 在 `xxpay-service` 创建实现类
 
@@ -138,9 +134,6 @@ org.xxpay.core/
 3. 定义方法签名和返回值
 4. 添加 Javadoc 注释
 
-### 调用 Dubbo 服务
-确保使用 `RpcBaseParam` 作为入参基类，并正确设置签名相关字段。
-
 ## 时区配置
 
 项目使用 **Asia/Shanghai** 时区：
@@ -154,8 +147,6 @@ org.xxpay.core/
 - MyBatis-Plus (provided)
 - MongoDB (provided)
 - Redis (provided)
-
-参考 `references/pom.xml`
 
 ## 日志
 
