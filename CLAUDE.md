@@ -37,7 +37,7 @@
     ├── 📁 repeatable-sql/               # 🗃️ 数据库迁移脚本生成器
     ├── 📁 thirdparty-pay-channel/       # 💳 支付集成开发技能
     ├── 📁 chrome-debug/                 # 🌐 Chrome DevTools 调试插件
-    └── 📁 ai-coding-java/               # ☕ Spring Boot + Dubbo 微服务开发技能 ✅
+    └── 📁 dtg-java-skill/               # ☕ Spring Boot + Dubbo 微服务开发技能 ✅
 ```
 
 ### 📋 标准插件结构
@@ -171,7 +171,7 @@ python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mc
   - **技能**: Chrome DevTools MCP 集成、DOM 自动化
   - **代理**: debug-automation (复杂多步骤调试工作流)
 
-### ☕ Spring Boot + Dubbo 微服务开发插件 (ai-coding-java) ✅ **生产就绪**
+### ☕ Spring Boot + Dubbo 微服务开发插件 (dtg-java-skill) ✅ **生产就绪**
 **🎯 用途**: 企业级 Spring Boot 2.7 + Dubbo 3.2.14 微服务智能开发平台
 
 - **🤖 AI 驱动特性**:
@@ -209,8 +209,8 @@ python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mc
   - 280+ 代码示例，35+ 配置模板
 
 **📄 重要报告**:
-- `plugins/ai-coding-java/VERIFICATION_REPORT.md` - 完整验证报告
-- `plugins/ai-coding-java/FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md` - 最终综合报告
+- `plugins/dtg-java-skill/VERIFICATION_REPORT.md` - 完整验证报告
+- `plugins/dtg-java-skill/FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md` - 最终综合报告
 
 ---
 
@@ -379,7 +379,7 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 **问题描述**: 当重命名插件目录时，主市场配置文件 (`.claude-plugin/marketplace.json`) 中的插件注册信息可能遗漏更新。
 
 **发生场景**:
-- 插件目录重命名（如 `ai-coding-boilerplate` → `ai-coding-java`）
+- 插件目录重命名（如 `ai-coding-boilerplate` → `ai-coding-java` → `dtg-java-skill`）
 - 插件技术栈变更
 - 插件功能重大调整
 
@@ -399,11 +399,14 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 □ 验证插件结构和配置一致性
 ```
 
-**具体案例** (2024-12-06):
-- 插件 `ai-coding-boilerplate` 重命名为 `ai-coding-java`
-- 已修复: 主市场配置文件中的引用更新
-- 技术栈: TypeScript → Spring Boot 2.7.18 + Apache Dubbo 3.2.14
-- 功能: 通用项目模板 → 企业级微服务架构模板
+**具体案例**:
+- **2024-12-06**: 插件 `ai-coding-boilerplate` 重命名为 `ai-coding-java`
+  - 已修复: 主市场配置文件中的引用更新
+  - 技术栈: TypeScript → Spring Boot 2.7.18 + Apache Dubbo 3.2.14
+  - 功能: 通用项目模板 → 企业级微服务架构模板
+- **2025-12-29**: 插件 `ai-coding-java` 重命名为 `dtg-java-skill`
+  - 统一插件命名规范为 `dtg-*` 格式
+  - 保持所有功能和配置完整性
 
 **预防措施**:
 - 使用脚本检查所有配置文件的一致性
@@ -429,16 +432,16 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 2. **repeatable-sql** 🗃️ - 数据库迁移脚本生成器 (正常运行)
 3. **en-to-zh-translator** 🔤 - 技术翻译技能 (正常运行)
 4. **chrome-debug** 🌐 - Chrome DevTools 调试插件 (正常运行)
-5. **ai-coding-java** ☕ - Spring Boot + Dubbo 微服务开发技能 ✅ (生产就绪)
+5. **dtg-java-skill** ☕ - Spring Boot + Dubbo 微服务开发技能 ✅ (生产就绪)
 
 #### 🛠️ 维护建议
 - 定期运行插件结构完整性检查命令
 - 保持文档与实际功能同步更新
 - 监控各插件的 Python 脚本兼容性
 
-### 2025-12-07: ai-coding-java 插件完整验证与文档建设 ✅ **里程碑完成**
+### 2025-12-07: dtg-java-skill 插件完整验证与文档建设 ✅ **里程碑完成**
 
-**重大成就**: ai-coding-java 插件从有阻塞性问题升级为企业级生产就绪的标杆插件
+**重大成就**: dtg-java-skill 插件从有阻塞性问题升级为企业级生产就绪的标杆插件
 
 #### 🔧 第一阶段：阻塞性问题修复
 - ✅ **硬编码路径修复** - `hooks/scripts/documentation-validator.sh` 现可在任何环境运行
@@ -468,22 +471,23 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 - **文档完整性**: 从 3/10 提升到 9/10
 
 #### 🏆 市场地位
-ai-coding-java 现在是：
+dtg-java-skill 现在是：
 - **技术最全面的** Spring Boot 2.7 + Dubbo 3 微服务开发插件
 - **文档质量最高的** 企业级开发工具
 - **AI 能力最强的** 智能化开发助手
 - **最易使用的** 零配置开箱即用工具
 
 #### 📄 重要文件
-- `plugins/ai-coding-java/VERIFICATION_REPORT.md` - 完整验证报告
-- `plugins/ai-coding-java/FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md` - 最终综合报告
-- `plugins/ai-coding-java/PHASE_TWO_DOCUMENTATION_REPORT.md` - 第二阶段报告
+- `plugins/dtg-java-skill/VERIFICATION_REPORT.md` - 完整验证报告
+- `plugins/dtg-java-skill/FINAL_VERIFICATION_AND_DOCUMENTATION_REPORT.md` - 最终综合报告
+- `plugins/dtg-java-skill/PHASE_TWO_DOCUMENTATION_REPORT.md` - 第二阶段报告
 
 **影响**: 为全球 Spring Boot + Dubbo 开发者提供了最佳的企业级微服务开发工具
 
 ---
 
 ### 📅 其他历史更新
+- **2025-12-29**: `ai-coding-java` → `dtg-java-skill` 重命名，统一插件命名规范
 - **2024-12-06**: `ai-coding-boilerplate` → `ai-coding-java` 重命名，技术栈从 TypeScript 升级为 Spring Boot 2.7.18 + Apache Dubbo 3.2.14
 
 ---
@@ -500,4 +504,4 @@ ai-coding-java 现在是：
 
 ---
 
-*📅 最后更新: 2025-12-07 | 🛠️ 维护者: Claude Code | 📊 版本: 2.1.1*
+*📅 最后更新: 2025-12-29 | 🛠️ 维护者: Claude Code | 📊 版本: 2.1.1*

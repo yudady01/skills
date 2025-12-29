@@ -1,13 +1,13 @@
 {
-  "name": "ai-coding-java",
+  "name": "dtg-java-skill",
   "version": "2.7.0",
   "description": "🤖 智能化 Spring Boot 2.7 + Dubbo 3 企业级微服务开发插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能，提供最智能的微服务开发体验",
   "author": {
     "name": "Spring Boot + Dubbo AI Coding Team",
     "email": "dubbo-microservice-support@example.com"
   },
-  "homepage": "https://github.com/shinpr/ai-coding-java",
-  "repository": "https://github.com/shinpr/ai-coding-java",
+  "homepage": "https://github.com/shinpr/dtg-java-skill",
+  "repository": "https://github.com/shinpr/dtg-java-skill",
   "license": "MIT",
   "keywords": [
     "java",
