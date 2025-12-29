@@ -1,12 +1,12 @@
 ---
 name: ai-coding-best-practices
-description: This skill should be used when the user asks to "optimize AI coding workflow", "improve code quality with AI", "best practices for Claude Code development", "AI-assisted development patterns", or "how to work effectively with AI for coding". Provides comprehensive guidance for AI-driven development workflows.
+description: AI 编码最佳实践技能。提供 AI 驱动开发的专业指导，帮助开发者最大化利用 Claude Code 工具的生产力。
 version: 1.0.0
 ---
 
 # AI 编码最佳实践技能
 
-这个技能提供 AI 驱动开发的专业指导，帮助开发者最大化利用 Claude Code 等工具的生产力。
+提供 AI 驱动开发的专业指导，帮助开发者最大化利用 Claude Code 等工具的生产力。
 
 ## 核心原则
 
@@ -60,21 +60,16 @@ version: 1.0.0
 - ADR（架构决策记录）用于重要决策
 - 设计文档用于中等规模功能
 
-## 质量保证策略
-
-### 自动化检查
-- 类型检查（Java 编译器）
-- 单元测试（JUnit）
-
 ## Lombok 和 @SneakyThrows 最佳实践
 
 ### Lombok 优势
-- **代码简化**：自动生成样板代码（getter、setter、constructor、equals、hashCode、toString）
-- **可读性提升**：减少冗余代码，专注于业务逻辑
-- **维护性增强**：减少手工错误，提高代码一致性
-- **开发效率**：显著减少编写和修改时间
+- **代码简化**：自动生成样板代码
+- **可读性提升**：减少冗余代码
+- **维护性增强**：减少手工错误
+- **开发效率**：显著减少编写时间
 
 ### @SneakyThrows 使用原则
+
 **推荐场景**：
 - 预期的运行时异常（如网络超时、数据库连接失败）
 - 可以安全向上传播的异常
@@ -85,241 +80,25 @@ version: 1.0.0
 - 需要回滚事务的情况
 - 可能导致系统状态不一致的异常
 
-### Lombok 注解最佳实践
-
-#### 1. 实体类模式
-```java
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@TableName("users")
-public class User extends BaseEntity {
-
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
-
-    @NotBlank
-    @TableField("username")
-    private String username;
-
-    @JsonIgnore
-    private String password;
-
-    @Builder.Default
-    private Integer status = 1;
-}
-```
-
-#### 2. DTO 模式
-```java
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserDTO {
-
-    private Long id;
-    private String username;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
-
-    public static UserDTO fromEntity(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .createTime(user.getCreateTime())
-                .build();
-    }
-}
-```
-
-#### 3. 服务类模式
-```java
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
-
-    private final UserMapper userMapper;
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    @Override
-    @Transactional
-    public UserDTO createUser(CreateUserRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .build();
-
-        userMapper.insert(user);
-        log.info("Created user: {}", user.getId());
-
-        return UserDTO.fromEntity(user);
-    }
-
-    @Override
-    @SneakyThrows(DataAccessException.class)
-    public UserDTO getUserById(Long id) {
-        // 数据库操作，允许异常向上传播
-        User user = userMapper.selectById(id);
-        if (user == null) {
-            throw new UserNotFoundException("用户不存在: " + id);
-        }
-        return UserDTO.fromEntity(user);
-    }
-}
-```
-
-#### 4. 控制器模式
-```java
-@RestController
-@RequestMapping("/api/users")
-@Slf4j
-@RequiredArgsConstructor
-public class UserController {
-
-    private final UserService userService;
-
-    @GetMapping("/{id}")
-    @SneakyThrows(UserNotFoundException.class)
-    public ResponseEntity<ApiResponse<UserDTO>> getUser(@PathVariable Long id) {
-        // 允许业务异常向上传播，由全局异常处理器处理
-        UserDTO user = userService.getUserById(id);
-        return ResponseEntity.ok(ApiResponse.success(user, "获取成功"));
-    }
-}
-```
-
-### @SneakyThrows 使用指南
-
-#### 1. 指定具体异常类型
-```java
-// ✅ 推荐：指定具体的异常类型
-@SneakyThrows(IOException.class)
-public String readFile(String path) {
-    return Files.readString(Paths.get(path));
-}
-
-// ✅ 推荐：多个异常类型
-@SneakyThrows({IOException.class, SecurityException.class})
-public String readFileWithSecurity(String path) {
-    return Files.readString(Paths.get(path));
-}
-```
-
-#### 2. 与事务管理结合
-```java
-@Service
-@Transactional
-public class OrderServiceImpl implements OrderService {
-
-    @Override
-    @SneakyThrows({DataAccessException.class, OptimisticLockingFailureException.class})
-    public Order createOrder(CreateOrderRequest request) {
-        // 数据库操作异常会触发事务回滚
-        Order order = Order.builder()
-                .userId(request.getUserId())
-                .totalAmount(request.getTotalAmount())
-                .build();
-
-        orderMapper.insert(order);
-        return order;
-    }
-}
-```
-
-#### 3. 网络操作和外部服务调用
-```java
-@Service
-@RequiredArgsConstructor
-public class ExternalApiService {
-
-    private final RestTemplate restTemplate;
-
-    @Override
-    @SneakyThrows({RestClientException.class, SocketTimeoutException.class})
-    public String callExternalService(String url) {
-        // 网络异常通常是临时的，可以向上传播由重试机制处理
-        return restTemplate.getForObject(url, String.class);
-    }
-}
-```
-
-#### 4. 缓存操作
-```java
-@Service
-@RequiredArgsConstructor
-public class CacheService {
-
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    @Override
-    @SneakyThrows(RedisConnectionFailureException.class)
-    public void setCache(String key, Object value, long timeout, TimeUnit unit) {
-        // Redis 连接失败通常可以向上传播，由降级策略处理
-        redisTemplate.opsForValue().set(key, value, timeout, unit);
-    }
-}
-```
-
-### 避免的错误用法
-
-```java
-// ❌ 错误：不应该包装所有异常
-@SneakyThrows(Exception.class)  // 过于宽泛
-public void doSomething() {
-    // 业务逻辑
-}
-
-// ❌ 错误：需要特殊处理的业务异常
-@SneakyThrows(BusinessException.class)
-public void processPayment(PaymentRequest request) {
-    if (request.getAmount() <= 0) {
-        throw new BusinessException("金额必须大于0");  // 应该明确处理
-    }
-    // 处理支付逻辑
-}
-
-// ❌ 错误：在需要事务回滚的场景
-@Transactional
-@SneakyThrows(DataException.class)
-public void transferMoney(TransferRequest request) {
-    // 这里应该明确处理异常以确保事务正确回滚
-}
-```
+详细代码示例见 `references/lombok-examples.md`
 
 ### Lombok 配置文件优化
+
 ```properties
 # lombok.config
 config.stopBubbling = true
-
-# 启用 Lombok 生成注解
 lombok.addLombokGeneratedAnnotation = true
-
-# Builder 模式优化
 lombok.builder.flagUsage = OK
-lombok.anyConstructor.addConstructorProperties = true
-
-# 字段默认设置
-lombok.fieldDefaults.defaultPrivate = final
-lombok.fieldDefaults.defaultProtected = final
-lombok.fieldDefaults.defaultPackage = final
-
-# 链式调用
-lombok.accessors.chain = true
-lombok.accessors.fluent = false
-
-# ToString 优化
-lombok.toString.includeFieldNames = true
-lombok.toString.callSuper = CALL
-lombok.toString.doNotUseGetters = false
-
-# 允许 @SneakyThrows
 lombok.sneakyThrows.flagUsage = OK
+lombok.fieldDefaults.defaultPrivate = final
+lombok.accessors.chain = true
 ```
+
+## 质量保证策略
+
+### 自动化检查
+- 类型检查（Java 编译器）
+- 单元测试（JUnit）
 
 ### 代码审查要点
 - 功能正确性
@@ -383,25 +162,6 @@ lombok.sneakyThrows.flagUsage = OK
 - 定期重构代码
 - 保持代码整洁性
 
-## 参考资源
-
-### 模板和示例
-参考 `examples/` 目录中的完整实现示例：
-- **`examples/feature-development.md`** - 功能开发完整流程
-- **`examples/bug-fix-workflow.md`** - 问题修复标准流程
-- **`examples/code-review-checklist.md`** - 代码审查检查表
-
-### 详细指南
-参考 `references/` 目录中的深入指南：
-- **`references/workflow-patterns.md`** - 详细的工作流程模式
-- **`references/quality-standards.md`** - 质量标准和检查清单
-- **`references/troubleshooting.md`** - 常见问题和解决方案
-
-### 工具和脚本
-使用 `scripts/` 目录中的实用工具：
-- **`scripts/setup-project.sh`** - 项目初始化脚本
-- **`scripts/template-generator.py`** - 模板生成器
-
 ## 使用技巧
 
 ### 提示工程
@@ -418,27 +178,3 @@ lombok.sneakyThrows.flagUsage = OK
 - 每个步骤都进行验证
 - 使用自动化测试
 - 进行人工审查
-
-## 监控和度量
-
-### 开发指标
-- 交付周期时间
-- 代码功能完成率
-
-### 持续改进
-- 定期回顾工作流程
-- 收集团队反馈
-- 优化工具配置
-
-## 故障排除
-
-### 常见问题解决
-参考 `references/troubleshooting.md` 获取：
-- 连接问题解决方案
-- 性能优化建议
-- 错误处理指南
-
-### 支持资源
-- 官方文档链接
-- 社区论坛
-- 最佳实践案例库

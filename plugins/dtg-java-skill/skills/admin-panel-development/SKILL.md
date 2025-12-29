@@ -1,13 +1,13 @@
 ---
 name: admin-panel-development
-description: This skill should be used when developing admin panel modules (xxpay-manage, xxpay-agent, xxpay-merchant) in dtg-pay project. It provides guidance for LayuiAdmin-based management interfaces, JWT authentication, and Dubbo service integration.
+description: 管理后台模块开发技能。提供 LayuiAdmin 管理界面、JWT 认证和 Dubbo 服务集成的完整指导。
 version: 1.0.0
 tags: ["admin-panel", "layui", "jwt", "dubbo-consumer", "management-interface"]
 ---
 
 # 管理后台开发技能
 
-这个技能用于开发 dtg-pay 项目中的管理后台模块：xxpay-manage（运营平台）、xxpay-agent（代理商系统）、xxpay-merchant（商户系统）。
+用于开发 dtg-pay 项目中的管理后台模块：xxpay-manage（运营平台）、xxpay-agent（代理商系统）、xxpay-merchant（商户系统）。
 
 ## 适用模块
 
@@ -20,21 +20,23 @@ tags: ["admin-panel", "layui", "jwt", "dubbo-consumer", "management-interface"]
 ## 核心技术栈
 
 ### 后端技术栈
-- **Java 11** - 编程语言
-- **Spring Boot 2.7.18** - 应用框架
-- **Apache Dubbo 3.2.14** - RPC 框架
-- **Spring Security + JWT** - 安全认证
-- **MyBatis** - 持久化（通过 xxpay-service）
-- **FreeMarker** - 模板引擎
+| 技术 | 版本 |
+|------|------|
+| Java | 11 |
+| Spring Boot | 2.7.18 |
+| Apache Dubbo | 3.2.14 |
+| Spring Security + JWT | 最新 |
+| MyBatis | 最新（通过 xxpay-service） |
+| FreeMarker | 最新 |
 
 ### 前端技术栈
-- **Layui v2.3.0** - UI框架
-- **jQuery** - JavaScript库
-- **ECharts** - 图表库
+| 技术 | 版本 |
+|------|------|
+| Layui | v2.3.0 |
+| jQuery | 最新 |
+| ECharts | 最新 |
 
 ## 构建和运行
-
-### 编译项目
 
 ```bash
 # 从项目根目录编译（需先编译依赖模块）
@@ -43,11 +45,7 @@ tags: ["admin-panel", "layui", "jwt", "dubbo-consumer", "management-interface"]
 
 # 编译当前模块
 ./mvnw clean package -Dmaven.test.skip=true
-```
 
-### 运行应用
-
-```bash
 # 开发环境运行
 ./mvnw spring-boot:run
 
@@ -58,7 +56,6 @@ java -jar target/xxpay-manage-1.0.0.jar
 ## 项目架构
 
 ### 模块依赖关系
-
 ```
 xxpay-manage / xxpay-agent / xxpay-merchant
     ↓ (依赖)
@@ -70,7 +67,6 @@ xxpay-service (业务服务实现)
 ```
 
 ### 代码结构
-
 ```
 src/main/java/org/xxpay/{module}/
 ├── common/
@@ -163,102 +159,11 @@ AgentInfo agentInfo = rpcCommonService.rpcAgentInfoService.findByAgentId(agentId
 - `DomainResourceResolver` 根据 host 决定返回 `724pay/x_agent/` 或 `ezpay/x_agent/` 的资源
 - 如果子目录没找到，回退到默认位置
 
-## Controller 开发示例
-
-```java
-@RestController
-@RequestMapping("/api/merchant")
-@Slf4j
-public class MchInfoController extends BaseController {
-
-    @Autowired
-    private RpcCommonService rpcCommonService;
-
-    /**
-     * 查询商户列表
-     */
-    @PostMapping("/list")
-    public ApiResponse listMerchant() {
-        // 获取当前登录用户
-        SysUser sysUser = getUser();
-
-        // 获取分页参数
-        Integer pageIndex = getPageIndex();
-        Integer pageSize = getPageSize();
-        String mchName = getString("mchName");
-
-        // 调用 Dubbo 服务
-        PageInfo<MchInfo> pageInfo = rpcCommonService.rpcMchInfoService.list(
-            pageIndex, pageSize, mchName
-        );
-
-        return ApiResponse.buildSuccess(pageInfo);
-    }
-
-    /**
-     * 添加商户
-     */
-    @PostMapping("/add")
-    public ApiResponse addMerchant() {
-        JSONObject param = getJsonParam();
-
-        MchInfo mchInfo = new MchInfo();
-        mchInfo.setMchName(param.getString("mchName"));
-        mchInfo.setLoginName(param.getString("loginName"));
-        // ... 设置其他属性
-
-        int result = rpcCommonService.rpcMchInfoService.add(mchInfo);
-
-        if (result > 0) {
-            return ApiResponse.buildSuccess();
-        }
-        return ApiResponse.build(RetEnum.RET_COMM_OPERATE_FAIL);
-    }
-}
-```
-
-## JWT 配置
-
-### Cookie 名称
-
-| 模块 | Cookie 名称 | Token 有效期 |
-|------|------------|-------------|
-| xxpay-manage | `XxPay_Mgr_Token` | 3600 秒 (1小时) |
-| xxpay-agent | `XxPay_Agent_Token` | 3600 秒 (1小时) |
-| xxpay-merchant | `XxPay_Mch_Token` | 3600 秒 (1小时) |
-
-### JWT 配置示例
-
-```java
-@Configuration
-public class JwtConfig {
-
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Value("${jwt.expiration}")
-    private Long expiration;
-
-    public String generateToken(String username, String userId) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
-        claims.put("userId", userId);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }
-}
-```
+详细代码见 `references/code-examples.md`
 
 ## 环境配置
 
 通过 `spring.profiles.active` 切换环境：
-
 - `local`: 本地开发
 - `dtg-stg`: 测试环境
 - `dtg-prod`: 生产环境
@@ -275,7 +180,6 @@ public class JwtConfig {
 ## Dubbo 配置
 
 ### 通用配置
-
 ```yaml
 dubbo:
   application:
@@ -303,7 +207,6 @@ dubbo:
 ## 日志配置
 
 使用 Logback，配置文件 `logback-spring.xml`：
-
 - **local**: 控制台输出 (STDOUT)
 - **dtg-stg/dtg-prod**: 文件输出 (RollingFile)，保留30天，单文件最大10MB
 - JSON格式: 包含 traceId 用于链路追踪
@@ -311,7 +214,6 @@ dubbo:
 ## 前端资源
 
 ### 静态资源目录
-
 ```
 src/main/resources/static/
 ├── 724pay/
@@ -323,7 +225,6 @@ src/main/resources/static/
 ```
 
 ### 前端构建
-
 ```bash
 cd src/main/resources/static/x_agent
 gulp
@@ -336,7 +237,6 @@ gulp
 - 静态资源: `/x_agent/**`, `/html/**`, `/actuator/**` 无需认证
 
 ### Controller 路径示例
-
 ```java
 // 运营平台
 @RestController
@@ -346,28 +246,33 @@ gulp
 
 // 代理商系统
 @RestController
-@RequestMapping("/api/agentMch")        # 代理商下的商户管理
-@RequestMapping("/api/agentSett")       # 代理商结算
+@RequestMapping("/api/agentMch")        // 代理商下的商户管理
+@RequestMapping("/api/agentSett")       // 代理商结算
 ```
 
 ## 开发约定
 
 ### 包命名
-
 - 控制器: `*Controller`，位于 `ctrl` 包
 - 服务: `*Service`，位于 `service` 包
 - 统一继承 `BaseController`
 
 ### 参数处理
-
 - 前端参数通过 `params` 字段传递JSON字符串
 - 使用 `getJsonParam(request)` 解析
 - 金额单位：前端传入"元"，后端转换为"分"
 
 ### 响应格式
+- 成功: `ApiResponse.buildSuccess(data)`
+- 失败: `ApiResponse.build(RetEnum)`
 
-- 成功: `XxPayResponse.buildSuccess(data)`
-- 失败: `BizResponse.build(RetEnum)`
+## Cookie 配置
+
+| 模块 | Cookie 名称 | Token 有效期 |
+|------|------------|-------------|
+| xxpay-manage | `XxPay_Mgr_Token` | 3600 秒 (1小时) |
+| xxpay-agent | `XxPay_Agent_Token` | 3600 秒 (1小时) |
+| xxpay-merchant | `XxPay_Mch_Token` | 3600 秒 (1小时) |
 
 ## 部署顺序
 
@@ -381,7 +286,6 @@ gulp
 ## 常见问题
 
 ### Dubbo shutdown 报错
-
 已知 issue: https://github.com/apache/dubbo/issues/10150
 
 可通过配置日志级别禁用相关错误：
@@ -393,11 +297,9 @@ logging:
 ```
 
 ### 品牌识别问题
-
 确保域名配置正确：
 - 724pay 代理商: `agent.724pay.com`
 - ezpay 代理商: `agent.ezpay.com`
 
 ### 权限控制
-
 使用 `@RequiresOperation` 注解进行操作权限校验，由 `PermissionAspect` AOP 拦截处理。

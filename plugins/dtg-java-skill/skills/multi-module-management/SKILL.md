@@ -1,15 +1,15 @@
 ---
 name: multi-module-management
-description: This skill should be used when working with dtg-pay multi-module Maven project. It provides automatic module detection based on current working directory, module context switching, and project structure navigation for the 10-module dtg-pay payment system.
+description: dtg-pay 多模块 Maven 项目智能管理技能。提供模块自动检测、上下文切换和项目结构导航功能。
 version: 1.0.0
 tags: ["multi-module", "maven", "project-structure", "module-detection"]
 ---
 
 # dtg-pay 多模块项目管理技能
 
-这个技能为 dtg-pay 多模块 Maven 项目提供智能模块管理和上下文切换功能。
+为 dtg-pay 多模块 Maven 项目提供智能模块管理和上下文切换功能。
 
-## 项目结构概览
+## 项目结构
 
 ```
 dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
@@ -70,14 +70,13 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
 ## 部署顺序
 
 上版时必须按以下顺序发布：
-
-1. **xxpay-flyway** - 数据库迁移
-2. **xxpay-service** - 业务服务（Dubbo Provider）
-3. **xxpay-pay** - 支付核心
-4. **xxpay-task** - 定时任务（单节点部署）
-5. **xxpay-manage** - 运营平台
-6. **xxpay-agent** - 代理商系统
-7. **xxpay-merchant** - 商户系统
+1. xxpay-flyway - 数据库迁移
+2. xxpay-service - 业务服务（Dubbo Provider）
+3. xxpay-pay - 支付核心
+4. xxpay-task - 定时任务（单节点部署）
+5. xxpay-manage - 运营平台
+6. xxpay-agent - 代理商系统
+7. xxpay-merchant - 商户系统
 
 ## 编译命令
 
@@ -112,7 +111,6 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
 ```
 
 ### 当前模块信息显示格式
-
 ```
 当前工作目录: /dtg-pay/xxpay-manage
 模块类型: 运营管理平台接口
@@ -123,19 +121,9 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
   ✓ /dtg-pay/xxpay-manage/CLAUDE.md (当前模块)
 ```
 
-## 查看其他模块
-
-用户可以使用命令查看其他模块的文档：
-
-```
-/view-module xxpay-service    # 查看 xxpay-service 模块文档
-/view-module xxpay-core       # 查看 xxpay-core 公共模块文档
-```
-
 ## 环境配置
 
 所有模块支持三种环境，通过环境变量 `spring.profiles.active` 切换：
-
 - `local` - 本地开发环境
 - `dtg-stg` - 测试环境
 - `dtg-prod` - 生产环境
@@ -146,13 +134,8 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
 |------|------|
 | `ZOOKEEPER` | Zookeeper 注册中心地址 |
 | `DATASOURCE_URL` | MySQL 数据库地址 |
-| `DATASOURCE_USERNAME` | 数据库用户名 |
-| `DATASOURCE_PASSWORD` | 数据库密码 |
 | `REDIS_HOST` | Redis 主机地址 |
-| `REDIS_PASSWORD` | Redis 密码 |
 | `ACTIVEMQ_BROKER` | ActiveMQ 消息代理地址 |
-| `ACTIVEMQ_USER` | ActiveMQ 用户名 |
-| `ACTIVEMQ_PASSWORD` | ActiveMQ 密码 |
 | `MONGODB_URI` | MongoDB 连接 URI |
 | `NODE` | 服务节点标识（分布式环境下需唯一） |
 
@@ -175,58 +158,35 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
 ## 核心架构概念
 
 ### 1. Dubbo RPC 通信模型
-
-所有服务间调用基于 `RpcBaseParam` / `RpcBaseResult` 模型：
-
-- **RpcBaseParam**: RPC 调用入参基类
-  - `rpcSrcSysId`: 调用方 ID
-  - `rpcDateTime`: 调用时间
-  - `rpcSeqNo`: 随机通讯码
-  - `rpcSignType`: 签名方式
-  - `rpcSign`: RPC 签名
-  - `bizSeqNo`: 业务流水号
-  - `bizSign`: 业务签名
-
-- **RpcBaseResult**: RPC 返回值基类
-  - `rpcRetCode`: 返回码（0000 表示成功）
-  - `rpcRetMsg`: 返回错误描述
+- **RpcBaseParam**: RPC 调用入参基类（包含签名、流水号等）
+- **RpcBaseResult**: RPC 返回值基类（包含返回码、错误信息）
 
 ### 2. 服务接口定义
-
-所有 Dubbo 服务接口定义在 `xxpay-core/src/main/java/org/xxpay/core/service/`，以 `I` 开头命名（如 `IPayOrderService`）。
-
-服务实现类在 `xxpay-service/src/main/java/org/xxpay/service/impl/`，使用 `@Service` 注解暴露为 Dubbo 服务。
+- 所有 Dubbo 服务接口定义在 `xxpay-core/src/main/java/org/xxpay/core/service/`
+- 以 `I` 开头命名（如 `IPayOrderService`）
+- 服务实现类在 `xxpay-service/src/main/java/org/xxpay/service/impl/`
 
 ### 3. 支付通道架构
-
-支付通道采用策略模式，位于 `xxpay-pay/src/main/java/org/xxpay/pay/channel/`：
-
+- 支付通道采用策略模式，位于 `xxpay-pay/src/main/java/org/xxpay/pay/channel/`
 - 每个支付通道独立封装在 `channel/{channel_name}/` 目录
 - 继承 `BasePayment` 实现支付下单
 - 继承 `BasePayNotify` 实现回调通知
-- 使用 OkHttp 连接池优化性能
 
 ### 4. 消息队列
-
 ActiveMQ 用于异步处理：
-
 - `Mq4PayOrderListener` - 支付订单消息
 - `Mq4MchNotify` - 商户通知（xxpay-consumer 消费）
 - `Mq4MchAgentpayNotify` - 代付通知
 
 ### 5. 数据同步
-
-xxpay-task 将 MySQL 支付订单同步到 MongoDB，用于高性能查询：
-
+- xxpay-task 将 MySQL 支付订单同步到 MongoDB
 - 每 5 分钟创建时间窗口
 - 首次同步每 30 秒执行
 - 二次同步每 2 分钟执行
-- 每天清理 7 天前的数据
 
 ## 时区设置
 
 项目统一使用 **Asia/Shanghai** 时区：
-
 - **应用层**: 通过 `@PostConstruct` 设置 `TimeZone.setDefault()`
 - **Jackson**: `spring.jackson.time-zone: Asia/Shanghai`
 - **数据库**: JDBC URL 使用 `serverTimezone=GMT%2B0`
@@ -257,13 +217,10 @@ logging:
 ```
 
 ### RPC 超时配置
-
 - xxpay-service provider: 60 秒
 - xxpay-pay consumer: 30 秒（必须 >= provider 超时）
 - 其他模块 consumer: 10-60 秒
 
 ### 数据库连接池
-
-根据 Dubbo 线程数配置：
 - 生产环境: Dubbo threads (200) × 0.7 ≈ 140，设为 150
 - 测试环境: 设为 200

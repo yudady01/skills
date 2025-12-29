@@ -1,6 +1,6 @@
 ---
 name: scheduled-task-development
-description: This skill should be used when developing xxpay-task module (scheduled tasks) in dtg-pay project. It provides guidance for creating scheduled jobs, reconciliation services, and data synchronization tasks.
+description: xxpay-task 定时任务模块开发技能。提供定时任务、对账服务、结算服务和数据同步的完整指导。
 version: 1.0.0
 tags: ["scheduled-task", "reconciliation", "settlement", "sync"]
 ---
@@ -11,24 +11,26 @@ xxpay-task 是 dtg-pay 支付系统的后台任务调度模块，负责处理定
 
 ## 模块信息
 
-- **模块名称**: xxpay-task
-- **模块类型**: 定时任务
-- **HTTP 端口**: 8194
-- **Dubbo 端口**: 28194
-- **主要职责**: 定时任务、对账服务、结算服务、数据同步
-- **部署要求**: 单节点部署
+| 属性 | 值 |
+|------|-----|
+| 模块名称 | xxpay-task |
+| 模块类型 | 定时任务 |
+| HTTP 端口 | 8194 |
+| Dubbo 端口 | 28194 |
+| 主要职责 | 定时任务、对账服务、结算服务、数据同步 |
+| 部署要求 | 单节点部署 |
 
 ## 核心技术栈
 
-- **Spring Boot 2.7.18** - 应用框架
-- **Apache Dubbo 3.2.14** - RPC 框架
-- **Spring Task Scheduling** - 定时任务调度
-- **ActiveMQ** - 消息队列
-- **MySQL + MongoDB** - 数据存储
+| 技术 | 版本 |
+|------|------|
+| Spring Boot | 2.7.18 |
+| Apache Dubbo | 3.2.14 |
+| Spring Task Scheduling | 最新 |
+| ActiveMQ | 最新 |
+| MySQL + MongoDB | 最新 |
 
 ## 构建和运行
-
-### 构建
 
 ```bash
 # 使用 Maven Wrapper 构建（推荐）
@@ -39,11 +41,7 @@ mvn clean package
 
 # 跳过测试构建
 ./mvnw clean package -DskipTests
-```
 
-### 运行
-
-```bash
 # 本地开发环境运行
 ./mvnw spring-boot:run
 
@@ -54,24 +52,10 @@ mvn clean package
 java -jar target/xxpay-task-1.0.0.jar --spring.profiles.active=dtg-prod
 ```
 
-### 测试
-
-```bash
-# 运行所有测试
-./mvnw test
-
-# 运行单个测试类
-./mvnw test -Dtest=OkexApiClientTest
-
-# 注意：大部分测试类使用 @Disabled 注解，需要手动移除才能运行
-```
-
 ## 环境配置
 
 ### Profile 配置
-
 项目支持三种 profile，通过环境变量 `spring.profiles.active` 配置：
-
 - `local` - 本地开发环境
 - `dtg-stg` - 测试环境
 - `dtg-prod` - 生产环境
@@ -93,9 +77,7 @@ java -jar target/xxpay-task-1.0.0.jar --spring.profiles.active=dtg-prod
 ## 核心架构
 
 ### Dubbo RPC 架构
-
 xxpay-task 作为 Dubbo 消费者，通过 `RpcCommonService` 调用其他模块的服务：
-
 - **xxpay-core** - 核心实体、接口定义和通用工具
 - **xxpay-service** - 业务服务实现（通过 Dubbo RPC 调用）
 
@@ -106,7 +88,6 @@ xxpay-task 作为 Dubbo 消费者，通过 `RpcCommonService` 调用其他模块
 - 分润报表：16 分钟
 
 ### 模块结构
-
 ```
 org.xxpay.task
 ├── agentpay/          # 代付相关任务（状态补偿、初始化修复、解冻修复）
@@ -123,32 +104,7 @@ org.xxpay.task
 └── whitelist/         # IP 白名单待审核任务
 ```
 
-## 定时任务配置
-
-### 任务调度配置
-
-```java
-@Configuration
-@EnableScheduling
-public class SchedulingConfig {
-
-    @Bean(name = "scheduledTaskExecutor")
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(15);
-        executor.setMaxPoolSize(15);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("scheduled-task-");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setAwaitTerminationSeconds(60);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.initialize();
-        return executor;
-    }
-}
-```
-
-### 主要定时任务
+## 主要定时任务
 
 | 任务类 | Cron 表达式 | 说明 | 文件位置 |
 |--------|------------|------|----------|
@@ -161,95 +117,11 @@ public class SchedulingConfig {
 | `PayOrderSyncService` | `*/30 * * * * ?` | MySQL -> MongoDB 同步 | sync/PayOrderSyncService.java:119 |
 | `StatisticsScheduled` | `0 0 1 * * ?` | 余额统计 | statistics_balance/scheduled/StatisticsScheduled.java |
 
-### 定时任务示例
-
-```java
-@Component
-@Slf4j
-public class SettScheduled {
-
-    @Autowired
-    private RpcCommonService rpcCommonService;
-
-    /**
-     * 商户日终结算汇总
-     * 每天凌晨 00:05 执行
-     */
-    @Scheduled(cron = "0 5 0 ? * *")
-    public void mchSettDailyCollectTask() {
-        try {
-            log.info("[SettScheduled][mchSettDailyCollectTask] 商户日终结算开始");
-
-            // 获取昨天的日期
-            Date yesterday = DateUtils.addDays(new Date(), -1);
-            String billDate = DateFormatUtils.format(yesterday, "yyyyMMdd");
-
-            // 执行结算汇总
-            int count = rpcCommonService.rpcSettDailyCollectService.mchCollect(billDate);
-
-            log.info("[SettScheduled][mchSettDailyCollectTask] 商户日终结算完成, 处理商户数: {}", count);
-
-        } catch (Exception e) {
-            log.error("[SettScheduled][mchSettDailyCollectTask] 商户日终结算异常", e);
-        }
-    }
-}
-```
-
-## 消息队列
-
-### 主要队列
-
-| 队列名称 | 用途 |
-|----------|------|
-| `PRODUCE_PAY_EXCEL_QUEUE` | 支付订单 Excel 导出队列 |
-| `PRODUCE_AG_PAY_EXCEL_QUEUE` | 代理商支付订单 Excel 导出队列 |
-| `PRODUCE_MCH_PAY_EXCEL_QUEUE` | 商户支付订单 Excel 导出队列 |
-
-### 消费者配置
-
-```java
-@Configuration
-public class ActiveMqConf {
-
-    @Value("${spring.activemq.broker-url}")
-    private String brokerUrl;
-
-    @Value("${spring.activemq.user}")
-    private String user;
-
-    @Value("${spring.activemq.password}")
-    private String password;
-
-    @Bean
-    public ActiveMQConnectionFactory activeMQConnectionFactory() {
-        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-        factory.setBrokerURL(brokerUrl);
-        factory.setUserName(user);
-        factory.setPassword(password);
-
-        // 连接池配置
-        factory.setMaxThreadPoolSize(10);
-        factory.setReconnectOnException(true);
-
-        return factory;
-    }
-
-    @Bean
-    public JmsListenerContainerFactory jmsListenerContainerFactory() {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(activeMQConnectionFactory());
-        factory.setConcurrency("1-10");
-        factory.setSessionTransacted(false);
-        return factory;
-    }
-}
-```
+详细代码见 `references/code-examples.md`
 
 ## 数据同步
 
 ### MySQL -> MongoDB 同步机制
-
 xxpay-task 将 MySQL 支付订单数据同步到 MongoDB，用于高性能查询和报表生成。
 
 **同步流程：**
@@ -262,66 +134,19 @@ xxpay-task 将 MySQL 支付订单数据同步到 MongoDB，用于高性能查询
 
 **启动补偿：** 应用重启时，根据上次同步状态智能回溯，避免数据丢失
 
-### 同步服务实现
+## 消息队列
 
-```java
-@Service
-@Slf4j
-public class PayOrderSyncService {
+### 主要队列
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @Autowired
-    private RpcCommonService rpcCommonService;
-
-    /**
-     * 同步支付订单到 MongoDB
-     * 每 30 秒执行一次
-     */
-    @Scheduled(cron = "*/30 * * * * ?")
-    public void syncPayOrder() {
-        try {
-            log.info("[PayOrderSyncService] 开始同步支付订单");
-
-            // 查询需要同步的订单
-            List<PayOrder> orders = rpcCommonService.rpcPayOrderService.selectNeedSync(1000);
-
-            if (orders.isEmpty()) {
-                log.info("[PayOrderSyncService] 没有需要同步的订单");
-                return;
-            }
-
-            // 批量插入 MongoDB
-            List<PayOrderDocument> documents = orders.stream()
-                    .map(this::convertToDocument)
-                    .collect(Collectors.toList());
-
-            mongoTemplate.insertAll(documents);
-
-            log.info("[PayOrderSyncService] 同步支付订单完成, 数量: {}", orders.size());
-
-        } catch (Exception e) {
-            log.error("[PayOrderSyncService] 同步支付订单异常", e);
-        }
-    }
-
-    private PayOrderDocument convertToDocument(PayOrder order) {
-        PayOrderDocument doc = new PayOrderDocument();
-        doc.setPayOrderId(order.getPayOrderId());
-        doc.setMchId(order.getMchId());
-        doc.setAmount(order.getAmount());
-        doc.setStatus(order.getStatus());
-        // ... 其他字段
-        return doc;
-    }
-}
-```
+| 队列名称 | 用途 |
+|----------|------|
+| `PRODUCE_PAY_EXCEL_QUEUE` | 支付订单 Excel 导出队列 |
+| `PRODUCE_AG_PAY_EXCEL_QUEUE` | 代理商支付订单 Excel 导出队列 |
+| `PRODUCE_MCH_PAY_EXCEL_QUEUE` | 商户支付订单 Excel 导出队列 |
 
 ## 汇率服务
 
 项目从多个第三方 API 抓取加密货币汇率，并存储到 Redis：
-
 - **OKX**：CNY/USDT、大额 C2C 汇率
 - **Binance**：USDT 汇率
 - **LFB**：USDT 汇率
@@ -332,68 +157,29 @@ public class PayOrderSyncService {
 ## 开发注意事项
 
 ### 时间配置
-
 - 默认时区：`Asia/Shanghai`
 - Jackson 序列化：时间戳格式（毫秒）
 - 所有定时任务基于服务器时间
 
 ### 日志规范
-
 使用 `@Slf4j` 注解（Lombok），使用 MDC 记录 traceId，格式：`[功能模块][子模块]traceId:{}, 消息`
 
 日志级别：INFO（业务流程）、WARN（告警）、ERROR（异常）
 
 ### 异常处理
-
 - 定时任务必须捕获所有异常，防止影响调度器
 - 不要在定时任务中重新抛出异常
 - 使用 try-with-resources 或 finally 块清理资源（MDC、文件句柄）
 
 ### RPC 调用
-
 - 所有 RPC 调用通过 `RpcCommonService` 进行
 - 注意超时配置，特别是同步服务（60 分钟）
 - 使用 `@DubboReference` 注解注入服务
 
 ### 并发处理
-
-```java
-@Service
-@Slf4j
-public class FetchCallbackScheduled {
-
-    @Autowired
-    private ThreadPoolTaskExecutor fetchCallbackExecutor;
-
-    public void fetchCallback() {
-        List<PayOrder> orders = getNeedFetchOrders();
-
-        // 使用线程池并行处理
-        CountDownLatch latch = new CountDownLatch(orders.size());
-
-        for (PayOrder order : orders) {
-            fetchCallbackExecutor.submit(() -> {
-                try {
-                    // 继承父线程的 MDC 上下文
-                    MDC.put("traceId", MDC.get("traceId"));
-
-                    fetchOrder(order);
-
-                } finally {
-                    MDC.clear();
-                    latch.countDown();
-                }
-            });
-        }
-
-        // 等待所有任务完成
-        latch.await();
-    }
-}
-```
+详细代码见 `references/code-examples.md`
 
 ### 文件处理
-
 - CSV 文件使用 UTF-8 BOM 格式（`{(byte) 0xef, (byte) 0xbb, (byte) 0xbf}`）
 - 对账单路径按日期组织：`{mchBillPath}{billDateStr}/{mchId}.csv`
 - Excel 导出文件默认保留 90 天
