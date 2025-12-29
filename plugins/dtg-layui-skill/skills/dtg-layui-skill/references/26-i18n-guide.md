@@ -150,7 +150,25 @@ table.render({
 
 <!-- 选项卡 -->
 <li class="layui-this" i18ndata="merchant:list.mch_view.basic">基本信息</li>
+
+<!-- 下拉选项 -->
+<option value="" i18ndata="merchant:list.all">全部</option>
+
+<!-- ⚠️ 注意：占位符不能使用 HTML 属性，必须使用 JavaScript 动态设置 -->
+<!-- ❌ 错误写法 -->
+<input type="text" i18n-placeholder="merchant:list.placeholder" />
+
+<!-- ✅ 正确写法 - 见下方 JavaScript 部分 -->
+<input type="text" id="searchInput" />
 ```
+
+### 属性说明
+
+| 属性 | 用途 | 示例 |
+|------|------|------|
+| `i18ndata` | 元素文本内容的翻译键 | `<span i18ndata="merchant:list.title">标题</span>` |
+| ~~`i18n-placeholder`~~ | ❌ 不支持，请使用 JavaScript 动态设置 | 见下方示例 |
+| `data-i18n` | ❌ 错误属性，请使用 `i18ndata` | 不要使用 |
 
 ## JavaScript 中的国际化
 

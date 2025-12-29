@@ -28,8 +28,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label" i18ndata="module:page.fieldName">字段名称</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="fieldName" placeholder=""
-                                   i18n-placeholder="module:page.fieldNamePlaceholder"
+                            <input type="text" name="fieldName" id="fieldNameInput"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -89,6 +88,11 @@
 
         // 渲染导航
         element.render('breadcrumb', 'breadcrumb');
+
+        // 设置占位符国际化
+        $('#fieldNameInput').attr('placeholder',
+            translateMessageByPath("module:page.fieldNamePlaceholder", "请输入字段名称")
+        );
 
         // 日期选择器
         laydate.render({

@@ -58,8 +58,6 @@
               <!-- 搜索输入框 -->
               <div class="layui-input-inline">
                 <input type="text" id="{{searchInputId}}"
-                       placeholder="{{searchPlaceholder}}"
-                       i18n-placeholder="{{moduleName}}:list.searchPlaceholder"
                        class="layui-input">
               </div>
               <!-- 下拉筛选（可选） -->
@@ -153,6 +151,11 @@ layui.use(['table','util','admin','form','laydate'], function(){
 
   // 渲染导航
   element.render('breadcrumb', 'breadcrumb');
+
+  // 设置占位符国际化
+  $('#{{searchInputId}}').attr('placeholder',
+    translateMessageByPath("{{moduleName}}:list.searchPlaceholder", "{{searchPlaceholder}}")
+  );
 
   // 日期选择器（可选）
   laydate.render({
