@@ -1,5 +1,5 @@
 ---
-name: admin-panel-development
+name: dtg-admin-panel-development
 description: 管理后台模块开发技能。提供 LayuiAdmin 管理界面、JWT 认证和 Dubbo 服务集成的完整指导。
 version: 1.0.0
 tags: ["admin-panel", "layui", "jwt", "dubbo-consumer", "management-interface"]

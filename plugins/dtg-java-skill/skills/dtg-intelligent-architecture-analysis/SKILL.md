@@ -1,5 +1,5 @@
 ---
-name: intelligent-architecture-analysis
+name: dtg-intelligent-architecture-analysis
 description: 智能架构分析技能，针对 Spring Boot 2.7 + Apache Dubbo 3 微服务架构
 license: Apache 2.0
 ---

@@ -1,5 +1,5 @@
 ---
-name: common-module-development
+name: dtg-common-module-development
 description: xxpay-core 公共模块开发技能
 version: 1.0.0
 tags: ["common-module", "entity", "service-interface", "utilities", "constants"]

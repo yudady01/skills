@@ -1,5 +1,5 @@
 ---
-name: multi-module-management
+name: dtg-multi-module-management
 description: dtg-pay 多模块 Maven 项目管理
 version: 1.0.0
 tags: ["multi-module", "maven", "project-structure", "module-detection"]
@@ -28,14 +28,14 @@ dtg-pay (父项目: org.dtg:dtg-pay:1.0.0)
 | 模块 | HTTP端口 | Dubbo端口 | 类型 | 对应技能 |
 |------|----------|-----------|------|---------|
 | rbgi | 8195 | - | 银行网关 | - |
-| xxpay-agent | 8192 | 28192 | 代理商系统 | admin-panel-development |
+| xxpay-agent | 8192 | 28192 | 代理商系统 | dtg-admin-panel-development |
 | xxpay-consumer | 3120 | 23120 | 通知消费者 | - |
-| xxpay-core | - | - | 公共模块 | common-module-development |
+| xxpay-core | - | - | 公共模块 | dtg-common-module-development |
 | xxpay-flyway | - | - | 数据库迁移 | - |
-| xxpay-manage | 8193 | 28193 | 运营平台 | admin-panel-development |
-| xxpay-merchant | 8191 | 28191 | 商户系统 | admin-panel-development |
+| xxpay-manage | 8193 | 28193 | 运营平台 | dtg-admin-panel-development |
+| xxpay-merchant | 8191 | 28191 | 商户系统 | dtg-admin-panel-development |
 | xxpay-task | 8194 | 28194 | 定时任务 | - |
-| xxpay-pay | 3020 | 23020 | 支付核心 | payment-core-development |
+| xxpay-pay | 3020 | 23020 | 支付核心 | dtg-payment-core-development |
 | xxpay-service | 8190 | 28190 | Dubbo 服务提供者 | - |
 
 ## 模块依赖关系
