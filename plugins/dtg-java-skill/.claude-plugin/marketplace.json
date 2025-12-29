@@ -1,7 +1,7 @@
 {
   "name": "dtg-java-skill",
   "version": "2.7.0",
-  "description": "🤖 智能化 Spring Boot 2.7 + Dubbo 3 企业级微服务开发插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能，提供最智能的微服务开发体验",
+  "description": "🤖 智能化 Spring Boot 2.7 + Dubbo 3 企业级微服务开发插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能，支持多模块项目管理，提供最智能的微服务开发体验",
   "author": {
     "name": "Spring Boot + Dubbo AI Coding Team",
     "email": "dubbo-microservice-support@example.com"
@@ -9,6 +9,13 @@
   "homepage": "https://github.com/shinpr/dtg-java-skill",
   "repository": "https://github.com/shinpr/dtg-java-skill",
   "license": "MIT",
+  "multiModuleSupport": {
+    "enabled": true,
+    "projectRootPatterns": ["pom.xml", "CLAUDE.md"],
+    "modulePatterns": ["*/pom.xml", "*/CLAUDE.md"],
+    "autoDetectModule": true,
+    "loadOnlyCurrentModule": true
+  },
   "keywords": [
     "java",
     "spring-boot",
@@ -67,6 +74,12 @@
     "enterprise-reports",
     "code-quality-metrics",
     "review-history",
-    "trend-analysis"
+    "trend-analysis",
+    "multi-module",
+    "maven-modules",
+    "module-detection",
+    "module-context",
+    "dtg-pay",
+    "payment-system"
   ]
 }
