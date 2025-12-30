@@ -152,7 +152,7 @@ dtg-pay 项目模块列表:
       "type": "payment-core",
       "httpPort": 3020,
       "dubboPort": 23020,
-      "skill": "payment-core-development",
+      "skill": "dtg-payment-core-development",
       "description": "支付核心"
     }
   ]

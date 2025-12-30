@@ -1,7 +1,7 @@
 ---
 name: dtg-multi-module-management
 description: dtg-pay 多模块 Maven 项目管理
-version: 1.0.0
+version: 3.0.0
 tags: ["multi-module", "maven", "project-structure", "module-detection"]
 ---
 

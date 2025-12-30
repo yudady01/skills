@@ -76,7 +76,7 @@ java -jar xxpay-service/target/xxpay-service-1.0.0.jar
 
 ```
 工作目录: /dtg-pay/xxpay-manage
-自动载入: admin-panel-development 技能
+自动载入: dtg-admin-panel-development 技能
 自动载入: /dtg-pay/xxpay-manage/CLAUDE.md
 ```
 
@@ -85,14 +85,14 @@ java -jar xxpay-service/target/xxpay-service-1.0.0.jar
 | 工作目录 | 自动应用技能 | 说明 |
 |---------|-------------|------|
 | xxpay-service | dubbo-provider-development | Dubbo 服务提供者开发 |
-| xxpay-pay | payment-core-development | 支付核心和通道开发 |
-| xxpay-manage | admin-panel-development | 运营管理后台开发 |
-| xxpay-agent | admin-panel-development | 代理商管理后台开发 |
-| xxpay-merchant | admin-panel-development | 商户管理后台开发 |
+| xxpay-pay | dtg-payment-core-development | 支付核心和通道开发 |
+| xxpay-manage | dtg-admin-panel-development | 运营管理后台开发 |
+| xxpay-agent | dtg-admin-panel-development | 代理商管理后台开发 |
+| xxpay-merchant | dtg-admin-panel-development | 商户管理后台开发 |
 | xxpay-task | scheduled-task-development | 定时任务开发 |
 | xxpay-consumer | message-consumer-development | 消息消费者开发 |
 | rbgi | bank-gateway-development | 银行网关开发 |
-| xxpay-core | common-module-development | 公共模块开发 |
+| xxpay-core | dtg-common-module-development | 公共模块开发 |
 
 ### 查看其他模块
 

@@ -1,7 +1,7 @@
 ---
 name: dtg-payment-core-development
 description: xxpay-pay 支付核心模块开发技能
-version: 1.0.0
+version: 3.0.0
 tags: ["payment", "payment-gateway", "channel-integration", "callback"]
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: dtg-springboot-project-setup
 description: 企业级 Spring Boot 2.7 + Apache Dubbo 3.2.14 微服务项目配置
-version: 2.7.0
+version: 3.0.0
 tags: ["spring-boot", "dubbo", "microservice", "enterprise", "java"]
 ---
 
