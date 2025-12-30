@@ -5,8 +5,8 @@
     "email": "yudady@gmail.com"
   },
   "metadata": {
-    "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器、支付渠道集成开发技能、Chrome DevTools调试和Spring Boot微服务开发技能",
-    "version": "1.0.0"
+    "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器、支付渠道集成开发技能、Spring Boot微服务开发技能和Layui前端开发技能",
+    "version": "2.1.1"
   },
   "plugins": [
     {
@@ -26,12 +26,6 @@
       "description": "专业的英中翻译工具，专门处理技术和编程内容",
       "source": "./plugins/en-to-zh-translator",
       "category": "translation"
-  },
-  {
-      "name": "chrome-debug",
-      "description": "Chrome DevTools 集成插件，提供强大的 Web 应用调试、自动化操作和性能分析能力，支持自动登录和智能回退机制",
-      "source": "./plugins/chrome-debug",
-      "category": "debugging"
     },
     {
       "name": "dtg-java-skill",
