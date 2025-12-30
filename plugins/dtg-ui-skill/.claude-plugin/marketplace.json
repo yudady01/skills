@@ -1,6 +1,6 @@
 {
   "name": "dtg-ui-skill",
-  "version": "3.3.0",
+  "version": "3.0.0",
   "description": "企业级 LayuiAdmin 代码生成助手，基于 716+ 个实际项目 HTML 文件分析，提供完整的 API 集成、权限控制、数据统计、国际化 i18n 等企业级开发模板，包含语言文件管理工具",
   "author": "tommy",
   "keywords": ["layui", "layuiadmin", "enterprise", "api", "admin", "payment", "reconciliation", "frontend", "echarts", "i18n", "internationalization", "multi-language", "translation"],

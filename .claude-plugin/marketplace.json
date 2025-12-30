@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器、支付渠道集成开发技能、Spring Boot微服务开发技能和Layui前端开发技能",
-    "version": "2.1.1"
+    "version": "3.0.0"
   },
   "plugins": [
     {
