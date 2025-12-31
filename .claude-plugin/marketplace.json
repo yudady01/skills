@@ -5,7 +5,7 @@
     "email": "yudady@gmail.com"
   },
   "metadata": {
-    "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器、支付渠道集成开发技能、Spring Boot微服务开发技能和Layui前端开发技能",
+    "description": "专业的 Claude Code 技能集合，包含翻译工具、SQL脚本生成器、支付渠道集成开发技能、Spring Boot微服务开发技能、Layui前端开发技能和代码审查技能",
     "version": "3.0.0"
   },
   "plugins": [
@@ -38,6 +38,12 @@
       "description": "Layui 2.3.0 代码生成助手，帮助快速构建使用 Layui 的网页",
       "source": "./plugins/dtg-ui-skill",
       "category": "frontend"
+    },
+    {
+      "name": "dtg-code-review",
+      "description": "智能化代码审查技能，提供 OWASP Top 10 安全检查、企业级编码规范验证、架构质量评估和自动化问题识别",
+      "source": "./plugins/dtg-code-review",
+      "category": "code-quality"
     }
   ]
 }
