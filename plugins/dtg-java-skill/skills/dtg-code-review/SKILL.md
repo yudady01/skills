@@ -1,339 +1,459 @@
 ---
 name: dtg-code-review
-description: 智能化代码审查技能，提供 OWASP Top 10 安全检查、企业级编码规范验证、架构质量评估和自动化问题识别。集成静态代码分析、安全漏洞扫描和代码质量度量功能。
-allowed-tools: Read, Glob, Grep, Task
+description: 智能化 Spring Boot 2.7 + Dubbo 3 微服务代码审查技能。提供 OWASP Top 10 安全检查、企业级 Java 编码规范验证、Dubbo 服务安全审查、MyBatis-Plus 防注入检查和自动化问题识别。集成静态代码分析、安全漏洞扫描和架构质量度量功能。
+version: 3.0.0
 tags:
   - code-review
   - security
+  - spring-boot
+  - dubbo
   - quality
   - static-analysis
 ---
 
 # DTG 代码审查
 
-编写安全代码的综合指南，涵盖 OWASP Top 10 2025、CWE Top 25 以及特定语言的安全模式。
+智能化 Spring Boot 2.7 + Dubbo 3 微服务代码审查技能，提供全面的安全检查和质量评估。
 
 ## 何时使用此技能
 
 在以下情况下使用此技能：
 
-- 审查代码的安全漏洞
-- 实现输入验证或输出编码
-- 了解常见安全弱点（OWASP、CWE）
-- 修复已识别的安全问题
-- 编写安全敏感代码（身份验证、授权、数据处理）
-- 进行安全代码审查
+- 审查 Spring Boot + Dubbo 微服务代码的安全漏洞
+- 检查 MyBatis-Plus 查询的注入风险
+- 验证 Dubbo 服务接口安全性
+- 评估微服务架构设计质量
+- 审查支付敏感代码（加密、签名、回调）
+- 检查配置文件安全风险
+- 进行企业级 Java 代码质量审查
 
-## OWASP Top 10 2025 快速参考
+## OWASP Top 10 2025 快速参考 (Spring Boot)
 
-| 排名 | 漏洞 | 关键缓解措施 |
+| 排名 | 漏洞 | Spring Boot 缓解措施 |
 |------|--------------|----------------|
-| A01 | 访问控制失效 | 服务器端访问检查、默认拒绝策略、CORS 限制 |
-| A02 | 安全配置错误 | 硬化配置、移除默认值、禁用不必要的功能 |
-| A03 | 软件供应链故障 | SCA、SBOM、验证依赖项、完整性检查 |
-| A04 | 加密失败 | 强加密（AES-256）、TLS 1.2+、禁用已弃用的算法 |
-| A05 | 注入 | 参数化查询、输入验证、上下文感知编码 |
-| A06 | 不安全设计 | 威胁建模、安全设计模式、纵深防御 |
-| A07 | 身份验证失败 | MFA、强密码、安全会话管理 |
-| A08 | 数据完整性失败 | 数字签名、完整性验证、安全 CI/CD |
-| A09 | 日志和警报失败 | 集中式日志记录、异常检测、审计跟踪 |
-| A10 | 异常处理不当 | 安全失败、通用错误消息、完整的异常处理 |
+| A01 | 访问控制失效 | `@PreAuthorize`、自定义拦截器、Dubbo Filter |
+| A02 | 安全配置错误 | 禁用 Actuator 端点、生产环境配置分离、配置加密 |
+| A03 | 软件供应链故障 | 依赖扫描 (OWASP Dependency-Check)、SBOM、验证依赖 |
+| A04 | 加密失败 | JCE Provider、配置加密 (Jasypt)、TLS 1.3 |
+| A05 | 注入 | MyBatis-Plus 参数化、输入验证、CSRF 防护 |
+| A06 | 不安全设计 | 纵深防御、安全设计模式、限流熔断 |
+| A07 | 身份验证失败 | JWT + Redis、会话管理、MFA 集成 |
+| A08 | 数据完整性失败 | 数字签名、防篡改机制、审计日志 |
+| A09 | 日志和警报失败 | Logback/SLF4J、集中式日志 (ELK)、异常监控 |
+| A10 | 异常处理不当 | `@ControllerAdvice`、通用错误响应、安全失败 |
 
 **详细缓解措施**：参见 [OWASP Top 10 2025 参考](references/owasp-top-10-2025.md)
 
-## 核心安全编码原则
+## Java/Spring Boot 核心安全编码原则
 
-### 1. 输入验证
+### 1. 输入验证 (JSR-303/380 + Spring Validation)
 
 **永远不要信任用户输入。** 在服务器端验证所有输入。
 
-```csharp
-using System.Text.RegularExpressions;
+```java
+// ✅ 好：使用 Bean Validation 注解
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.Length;
 
-// 好：使用允许列表的服务器端验证
-public static partial class InputValidation
-{
-    [GeneratedRegex(@"^[a-zA-Z0-9_]{3,20}$")]
-    private static partial Regex UsernamePattern();
+public class PayOrderCreateRequest {
 
-    /// <summary>
-    /// 根据允许列表模式验证用户名。
-    /// </summary>
-    public static bool ValidateUsername(string username) =>
-        !string.IsNullOrEmpty(username) && UsernamePattern().IsMatch(username);
+    @NotBlank(message = "商户号不能为空")
+    @Pattern(regexp = "^[A-Z0-9]{8,32}$", message = "商户号格式错误")
+    private String mchId;
+
+    @NotNull(message = "金额不能为空")
+    @DecimalMin(value = "0.01", message = "金额最小为 0.01")
+    @DecimalMax(value = "999999.99", message = "金额最大为 999999.99")
+    private BigDecimal amount;
+
+    @NotBlank(message = "支付渠道不能为空")
+    @Pattern(regexp = "^[A-Z0-9_]{2,16}$", message = "渠道码格式错误")
+    private String payChannelId;
+
+    @Length(max = 128, message = "回调URL长度不能超过128")
+    @Pattern(regexp = "^https?://[\\w\\-]+(\\.[\\w\\-]+)+[/#?]?.*$", message = "回调URL格式错误")
+    private String notifyUrl;
 }
 
-// 坏：无验证
-public string ProcessUsername(string username) => username;  // 危险！
-```
+// Controller 层验证
+@RestController
+@RequestMapping("/api/payOrder")
+public class PayOrderController {
 
-**验证策略**：
-
-- **允许列表验证**：定义允许的内容（推荐）
-- **阻止列表验证**：定义不允许的内容（安全性较低）
-- **类型检查**：确保正确的数据类型
-- **范围检查**：验证值在预期范围内
-- **长度限制**：防止缓冲区溢出和 DoS
-
-### 2. 输出编码
-
-根据上下文对输出进行编码以防止注入攻击。
-
-| 上下文 | 编码方法 | 示例 |
-|---------|----------------|---------|
-| HTML 正文 | HTML 实体编码 | `&lt;script&gt;` |
-| HTML 属性 | 属性编码 | `&#x27;` 用于 `'` |
-| JavaScript | JavaScript 编码 | `\\x3Cscript\\x3E` |
-| URL 参数 | URL 编码 | `%3Cscript%3E` |
-| CSS | CSS 编码 | `\\3C script\\3E` |
-| SQL | 参数化查询 | 使用预处理语句 |
-
-### 3. 参数化查询（注入预防）
-
-**始终对数据库操作使用参数化查询。**
-
-```csharp
-// 好：使用 SqlCommand 的参数化查询
-using var cmd = new SqlCommand(
-    "SELECT * FROM Users WHERE Username = @username AND Status = @status",
-    connection);
-cmd.Parameters.AddWithValue("@username", username);
-cmd.Parameters.AddWithValue("@status", status);
-
-// 好：使用 Dapper 的参数化查询
-var users = await connection.QueryAsync<User>(
-    "SELECT * FROM Users WHERE Username = @Username AND Status = @Status",
-    new { Username = username, Status = status });
-
-// 坏：字符串插值（SQL 注入漏洞）
-var query = $"SELECT * FROM Users WHERE Username = '{username}'";  // 易受攻击
-```
-
-### 4. 身份验证安全
-
-- **使用强密码哈希**：Argon2id、bcrypt、scrypt（参见 `cryptography` 技能）
-- **实施 MFA**：基于时间的 OTP、硬件密钥、通行密钥
-- **安全会话管理**：HttpOnly Cookie、安全标志、短过期时间
-- **账户锁定**：防止暴力攻击
-- **凭据存储**：永远不要存储明文密码
-
-### 5. 授权安全
-
-- **默认拒绝**：需要显式权限授予
-- **服务器端检查**：永远不要依赖客户端授权
-- **验证对象所有权**：检查用户可以访问请求的资源
-- **使用间接引用**：将内部 ID 映射到用户特定的引用
-- **实施 RBAC/ABAC**：使用结构化访问控制模型
-
-### 6. 错误处理
-
-```csharp
-// 好：向用户返回通用错误消息，详细记录日志
-public async Task<IActionResult> ProcessData([FromBody] DataRequest request)
-{
-    try
-    {
-        await _dataService.ProcessSensitiveDataAsync(request.Data);
-        return Ok();
-    }
-    catch (DbException ex)
-    {
-        _logger.LogError(ex, "Database error processing request for user {UserId}", User.GetUserId());
-        return StatusCode(500, new { error = "An error occurred" });
+    @PostMapping("/create")
+    public Result<PayOrder> createOrder(@Valid @RequestBody PayOrderCreateRequest request) {
+        // 验证通过，处理业务逻辑
+        return Result.success(payOrderService.createOrder(request));
     }
 }
 
-// 坏：暴露内部细节
-catch (DbException ex)
-{
-    return StatusCode(500, new { error = ex.Message });  // 易受攻击 - 暴露内部信息
+// ❌ 坏：无验证
+public PayOrder createOrder(PayOrderRequest request) {
+    return payOrderService.save(request);  // 危险！
 }
 ```
 
-**错误处理规则**：
+### 2. MyBatis-Plus 防注入 (SQL Injection Prevention)
 
-- 向用户返回通用错误消息
-- 在服务器端记录详细错误
-- 永远不要暴露堆栈跟踪、数据库错误或内部路径
-- 安全失败（错误时拒绝访问）
+**始终使用 MyBatis-Plus 的条件构造器或 Mapper 方法。**
 
-## 特定语言的模式
+```java
+// ✅ 好：使用 QueryWrapper (参数化查询)
+@Service
+public class PayOrderServiceImpl extends ServiceImpl<PayOrderMapper, PayOrder> implements PayOrderService {
 
-### JavaScript/TypeScript
+    public PayOrder getByOrderNo(String orderNo) {
+        return lambdaQuery()
+                .eq(PayOrder::getPayOrderId, orderNo)
+                .one();
+    }
 
-```typescript
-// XSS 预防 - 使用 textContent，而不是 innerHTML
-element.textContent = userInput;  // 安全
-element.innerHTML = userInput;    // 易受攻击
+    public List<PayOrder> listByMchIdAndStatus(String mchId, Byte status) {
+        return lambdaQuery()
+                .eq(PayOrder::getMchId, mchId)
+                .eq(PayOrder::getStatus, status)
+                .orderByDesc(PayOrder::getCreateTime)
+                .list();
+    }
+}
 
-// 对于必须渲染的 HTML，使用 DOMPurify
-import DOMPurify from 'dompurify';
-element.innerHTML = DOMPurify.sanitize(userInput);
+// ✅ 好：使用 @Select 注解 (参数化)
+@Mapper
+public interface PayOrderMapper extends BaseMapper<PayOrder> {
 
-// 避免使用 eval() 和 Function()
-eval(userInput);           // 易受攻击
-new Function(userInput)(); // 易受攻击
+    @Select("SELECT * FROM pay_order WHERE pay_order_id = #{orderNo} AND mch_id = #{mchId}")
+    PayOrder selectByOrderNoAndMchId(@Param("orderNo") String orderNo, @Param("mchId") String mchId);
+}
 
-// 使用严格模式
-'use strict';
+// ❌ 坏：字符串拼接 (SQL 注入漏洞)
+@Select("SELECT * FROM pay_order WHERE pay_order_id = '${orderNo}'")  // 易受攻击！
+PayOrder selectByOrderNo(@Param("orderNo") String orderNo);
 ```
 
-### C# / .NET
+### 3. Dubbo 服务安全
 
-```csharp
-// 安全进程执行 - 使用参数列表，避免 shell
-using System.Diagnostics;
+```java
+// ✅ 好：使用 Token 验证的 Dubbo Filter
+@Activate(group = {Constants.PROVIDER})
+public class TokenValidationFilter implements Filter {
 
-public static async Task<string> SafeExecuteAsync(string command, params string[] args)
-{
-    using var process = new Process
-    {
-        StartInfo = new ProcessStartInfo
-        {
-            FileName = command,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,  // 安全：无 shell 解释
-            CreateNoWindow = true
+    @Override
+    public Result invoke(Invoker<?> invoker, Invocation invocation) {
+        String token = RpcContext.getContext().getAttachment("authToken");
+
+        if (!isValidToken(token)) {
+            return new Result(1, "Invalid authentication token", null);
         }
-    };
 
-    foreach (var arg in args)
-        process.StartInfo.ArgumentList.Add(arg);  // 安全：无需 shell 转义
-
-    process.Start();
-    var output = await process.StandardOutput.ReadToEndAsync();
-    await process.WaitForExitAsync();
-    return output;
-}
-
-// 坏：Shell 注入漏洞
-Process.Start("cmd", $"/c dir {userInput}");  // 易受攻击
-
-// 安全文件操作 - 防止路径遍历
-public static class SafeFileAccess
-{
-    /// <summary>
-    /// 安全读取文件，防止路径遍历攻击。
-    /// </summary>
-    public static string SafeReadFile(string baseDir, string filename)
-    {
-        var basePath = Path.GetFullPath(baseDir);
-        var filePath = Path.GetFullPath(Path.Combine(baseDir, filename));
-
-        if (!filePath.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
-            throw new UnauthorizedAccessException("Path traversal detected");
-
-        return File.ReadAllText(filePath);
+        return invoker.invoke(invocation);
     }
 }
 
-// 使用 Entity Framework 的参数化查询
-var users = context.Users
-    .Where(u => u.Username == username)  // 安全 - 参数化
-    .ToList();
+// ✅ 好：服务接口权限控制
+@Service(version = "1.0.0")
+public class PayOrderServiceImpl implements PayOrderService {
 
-// 尽可能避免原始 SQL，需要时使用参数
-var users = context.Users
-    .FromSqlRaw("SELECT * FROM Users WHERE Username = {0}", username)
-    .ToList();
-
-// 用于 CSRF 保护防伪令牌
-[ValidateAntiForgeryToken]
-public IActionResult UpdateProfile(ProfileModel model)
-{
-    // 处理更新
-}
-
-// 使用数据注释的输入验证
-public sealed class UserInput
-{
-    [Required]
-    [StringLength(100, MinimumLength = 3)]
-    [RegularExpression(@"^[a-zA-Z0-9_]+$")]
-    public required string Username { get; init; }
+    @Override
+    @DubboServiceAuth(permission = "pay:order:create")
+    public PayOrder createOrder(PayOrderCreateRequest request) {
+        // 业务逻辑
+    }
 }
 ```
 
-## 安全代码审查清单
+### 4. 密码和敏感数据加密
 
-### 输入处理
+```java
+// ✅ 好：使用 BCrypt 或 Argon2 进行密码哈希
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
-- [ ] 在服务器端验证所有输入
-- [ ] 尽可能使用允许列表验证
-- [ ] 执行长度限制
-- [ ] 执行类型检查
-- [ ] 验证文件上传（类型、大小、内容）
+@Service
+public class UserService {
 
-### 输出编码
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
-- [ ] 应用上下文适当的编码
-- [ ] HTML/JS/SQL 中没有原始用户输入
-- [ ] Content-Type 头设置正确
-- [ ] X-Content-Type-Options: nosniff
+    public void createUser(UserCreateRequest request) {
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));  // 安全哈希
+        user.setSalt(generateRandomSalt());
+        userRepository.save(user);
+    }
+}
 
-### 身份验证
+// ✅ 好：使用 Jasypt 加密配置
+# application.yml
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+    algorithm: PBEWITHHMACSHA512ANDAES_256
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
 
-- [ ] 强密码哈希（Argon2id/bcrypt）
-- [ ] 会话令牌随机且不可预测
-- [ ] 登出时使会话无效
-- [ ] 失败尝试后账户锁定
-- [ ] 凭据仅通过 HTTPS 传输
+# 加密数据库密码
+spring:
+  datasource:
+    password: ENC(gQ4lJz7G3xK3R8hN0xM3pQ==)
+```
 
-### 授权
+### 5. 支付签名验证 (Signature Verification)
 
-- [ ] 每个请求都有访问控制
-- [ ] 默认拒绝策略
-- [ ] 对象级授权检查
-- [ ] 不暴露直接对象引用
+```java
+// ✅ 好：统一的签名验证工具
+@Component
+public class PaySignatureValidator {
 
-### 数据保护
+    /**
+     * 验证支付回调签名
+     * @param params 参数Map（不包含sign字段）
+     * @param sign 待验证签名
+     * @param key 商户密钥
+     */
+    public boolean verifyCallbackSign(Map<String, String> params, String sign, String key) {
+        // 1. 参数排序
+        TreeMap<String, String> sortedParams = new TreeMap<>(params);
+        sortedParams.remove("sign");
 
-- [ ] 敏感数据静态加密
-- [ ] 传输中的数据使用 TLS 1.2+
-- [ ] URL 或日志中没有敏感数据
-- [ ] 正确的密钥管理
+        // 2. 拼接参数
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : sortedParams.entrySet()) {
+            if (StringUtils.isNotBlank(entry.getValue())) {
+                sb.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+            }
+        }
+        sb.append("key=").append(key);
 
-### 错误处理
+        // 3. MD5 签名
+        String calculatedSign = DigestUtils.md5Hex(sb.toString()).toUpperCase();
 
-- [ ] 向用户返回通用错误消息
-- [ ] 安全记录详细错误
-- [ ] 不暴露堆栈跟踪
-- [ ] 安全失败（错误时拒绝）
+        return calculatedSign.equals(sign);
+    }
+}
+```
+
+### 6. 安全的异常处理
+
+```java
+// ✅ 好：统一异常处理，不暴露内部细节
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(SQLException.class)
+    public Result<Void> handleSQLException(SQLException ex) {
+        logger.error("Database error: {}", ex.getMessage(), ex);
+        return Result.fail(500, "系统繁忙，请稍后重试");  // 不暴露数据库错误
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public Result<Void> handleAuthException(AuthenticationException ex) {
+        logger.warn("Authentication failed: {}", ex.getMessage());
+        return Result.fail(401, "认证失败");  // 通用错误消息
+    }
+}
+
+// ❌ 坏：暴露内部错误
+@ExceptionHandler(SQLException.class)
+public Result<Void> handleSQLException(SQLException ex) {
+    return Result.fail(500, ex.getMessage());  // 易受攻击 - 暴露数据库信息
+}
+```
+
+## 支付系统安全审查清单
+
+### 支付订单处理
+
+- [ ] 订单号使用 UUID 或雪花算法生成，确保唯一性
+- [ ] 金额使用 `BigDecimal`，不使用 `double`/`float`
+- [ ] 支付回调进行签名验证
+- [ ] 重复回调幂等处理
+- [ ] 订单状态机严格控制状态转换
+- [ ] 敏感字段（银行卡号、密码）加密存储
+
+### 支付渠道集成
+
+```java
+// ✅ 好：支付渠道基类模板
+public abstract class AbstractPayChannel<T extends PayConfig> {
+
+    /**
+     * 验证回调签名
+     */
+    protected abstract boolean verifySign(Map<String, String> params);
+
+    /**
+     * 解析回调参数
+     */
+    protected abstract PayCallbackResult parseCallback(Map<String, String> params);
+
+    /**
+     * 统一回调处理模板方法
+     */
+    public final PayOrderProcessResult handleCallback(Map<String, String> params) {
+        // 1. 签名验证
+        if (!verifySign(params)) {
+            return PayOrderProcessResult.fail("签名验证失败");
+        }
+
+        // 2. 解析回调
+        PayCallbackResult callback = parseCallback(params);
+
+        // 3. 幂等检查
+        PayOrder existingOrder = payOrderService.getByOrderNo(callback.getOrderNo());
+        if (existingOrder.getStatus() == PayStatus.SUCCESS) {
+            return PayOrderProcessResult.success("订单已处理");
+        }
+
+        // 4. 更新订单
+        return payOrderService.updateOrderStatus(callback);
+    }
+}
+```
+
+### Dubbo 服务安全
+
+- [ ] 所有服务接口添加版本号控制
+- [ ] 敏感服务添加 Token 验证 Filter
+- [ ] 超时配置合理（避免资源耗尽）
+- [ ] 负载均衡和容错策略配置
+- [ ] 服务降级和熔断配置
+
+### 配置安全
+
+```yaml
+# ✅ 好：生产环境配置示例
+spring:
+  profiles:
+    active: prod
+
+  # 禁用 Actuator 敏感端点
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
+          exclude: env,configprops,beans
+    endpoint:
+      health:
+        show-details: never  # 生产环境不显示详情
+
+# Dubbo 安全配置
+dubbo:
+  provider:
+    timeout: 5000
+    token: true  # 启用 Token 验证
+  protocol:
+    name: dubbo
+    # 生产环境使用 Hessian2 序列化（更安全）
+    serialization: hessian2
+```
+
+## 代码质量度量指标
+
+| 指标 | 阈值 | 说明 |
+|------|------|------|
+| 圈复杂度 | ≤ 10 | 单方法复杂度 |
+| 方法行数 | ≤ 50 | 单方法代码行数 |
+| 类行数 | ≤ 500 | 单类代码行数 |
+| 测试覆盖率 | ≥ 70% | 单元测试覆盖率 |
+| 重复代码率 | ≤ 5% | 代码重复度 |
+
+## Spring Boot 常见安全问题
+
+### 1. Actuator 端点泄露
+
+```yaml
+# ❌ 危险：生产环境暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# ✅ 安全：仅暴露必要端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+    endpoint:
+      health:
+        show-details: when-authorized
+```
+
+### 2. CORS 配置不当
+
+```java
+// ❌ 危险：允许所有来源
+@Configuration
+public class CorsConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");  // 危险！
+        // ...
+    }
+}
+
+// ✅ 安全：明确指定允许的来源
+@Configuration
+public class CorsConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("https://trusted-domain.com");
+        config.setAllowCredentials(true);
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("GET");
+        config.setMaxAge(3600L);
+        // ...
+    }
+}
+```
+
+### 3. 敏感信息日志泄露
+
+```java
+// ❌ 危险：记录敏感信息
+log.info("User login: username={}, password={}", username, password);
+
+// ✅ 安全：脱敏处理
+log.info("User login: username={}, password=****", username);
+```
 
 ## 快速决策树
 
 **您正在解决什么安全问题？**
 
-1. **SQL/NoSQL 注入** → 使用参数化查询、ORM
-2. **XSS（跨站脚本）** → 上下文感知输出编码、CSP
-3. **CSRF** → 防伪令牌、SameSite Cookie
-4. **身份验证** → 参见 `authentication-patterns` 技能
-5. **授权** → 参见 `authorization-models` 技能
-6. **加密** → 参见 `cryptography` 技能
-7. **密钥/凭据** → 参见 `secrets-management` 技能
-8. **API 安全** → 参见 `api-security` 技能
+1. **SQL 注入** → 使用 MyBatis-Plus 条件构造器，禁止字符串拼接
+2. **XSS** → 输入验证 + 输出编码 + CSP 头
+3. **CSRF** → Spring Security `@CsrfToken`
+4. **会话管理** → Spring Session + Redis
+5. **Dubbo 服务安全** → Token 验证 Filter + 权限控制
+6. **支付回调安全** → 签名验证 + 幂等处理
+7. **配置安全** → Jasypt 加密 + 环境隔离
+8. **日志安全** → 脱敏处理 + 集中式日志
 
 ## 参考资料
 
 - [OWASP Top 10 2025 详细参考](references/owasp-top-10-2025.md) - 完整的缓解措施和示例
 - [CWE Top 25 参考](references/cwe-top-25.md) - 最危险的软件弱点
-- [特定语言的模式](references/language-specific/) - 每种语言的安全指南
 
 ## 相关技能
 
 | 技能 | 关系 |
 |-------|-------------|
-| `authentication-patterns` | 身份验证实现细节（JWT、OAuth、Passkeys） |
-| `authorization-models` | 访问控制（RBAC、ABAC） |
-| `cryptography` | 加密、哈希、TLS |
-| `api-security` | 特定于 API 的安全模式 |
-| `secrets-management` | 凭据和密钥处理 |
+| `dtg-springboot-project-setup` | Spring Boot 项目配置和最佳实践 |
+| `dtg-payment-core-development` | 支付核心模块开发 |
+| `dtg-intelligent-architecture-analysis` | 智能架构分析 |
+| `dtg-admin-panel-development` | 管理后台开发 |
 
 ## 版本历史
 
-- v1.0.0 (2025-12-26): 初始版本，包含 OWASP Top 10 2025、核心原则
+- v3.0.0 (2025-12-31): 专注 Spring Boot 2.7 + Dubbo 3 微服务代码审查，替换 C# 示例为 Java
+- v1.0.0 (2025-12-26): 初始版本，通用安全编码指南
 
 ---
 
-**最后更新**：2025-12-26
+**最后更新**：2025-12-31 | **适用技术栈**：Spring Boot 2.7.18 + Dubbo 3.2.14
