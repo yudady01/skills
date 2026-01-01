@@ -202,6 +202,18 @@ python3 plugins/chrome-debug/skills/chrome-devtools-integration/scripts/setup-mc
   - **architecture-analyzer** - 架构分析代理
   - **intelligent-diagnoser** - 智能诊断代理
 
+- **🎯 自动检测功能** (2026-01-01 新增):
+  - **SessionStart Hook**: 自动检测 dtg-pay 项目并启用技能
+  - **检测标准**:
+    - 目录名称包含 `dtg-pay` 或 `xxpay`
+    - pom.xml 包含 Spring Boot + Dubbo 依赖
+    - 父目录名称匹配
+    - 存在 dtg-pay 特征模块目录
+  - **检测脚本**:
+    - `scripts/detect-dtg-pay.sh` - Shell 版本
+    - `scripts/detect-dtg-pay.py` - Python 版本
+  - **使用方法**: 在 dtg-pay 项目目录打开 Claude Code 时自动启用
+
 - **✅ 验证完成** (2025-12-07):
   - 质量评分: ⭐⭐⭐⭐⭐ (4.9/5.0)
   - 开发效率提升 85%
@@ -416,6 +428,30 @@ CONFIG_FILE="${CLAUDE_PLUGIN_ROOT}/config/settings.json"
 ---
 
 ## 📋 项目更新记录
+
+### 2026-01-01: dtg-java-skill 自动检测功能优化 ✅
+
+**新增功能**: dtg-pay 项目自动检测和技能自动启用
+
+#### 🎯 优化内容
+- ✅ **SessionStart Hook** - 会话开始时自动检测项目类型
+- ✅ **检测脚本** - 提供 Shell 和 Python 双版本检测工具
+- ✅ **智能识别** - 基于多种特征自动识别 dtg-pay 项目
+
+#### 📁 新增文件
+- `plugins/dtg-java-skill/.claude-plugin/hooks.json` - Hook 配置
+- `plugins/dtg-java-skill/scripts/detect-dtg-pay.sh` - Shell 检测脚本
+- `plugins/dtg-java-skill/scripts/detect-dtg-pay.py` - Python 检测脚本
+
+#### 🔍 检测标准（满足任一即触发）
+1. 目录名称包含 `dtg-pay` 或 `xxpay`
+2. pom.xml 包含 Spring Boot + Dubbo 依赖
+3. 父目录名称匹配
+4. 存在 dtg-pay 特征模块目录（如 xxpay-pay, xxpay-gateway 等）
+
+#### 💡 使用方式
+- **自动启用**: 在 dtg-pay 项目目录打开 Claude Code 时自动启用技能
+- **手动检测**: `python3 ${CLAUDE_PLUGIN_ROOT}/scripts/detect-dtg-pay.py`
 
 ### 2025-12-30: 项目 3.0.0 大版本升级 ✅
 
