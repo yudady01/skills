@@ -355,6 +355,43 @@ class MySQLDataSynchronizer:
         except (EOFError, KeyboardInterrupt):
             return False
 
+    def _display_dry_run_preview(self, source_rows: int, target_rows: int) -> None:
+        """
+        显示 Dry-run 预览信息
+
+        Args:
+            source_rows: 源表行数
+            target_rows: 目标表行数
+        """
+        if RICH_AVAILABLE:
+            from rich.panel import Panel
+
+            # 计算批次数
+            batch_count = (source_rows + self.BATCH_SIZE - 1) // self.BATCH_SIZE
+
+            preview_msg = f"[bold cyan]👀 预览模式 (DRY-RUN)[/bold cyan]\n\n"
+            preview_msg += f"[yellow]将执行以下操作:[/yellow]\n"
+            preview_msg += f"  1. [red]清除目标表[/red] {target_rows:,} 行数据\n"
+            preview_msg += f"  2. [green]从源表复制[/green] {source_rows:,} 行数据\n"
+            preview_msg += f"  3. 分 [cyan]{batch_count}[/cyan] 批次处理（每批 {self.BATCH_SIZE} 行）\n\n"
+            preview_msg += f"[bold green]✓ 这是预览模式，不会执行任何实际操作[/bold green]"
+            preview_msg += f"\n[dim]去掉 --dry-run 参数后再次运行以执行同步[/dim]"
+
+            console.print(Panel(
+                preview_msg,
+                title="预览模式",
+                border_style="cyan"
+            ))
+        else:
+            print("\n=== 预览模式 (DRY-RUN) ===")
+            print(f"将执行以下操作:")
+            print(f"  1. 清除目标表 {target_rows:,} 行数据")
+            print(f"  2. 从源表复制 {source_rows:,} 行数据")
+            batch_count = (source_rows + self.BATCH_SIZE - 1) // self.BATCH_SIZE
+            print(f"  3. 分 {batch_count} 批次处理（每批 {self.BATCH_SIZE} 行）")
+            print(f"\n✓ 这是预览模式，不会执行任何实际操作")
+            print(f"去掉 --dry-run 参数后再次运行以执行同步")
+
     def clear_target_table(self, table_name: str) -> int:
         """
         清除目标表数据
@@ -395,7 +432,7 @@ class MySQLDataSynchronizer:
         cursor.executemany(sql, values)
         return cursor.rowcount
 
-    def sync_table(self, table_name: str, force: bool = False, days: int = 10) -> Dict[str, Any]:
+    def sync_table(self, table_name: str, force: bool = False, days: int = 10, dry_run: bool = False) -> Dict[str, Any]:
         """
         同步表数据
 
@@ -403,6 +440,7 @@ class MySQLDataSynchronizer:
             table_name: 表名
             force: 强制同步（跳过确认）
             days: 只同步最近 N 天的数据（默认 10 天，0 表示同步全部）
+            dry_run: 预览模式，只显示信息不执行实际操作
 
         Returns:
             同步结果字典
@@ -454,6 +492,17 @@ class MySQLDataSynchronizer:
 
             # 6. 显示同步信息并请求用户确认
             self._display_sync_info(table_name, source_rows, target_rows_before, len(columns), time_filter=result['time_filter'])
+
+            # Dry-run 模式：只显示预览，不执行实际操作
+            if dry_run:
+                self._display_dry_run_preview(source_rows, target_rows_before)
+                result['success'] = True
+                result['dry_run'] = True
+                result['source_rows'] = source_rows
+                result['target_rows_before'] = target_rows_before
+                result['deleted_rows'] = target_rows_before  # 预计删除
+                result['inserted_rows'] = source_rows  # 预计插入
+                return result
 
             if not force:
                 if not self._confirm_sync():
@@ -739,7 +788,7 @@ def parse_args() -> tuple:
     解析命令行参数
 
     Returns:
-        (table_name, force, days, source_config, target_config)
+        (table_name, force, days, dry_run, source_config, target_config)
     """
     parser = argparse.ArgumentParser(
         description='MySQL 8 数据同步工具',
@@ -747,6 +796,7 @@ def parse_args() -> tuple:
         epilog="""
 示例:
   %(prog)s --table pay_order
+  %(prog)s -t pay_order --dry-run    # 预览模式，不执行实际操作
   %(prog)s -t pay_order --force
   %(prog)s -t pay_order --days 7
   %(prog)s -t pay_order --days 0  # 同步全部数据
@@ -763,6 +813,13 @@ def parse_args() -> tuple:
         '-f', '--force',
         action='store_true',
         help='强制同步，跳过确认'
+    )
+
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        dest='dry_run',
+        help='预览模式，显示同步信息但不执行实际操作'
     )
 
     parser.add_argument(
@@ -805,7 +862,7 @@ def parse_args() -> tuple:
         password=args.target_password
     )
 
-    return args.table, args.force, args.days, source_config, target_config
+    return args.table, args.force, args.days, args.dry_run, source_config, target_config
 
 
 def main() -> int:
@@ -814,7 +871,11 @@ def main() -> int:
         console.print("[bold cyan]MySQL 8 数据同步工具[/bold cyan]\n")
 
         # 解析参数
-        table_name, force, days, source_config, target_config = parse_args()
+        table_name, force, days, dry_run, source_config, target_config = parse_args()
+
+        # Dry-run 模式提示
+        if dry_run:
+            console.print("[bold cyan]👀 预览模式 (DRY-RUN)[/bold cyan]\n")
 
         # 创建同步器
         synchronizer = MySQLDataSynchronizer(source_config, target_config)
@@ -823,10 +884,14 @@ def main() -> int:
         synchronizer.connect()
 
         # 执行同步
-        result = synchronizer.sync_table(table_name, force=force, days=days)
+        result = synchronizer.sync_table(table_name, force=force, days=days, dry_run=dry_run)
 
-        # 显示报告
-        synchronizer.display_sync_report([result])
+        # 只有在非 dry-run 模式下才显示详细报告
+        if not dry_run:
+            synchronizer.display_sync_report([result])
+        else:
+            console.print("\n[bold green]✓ 预览完成[/bold green]")
+            console.print(f"[dim]运行不带 --dry-run 参数的命令以执行实际同步[/dim]\n")
 
         # 关闭连接
         synchronizer.close()

@@ -12,6 +12,9 @@ tags: ["mysql", "data-sync", "replication", "mysql-8", "database-operations", "x
 ## 使用方式
 
 ```bash
+# 预览模式（推荐先使用预览模式查看同步信息）
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/dtg-mysql-sync/scripts/mysql_sync.py --table <table_name> --dry-run
+
 # 基本用法（默认同步最近 10 天数据）
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/dtg-mysql-sync/scripts/mysql_sync.py --table <table_name>
 
@@ -53,6 +56,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/dtg-mysql-sync/scripts/mysql_sync.py \
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
 | `--table` | 必需 | 要同步的表名 |
+| `--dry-run` | false | 预览模式，显示同步信息但不执行实际操作 |
 | `--days` | 10 | 只同步最近 N 天的数据（0 = 全部） |
 | `--force` | false | 跳过确认直接执行 |
 

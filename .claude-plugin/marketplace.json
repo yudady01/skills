@@ -29,7 +29,7 @@
     },
     {
       "name": "dtg-java-skill",
-      "description": "Claude Code 专用的 Spring Boot 2.7 + Dubbo 企业级微服务项目模板插件，提供完整的 AI 驱动分布式系统开发流程，集成 Context7 智能文档检索和知识管理功能",
+      "description": "Spring Boot 2.7 + Dubbo 企业级微服务开发插件，集成 AI 代码审查、智能架构分析和问题诊断功能，包含 MySQL 8 数据同步工具",
       "source": "./plugins/dtg-java-skill",
       "category": "development"
     },
