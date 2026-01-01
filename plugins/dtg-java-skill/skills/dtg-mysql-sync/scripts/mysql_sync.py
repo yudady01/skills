@@ -223,8 +223,9 @@ class MySQLDataSynchronizer:
 
         columns = {row['COLUMN_NAME']: row['DATA_TYPE'] for row in cursor.fetchall()}
 
-        # 常见的创建时间字段名（按优先级排序）
+        # 常见的创建时间字段名（按优先级排序，大小写不敏感）
         time_column_patterns = [
+            'CreateTime',
             'create_time',
             'created_at',
             'create_at',
@@ -235,12 +236,13 @@ class MySQLDataSynchronizer:
             'reg_time'
         ]
 
-        # 查找匹配的字段
+        # 查找匹配的字段（大小写不敏感）
         for pattern in time_column_patterns:
-            if pattern in columns:
-                # 确保是时间类型
-                if columns[pattern] in ['datetime', 'timestamp', 'date', 'time']:
-                    return pattern
+            for column_name in columns.keys():
+                if column_name.lower() == pattern.lower():
+                    # 确保是时间类型
+                    if columns[column_name] in ['datetime', 'timestamp', 'date', 'time']:
+                        return column_name  # 返回实际的字段名（保持原始大小写）
 
         return None
 
