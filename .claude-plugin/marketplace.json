@@ -38,12 +38,6 @@
       "description": "Layui 2.3.0 代码生成助手，帮助快速构建使用 Layui 的网页",
       "source": "./plugins/dtg-ui-skill",
       "category": "frontend"
-    },
-    {
-      "name": "dtg-code-review",
-      "description": "智能化代码审查技能，提供 OWASP Top 10 安全检查、企业级编码规范验证、架构质量评估和自动化问题识别",
-      "source": "./plugins/dtg-code-review",
-      "category": "code-quality"
     }
   ]
 }
