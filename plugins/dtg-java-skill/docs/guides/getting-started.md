@@ -1,10 +1,10 @@
 # 快速开始指南
 
-## 🚀 ai-coding-java 快速入门
+## [ROCKET] ai-coding-java 快速入门
 
 欢迎使用 ai-coding-java 插件！这是一个专为 Spring Boot 2.7 + Dubbo 3 企业级微服务开发设计的智能化插件，集成 AI 驱动的代码审查、智能架构分析和问题诊断功能。
 
-### 🎯 适用场景
+### [TARGET] 适用场景
 
 - **企业级微服务开发** - 快速搭建生产就绪的微服务架构
 - **Spring Boot + Dubbo 项目** - 零配置集成主流微服务框架
@@ -23,7 +23,7 @@
 - **磁盘**: 最少 2GB 可用空间
 - **网络**: 稳定的互联网连接（用于依赖下载）
 
-## ⚡ 5分钟快速体验
+## [FAST] 5分钟快速体验
 
 ### 1. 启动项目上下文注入
 
@@ -32,10 +32,10 @@
 ```
 
 此命令会自动：
-- ✅ 检测当前项目结构
-- ✅ 注入 Spring Boot 2.7 + Dubbo 3 配置模板
-- ✅ 设置企业级开发环境标准
-- ✅ 激活 AI 驱动的质量门检查
+- [OK] 检测当前项目结构
+- [OK] 注入 Spring Boot 2.7 + Dubbo 3 配置模板
+- [OK] 设置企业级开发环境标准
+- [OK] 激活 AI 驱动的质量门检查
 
 ### 2. 创建第一个微服务
 
@@ -44,11 +44,11 @@
 ```
 
 此命令会自动：
-- 🏗️ 创建完整的微服务项目结构
+- [ARCHITECTURE] 创建完整的微服务项目结构
 - ⚙️ 配置 Spring Boot + Dubbo 集成
 - 🗄️ 设置数据库连接和实体类
 - 🧪 生成单元测试和集成测试
-- 📚 创建相关文档
+- [LIBRARY] 创建相关文档
 
 ### 3. 运行智能代码审查
 
@@ -57,13 +57,13 @@
 ```
 
 此功能会：
-- 🔍 AI 驱动的代码质量分析
-- 🏗️ 架构合理性评估
+- [SEARCH] AI 驱动的代码质量分析
+- [ARCHITECTURE] 架构合理性评估
 - 🔒 安全漏洞检测
-- ⚡ 性能优化建议
-- 📝 企业级代码规范检查
+- [FAST] 性能优化建议
+- [EDIT] 企业级代码规范检查
 
-## 🛠️ 核心功能快速指南
+## [TOOLS] 核心功能快速指南
 
 ### 智能实现命令 `/implement`
 
@@ -88,27 +88,27 @@
 
 插件包含 5 个专业 AI 代理：
 
-#### 📊 需求分析代理 (requirement-analyzer)
+#### [CHART] 需求分析代理 (requirement-analyzer)
 ```bash
 /ai-coding-java:task --analyzer=requirement-analyzer 分析用户管理模块的技术需求
 ```
 
-#### 🏗️ 架构分析代理 (architecture-analyzer)
+#### [ARCHITECTURE] 架构分析代理 (architecture-analyzer)
 ```bash
 /ai-coding-java:task --analyzer=architecture-analyzer 评估当前微服务架构的合理性
 ```
 
-#### 🔍 智能诊断代理 (intelligent-diagnoser)
+#### [SEARCH] 智能诊断代理 (intelligent-diagnoser)
 ```bash
 /ai-coding-java:task --analyzer=intelligent-diagnoser 诊断应用的性能瓶颈
 ```
 
-#### ✅ 代码审查代理 (code-reviewer)
+#### [OK] 代码审查代理 (code-reviewer)
 ```bash
 /ai-coding-java:task --analyzer=code-reviewer 对支付模块进行深度代码审查
 ```
 
-#### 🚀 任务执行代理 (task-executor)
+#### [ROCKET] 任务执行代理 (task-executor)
 ```bash
 /ai-coding-java:task --analyzer=task-executor 实现用户注册功能
 ```
@@ -121,11 +121,11 @@
 ```
 
 自动检查：
-- ✅ 编译错误和语法问题
-- ✅ Spring Boot 启动测试
-- ✅ Dubbo 服务注册验证
-- ✅ 数据库连接测试
-- ✅ 单元测试覆盖率
+- [OK] 编译错误和语法问题
+- [OK] Spring Boot 启动测试
+- [OK] Dubbo 服务注册验证
+- [OK] 数据库连接测试
+- [OK] 单元测试覆盖率
 
 #### 文档质量验证
 ```bash
@@ -174,7 +174,7 @@
 /ai-coding-java:code-quality --module=payment
 ```
 
-## 🔧 配置快速设置
+## [TOOL] 配置快速设置
 
 ### 1. 基础配置
 插件会自动创建以下配置文件：
@@ -220,7 +220,7 @@ curl http://localhost:8080/actuator/info
 curl http://localhost:8080/dubbo/registry
 ```
 
-## 🔍 常见问题排查
+## [SEARCH] 常见问题排查
 
 ### 启动失败
 1. 检查 Java 版本：`java -version`
@@ -238,7 +238,7 @@ curl http://localhost:8080/dubbo/registry
 2. 检查数据库权限
 3. 验证连接池配置
 
-## 📚 进一步学习
+## [LIBRARY] 进一步学习
 
 ### 高级功能
 - [微服务架构设计指南](./microservice-development.md)

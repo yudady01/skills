@@ -4,7 +4,7 @@
 
 本文档定义了 ai-coding-java 项目中的编码标准和最佳实践，确保代码质量、可维护性和团队协作效率。
 
-## 🎯 核心原则
+## [TARGET] 核心原则
 
 ### 1. 可读性优先
 - 代码应该易于理解和维护
@@ -21,26 +21,26 @@
 - 依赖注入和面向接口编程
 - 避免硬编码和静态依赖
 
-## 📝 命名规范
+## [EDIT] 命名规范
 
 ### 1. 包命名
 ```java
-// ✅ 正确 - 全小写，用点号分隔
+// [OK] 正确 - 全小写，用点号分隔
 package com.company.project.module.service.impl;
 
-// ❌ 错误 - 首字母大写或使用下划线
+// [X] 错误 - 首字母大写或使用下划线
 package com.Company.Project.Module.Service;
 package com.company.project.module.service_impl;
 ```
 
 ### 2. 类命名
 ```java
-// ✅ 正确 - 大驼峰命名法
+// [OK] 正确 - 大驼峰命名法
 public class UserService {}
 public class OrderRepositoryImpl {}
 public class PaymentController {}
 
-// ❌ 错误 - 小驼峰或下划线
+// [X] 错误 - 小驼峰或下划线
 public class userService {}
 public class order_repository_impl {}
 ```
@@ -49,17 +49,17 @@ public class order_repository_impl {}
 ```java
 public class UserService {
 
-    // ✅ 正确 - 小驼峰命名法
+    // [OK] 正确 - 小驼峰命名法
     private UserRepository userRepository;
     private String userName;
     private List<Order> orderList;
 
-    // ✅ 正确 - 动词开头，表达明确的操作
+    // [OK] 正确 - 动词开头，表达明确的操作
     public User createUser(CreateUserRequest request) {}
     public boolean validateUserCredentials(String username, String password) {}
     public List<User> findActiveUsersByDepartment(String departmentId) {}
 
-    // ❌ 错误 - 名词开头或含义不明
+    // [X] 错误 - 名词开头或含义不明
     public User user(CreateUserRequest request) {}
     public boolean check(String username, String password) {}
     public List<User> get(String departmentId) {}
@@ -70,18 +70,18 @@ public class UserService {
 ```java
 public class OrderConstants {
 
-    // ✅ 正确 - 全大写，下划线分隔
+    // [OK] 正确 - 全大写，下划线分隔
     public static final int MAX_ORDER_AMOUNT = 10000;
     public static final String DEFAULT_STATUS = "PENDING";
     public static final long TOKEN_EXPIRE_TIME = 3600L;
 
-    // ❌ 错误 - 小驼峰或混合大小写
+    // [X] 错误 - 小驼峰或混合大小写
     public static final int maxOrderAmount = 10000;
     public static final String defaultStatus = "PENDING";
 }
 ```
 
-## 📖 注释规范
+## [BOOK] 注释规范
 
 ### 1. 类注释
 ```java
@@ -155,7 +155,7 @@ public Order calculateOrderTotal(Order order) {
 }
 ```
 
-## 🏗️ 代码结构规范
+## [ARCHITECTURE] 代码结构规范
 
 ### 1. 类结构顺序
 ```java
@@ -199,7 +199,7 @@ public class UserService {
 
 ### 2. 方法长度控制
 ```java
-// ✅ 正确 - 单一职责，长度适中
+// [OK] 正确 - 单一职责，长度适中
 public UserResponse createUser(CreateUserRequest request) {
     // 验证请求参数
     validateCreateUserRequest(request);
@@ -221,7 +221,7 @@ public UserResponse createUser(CreateUserRequest request) {
     return convertToResponse(savedUser);
 }
 
-// ❌ 错误 - 方法过长，职责不清
+// [X] 错误 - 方法过长，职责不清
 public UserResponse createUser(CreateUserRequest request) {
     // 100+ 行代码包含验证、业务逻辑、数据转换、通知等
 }
@@ -398,7 +398,7 @@ class UserControllerIntegrationTest {
 }
 ```
 
-## 🔧 配置规范
+## [TOOL] 配置规范
 
 ### 1. 配置类
 ```java
@@ -440,11 +440,11 @@ public class AppConfigProperties {
 }
 ```
 
-## 📊 性能优化规范
+## [CHART] 性能优化规范
 
 ### 1. 数据库访问优化
 ```java
-// ✅ 正确 - 使用分页查询
+// [OK] 正确 - 使用分页查询
 public Page<User> findUsersByPage(UserQuery query, Pageable pageable) {
     return userRepository.findByConditions(
         query.getUsername(),
@@ -454,7 +454,7 @@ public Page<User> findUsersByPage(UserQuery query, Pageable pageable) {
     );
 }
 
-// ❌ 错误 - 一次性加载大量数据
+// [X] 错误 - 一次性加载大量数据
 public List<User> findAllUsers() {
     return userRepository.findAll(); // 可能导致内存溢出
 }
@@ -525,11 +525,11 @@ public class UserResponse {
     private String username;
     private String email;
 
-    // ❌ 不要在响应中包含敏感信息
+    // [X] 不要在响应中包含敏感信息
     // private String password;
     // private String creditCardNumber;
 
-    // ✅ 使用数据脱敏
+    // [OK] 使用数据脱敏
     public String getPhone() {
         return phone != null ? phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2") : null;
     }
@@ -538,11 +538,11 @@ public class UserResponse {
 
 ### 3. SQL 注入防护
 ```java
-// ✅ 正确 - 使用参数化查询
+// [OK] 正确 - 使用参数化查询
 @Query("SELECT u FROM User u WHERE u.username = :username AND u.status = :status")
 List<User> findByUsernameAndStatus(@Param("username") String username, @Param("status") String status);
 
-// ❌ 错误 - 字符串拼接容易导致 SQL 注入
+// [X] 错误 - 字符串拼接容易导致 SQL 注入
 // @Query("SELECT u FROM User u WHERE u.username = '" + username + "'")
 ```
 
@@ -580,7 +580,7 @@ List<User> findByUsernameAndStatus(@Param("username") String username, @Param("s
 
 ---
 
-## ✅ 遵循本规范
+## [OK] 遵循本规范
 
 遵循本编码规范将有助于：
 

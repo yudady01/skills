@@ -1,6 +1,6 @@
 # 项目设置指南
 
-## 🏗️ Spring Boot 2.7 + Dubbo 3 企业级项目设置
+## [ARCHITECTURE] Spring Boot 2.7 + Dubbo 3 企业级项目设置
 
 本指南将帮助您快速搭建一个生产就绪的 Spring Boot 2.7 + Dubbo 3 企业级微服务项目，集成最佳实践和企业级配置。
 
@@ -54,7 +54,7 @@ project-root/
 └── pom.xml                                   # Maven 配置
 ```
 
-## ⚡ 快速项目初始化
+## [FAST] 快速项目初始化
 
 ### 1. 使用项目注入命令
 
@@ -63,11 +63,11 @@ project-root/
 ```
 
 此命令会自动：
-- ✅ 检测当前目录结构
-- ✅ 创建标准的项目目录结构
-- ✅ 生成配置文件模板
-- ✅ 设置企业级开发环境
-- ✅ 初始化质量门检查
+- [OK] 检测当前目录结构
+- [OK] 创建标准的项目目录结构
+- [OK] 生成配置文件模板
+- [OK] 设置企业级开发环境
+- [OK] 初始化质量门检查
 
 ### 2. 手动项目创建
 
@@ -93,7 +93,7 @@ mvn archetype:generate \
 </parent>
 ```
 
-## 🛠️ 核心配置文件
+## [TOOLS] 核心配置文件
 
 ### 1. Maven 依赖配置
 
@@ -366,7 +366,7 @@ dubbo:
     retries: 2
 ```
 
-## 🔧 开发环境配置
+## [TOOL] 开发环境配置
 
 ### 1. 开发环境配置 (application-dev.yml)
 
@@ -461,7 +461,7 @@ dubbo:
     retries: 3
 ```
 
-## 🚀 启动类配置
+## [ROCKET] 启动类配置
 
 ### 主应用类
 ```java
@@ -486,7 +486,7 @@ public class YourApplication {
 }
 ```
 
-## 🔍 常见问题解决
+## [SEARCH] 常见问题解决
 
 ### 1. 端口冲突
 ```bash
@@ -558,7 +558,7 @@ curl http://localhost:8080/api/actuator/info
 curl http://localhost:8080/api/actuator/metrics
 ```
 
-## 📚 进一步配置
+## [LIBRARY] 进一步配置
 
 ### 1. Docker 支持
 ```dockerfile
@@ -601,7 +601,7 @@ spec:
 
 ---
 
-## ✅ 配置完成！
+## [OK] 配置完成！
 
 您的企业级 Spring Boot 2.7 + Dubbo 3 项目现在已经完成基础配置。接下来可以：
 

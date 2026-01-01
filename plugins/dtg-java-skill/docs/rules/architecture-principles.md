@@ -4,25 +4,25 @@
 
 本文档定义了 ai-coding-java 项目中微服务架构的核心原则和最佳实践，确保系统的可扩展性、可维护性和高可用性。
 
-## 🎯 核心架构原则
+## [TARGET] 核心架构原则
 
 ### 1. 单一职责原则 (Single Responsibility Principle)
 每个微服务应该专注于单一业务领域，保持服务边界的清晰性。
 
 ```java
-// ✅ 正确 - 用户服务专注用户管理
+// [OK] 正确 - 用户服务专注用户管理
 @Service
 public class UserService {
     // 用户注册、登录、信息管理
 }
 
-// ✅ 正确 - 订单服务专注订单处理
+// [OK] 正确 - 订单服务专注订单处理
 @Service
 public class OrderService {
     // 订单创建、支付、状态跟踪
 }
 
-// ❌ 错误 - 混合职责
+// [X] 错误 - 混合职责
 @Service
 public class UserAndOrderService {
     // 既处理用户管理，又处理订单处理
@@ -33,13 +33,13 @@ public class UserAndOrderService {
 服务内部组件高度内聚，服务之间通过明确的接口进行松耦合通信。
 
 ```java
-// ✅ 正确 - 明确的服务接口定义
+// [OK] 正确 - 明确的服务接口定义
 @DubboService(version = "1.0.0")
 public class UserServiceImpl implements UserService {
     // 实现用户相关业务逻辑，不直接依赖其他服务
 }
 
-// ✅ 正确 - 通过 Dubbo 接口调用其他服务
+// [OK] 正确 - 通过 Dubbo 接口调用其他服务
 @DubboReference(version = "1.0.0")
 private PaymentService paymentService;
 ```
@@ -69,7 +69,7 @@ public class Order {
 }
 ```
 
-## 🏗️ 微服务设计原则
+## [ARCHITECTURE] 微服务设计原则
 
 ### 1. 服务边界划分
 
@@ -102,7 +102,7 @@ public class Order {
 
 #### 数据一致性边界
 ```java
-// ✅ 正确 - 每个服务管理自己的数据
+// [OK] 正确 - 每个服务管理自己的数据
 @Service
 @Transactional
 public class OrderService {
@@ -117,7 +117,7 @@ public class OrderService {
     private PaymentService paymentService;
 }
 
-// ❌ 错误 - 跨服务直接访问数据库
+// [X] 错误 - 跨服务直接访问数据库
 @Service
 public class OrderService {
     @Autowired
@@ -158,7 +158,7 @@ public class UserController {
 
 #### Dubbo 服务接口设计
 ```java
-// ✅ 正确 - 明确的服务接口定义
+// [OK] 正确 - 明确的服务接口定义
 public interface UserService {
 
     /**
@@ -185,7 +185,7 @@ public interface UserService {
 }
 ```
 
-## 🔧 技术架构原则
+## [TOOL] 技术架构原则
 
 ### 1. 分层架构
 ```
@@ -205,12 +205,12 @@ public interface UserService {
 @Service
 public class UserServiceImpl implements UserService {
 
-    // ✅ 正确 - 依赖接口而不是具体实现
+    // [OK] 正确 - 依赖接口而不是具体实现
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NotificationService notificationService;
 
-    // ✅ 正确 - 构造函数注入
+    // [OK] 正确 - 构造函数注入
     public UserServiceImpl(UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
                           NotificationService notificationService) {
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
         this.notificationService = notificationService;
     }
 
-    // ✅ 正确 - 遵循单一职责
+    // [OK] 正确 - 遵循单一职责
     public UserResponse createUser(UserRequest request) {
         // 业务逻辑编排
         validateRequest(request);
@@ -263,7 +263,7 @@ public class UserService {
 @Service
 public class OrderService {
 
-    // ✅ 正确 - 同步调用，适用于需要立即响应的场景
+    // [OK] 正确 - 同步调用，适用于需要立即响应的场景
     @DubboReference(version = "1.0.0", timeout = 5000)
     private PaymentService paymentService;
 
@@ -297,7 +297,7 @@ public class OrderService {
 @Service
 public class OrderService {
 
-    // ✅ 正确 - 异步事件，适用于不需要立即处理的场景
+    // [OK] 正确 - 异步事件，适用于不需要立即处理的场景
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -353,7 +353,7 @@ public class OrderMessageHandler {
 }
 ```
 
-## 📊 数据架构原则
+## [CHART] 数据架构原则
 
 ### 1. 数据库分离
 ```yaml
@@ -450,14 +450,14 @@ public class OrderSaga {
 @Service
 public class UserService {
 
-    // ✅ 正确 - 多级缓存策略
+    // [OK] 正确 - 多级缓存策略
     @Cacheable(value = "users", key = "#userId")
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    // ✅ 正确 - 缓存预热
+    // [OK] 正确 - 缓存预热
     @PostConstruct
     public void warmUpCache() {
         List<User> activeUsers = userRepository.findActiveUsers();
@@ -466,7 +466,7 @@ public class UserService {
         );
     }
 
-    // ✅ 正确 - 缓存失效策略
+    // [OK] 正确 - 缓存失效策略
     @CacheEvict(value = "users", key = "#user.id")
     public User updateUser(User user) {
         return userRepository.save(user);
@@ -532,7 +532,7 @@ dubbo:
 
 ### 2. 数据库扩展
 ```java
-// ✅ 正确 - 读写分离
+// [OK] 正确 - 读写分离
 @Configuration
 public class DatabaseConfig {
 
@@ -577,7 +577,7 @@ public class DubboConfig {
 }
 ```
 
-## 🔍 监控与治理原则
+## [SEARCH] 监控与治理原则
 
 ### 1. 健康检查
 ```java
@@ -661,7 +661,7 @@ public class TracingInterceptor {
 
 ---
 
-## ✅ 遵循本架构原则
+## [OK] 遵循本架构原则
 
 遵循本架构原则将确保：
 

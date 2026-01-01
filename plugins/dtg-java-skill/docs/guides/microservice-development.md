@@ -1,22 +1,22 @@
 # 微服务开发指南
 
-## 🏗️ Spring Boot 2.7 + Dubbo 3 企业级微服务开发指南
+## [ARCHITECTURE] Spring Boot 2.7 + Dubbo 3 企业级微服务开发指南
 
 本指南详细介绍如何使用 ai-coding-java 插件进行企业级微服务开发，涵盖微服务设计、实现、测试和部署的完整生命周期。
 
-## 🎯 微服务开发概述
+## [TARGET] 微服务开发概述
 
 ### 什么是微服务架构
 微服务架构是一种将应用程序构建为一组小型、独立服务的方法，每个服务都运行在自己的进程中，通过轻量级通信机制进行交互。
 
 ### ai-coding-java 微服务特性
-- **🤖 AI 驱动开发** - 智能代码生成和优化建议
-- **⚡ 快速启动** - 5分钟创建生产就绪的微服务
-- **🔧 企业级配置** - 开箱即用的 Spring Boot 2.7 + Dubbo 3 集成
-- **📊 质量保证** - 内置代码审查和架构分析
-- **🚀 一键部署** - 支持 Docker 和 Kubernetes 部署
+- **[AI] AI 驱动开发** - 智能代码生成和优化建议
+- **[FAST] 快速启动** - 5分钟创建生产就绪的微服务
+- **[TOOL] 企业级配置** - 开箱即用的 Spring Boot 2.7 + Dubbo 3 集成
+- **[CHART] 质量保证** - 内置代码审查和架构分析
+- **[ROCKET] 一键部署** - 支持 Docker 和 Kubernetes 部署
 
-## 🚀 快速创建微服务
+## [ROCKET] 快速创建微服务
 
 ### 1. 使用 AI 实现命令创建微服务
 
@@ -73,7 +73,7 @@ dubbo:
 
 #### 单一职责原则
 ```java
-// ✅ 正确 - 每个服务专注于单一业务领域
+// [OK] 正确 - 每个服务专注于单一业务领域
 @Service
 public class OrderService {
     // 专注于订单相关业务逻辑
@@ -89,7 +89,7 @@ public class PaymentService {
     public RefundResult processRefund(RefundRequest request) {}
 }
 
-// ❌ 错误 - 服务职责混合
+// [X] 错误 - 服务职责混合
 @Service
 public class OrderAndPaymentService {
     // 既处理订单逻辑又处理支付逻辑，违反单一职责原则
@@ -457,7 +457,7 @@ public class OrderEventHandler {
 }
 ```
 
-## 🔧 微服务配置管理
+## [TOOL] 微服务配置管理
 
 ### 1. 配置中心集成
 ```yaml
@@ -745,7 +745,7 @@ class OrderServiceE2ETest {
 }
 ```
 
-## 🚀 微服务部署
+## [ROCKET] 微服务部署
 
 ### 1. Docker 部署
 ```dockerfile
@@ -930,7 +930,7 @@ spec:
   type: LoadBalancer
 ```
 
-## 📊 微服务监控
+## [CHART] 微服务监控
 
 ### 1. 健康检查
 ```java
@@ -1014,7 +1014,7 @@ public class OrderServiceMetrics {
 }
 ```
 
-## 🔧 常见问题解决
+## [TOOL] 常见问题解决
 
 ### 1. 服务发现失败
 ```java
@@ -1071,7 +1071,7 @@ public class DatabaseConnectionPoolMonitor {
 }
 ```
 
-## 📚 进阶主题
+## [LIBRARY] 进阶主题
 
 ### 1. API 版本管理
 ```java
@@ -1147,18 +1147,18 @@ public class OrderServiceCircuitBreaker {
 
 ---
 
-## ✅ 微服务开发最佳实践总结
+## [OK] 微服务开发最佳实践总结
 
 通过本指南，您已经掌握了使用 ai-coding-java 插件进行企业级微服务开发的完整流程：
 
-### 🎯 关键成功要素
+### [TARGET] 关键成功要素
 1. **清晰的服务边界** - 遵循单一职责原则和DDD设计
 2. **完善的数据一致性** - 使用Saga模式和事件驱动架构
 3. **可靠的通信机制** - 合理使用Dubbo同步和异步通信
 4. **全面的测试策略** - 单元测试、集成测试、端到端测试
 5. **完善的监控体系** - 健康检查、指标收集、日志管理
 
-### 🚀 下一步行动
+### [ROCKET] 下一步行动
 1. **实践项目开发** - 使用指南创建实际微服务项目
 2. **深入高级特性** - 学习API版本管理、限流熔断等
 3. **性能优化** - 优化数据库查询、缓存策略
