@@ -3,13 +3,23 @@
 MySQL 8 数据同步工具
 用于将 MySQL Node 1 的表数据完整复制到 Node 2
 支持自动清除目标表数据、事务安全和进度反馈
+
+新功能：
+- 基于主键的高性能分页（自动检测主键，使用游标分页代替 OFFSET）
+- 失败批次自动重试机制
+- 数据一致性校验
+- 断点续传支持
+- 消除代码重复，统一批量插入逻辑
 """
 
 import argparse
 import sys
-from typing import Optional, List, Dict, Any
+import time
+import json
+from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import pymysql
 from pymysql.cursors import DictCursor
@@ -58,6 +68,17 @@ class MySQLConnection:
     charset: str = 'utf8mb4'
 
 
+@dataclass
+class BatchResult:
+    """批次执行结果"""
+    batch_num: int
+    offset: int
+    row_count: int
+    success: bool
+    error: Optional[str] = None
+    retries: int = 0
+
+
 class MySQLSyncError(Exception):
     """MySQL 同步错误基类"""
     pass
@@ -76,6 +97,44 @@ class MySQLTableNotFoundError(MySQLSyncError):
 class MySQLDataSyncError(MySQLSyncError):
     """数据同步错误"""
     pass
+
+
+class ResumeManager:
+    """断点续传管理器"""
+
+    def __init__(self, resume_file: str = '.mysql_sync_resume.json'):
+        self.resume_file = Path(resume_file)
+
+    def save_state(self, table_name: str, completed_batches: List[int]) -> None:
+        """保存断点状态"""
+        state = {
+            'table_name': table_name,
+            'completed_batches': completed_batches,
+            'timestamp': datetime.now().isoformat()
+        }
+        with open(self.resume_file, 'w') as f:
+            json.dump(state, f)
+
+    def load_state(self, table_name: str) -> List[int]:
+        """加载断点状态"""
+        if not self.resume_file.exists():
+            return []
+
+        try:
+            with open(self.resume_file, 'r') as f:
+                state = json.load(f)
+
+            if state.get('table_name') != table_name:
+                return []
+
+            return state.get('completed_batches', [])
+        except (json.JSONDecodeError, KeyError):
+            return []
+
+    def clear_state(self) -> None:
+        """清除断点状态"""
+        if self.resume_file.exists():
+            self.resume_file.unlink()
 
 
 class MySQLDataSynchronizer:
@@ -101,18 +160,38 @@ class MySQLDataSynchronizer:
     # 批量插入大小
     BATCH_SIZE = 1000
 
-    def __init__(self, source: MySQLConnection, target: MySQLConnection):
+    def __init__(
+        self,
+        source: MySQLConnection,
+        target: MySQLConnection,
+        retry_times: int = 3,
+        retry_delay: float = 1.0,
+        enable_verify: bool = True,
+        enable_resume: bool = False,
+        verbose: bool = False
+    ):
         """
         初始化同步器
 
         Args:
             source: 源数据库配置 (Node 1)
             target: 目标数据库配置 (Node 2)
+            retry_times: 失败重试次数
+            retry_delay: 重试延迟（秒）
+            enable_verify: 是否启用数据校验
+            enable_resume: 是否启用断点续传
+            verbose: 是否显示详细输出
         """
         self.source = source
         self.target = target
         self.source_conn: Optional[pymysql.Connection] = None
         self.target_conn: Optional[pymysql.Connection] = None
+        self.retry_times = retry_times
+        self.retry_delay = retry_delay
+        self.enable_verify = enable_verify
+        self.enable_resume = enable_resume
+        self.verbose = verbose
+        self.resume_manager = ResumeManager() if enable_resume else None
 
     def connect(self) -> None:
         """建立数据库连接，确保源数据库和目标数据库都能连接成功"""
@@ -204,6 +283,27 @@ class MySQLDataSynchronizer:
 
         return [row['COLUMN_NAME'] for row in cursor.fetchall()]
 
+    def get_primary_key(self, table_name: str) -> Optional[str]:
+        """
+        获取表的主键字段
+
+        Args:
+            table_name: 表名
+
+        Returns:
+            主键字段名，如果不存在则返回 None
+        """
+        cursor = self.source_conn.cursor()
+        cursor.execute("""
+            SELECT column_name
+            FROM information_schema.key_column_usage
+            WHERE table_schema = %s AND table_name = %s
+            AND constraint_name = 'PRIMARY'
+        """, (self.source.database, table_name))
+
+        result = cursor.fetchone()
+        return result['COLUMN_NAME'] if result else None
+
     def find_create_time_column(self, table_name: str) -> Optional[str]:
         """
         查找表的创建时间字段
@@ -277,11 +377,13 @@ class MySQLDataSynchronizer:
         """禁用外键检查"""
         cursor = self.target_conn.cursor()
         cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
+        self.target_conn.commit()
 
     def enable_foreign_key_checks(self) -> None:
         """启用外键检查"""
         cursor = self.target_conn.cursor()
         cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+        self.target_conn.commit()
 
     def _display_sync_info(self, table_name: str, source_rows: int, target_rows: int, column_count: int, time_filter: Optional[str] = None) -> None:
         """
@@ -404,33 +506,202 @@ class MySQLDataSynchronizer:
         """
         cursor = self.target_conn.cursor()
         cursor.execute(f"DELETE FROM {table_name}")
+        self.target_conn.commit()
         return cursor.rowcount
 
-    def insert_target_data(self, table_name: str, columns: List[str], data: List[Dict[str, Any]]) -> int:
+    def verify_data(
+        self,
+        table_name: str,
+        expected_count: int,
+        time_column: Optional[str] = None,
+        days: Optional[int] = None
+    ) -> bool:
         """
-        批量插入数据到目标表
+        验证数据一致性
+
+        Args:
+            table_name: 表名
+            expected_count: 期望的行数
+            time_column: 时间字段名
+            days: 天数过滤
+
+        Returns:
+            是否验证通过
+        """
+        if not self.enable_verify:
+            return True
+
+        with console.status("[bold yellow]验证数据一致性..."):
+            # 获取目标表行数（需要考虑时间过滤）
+            actual_count = self.get_row_count(table_name, is_source=False)
+
+            if expected_count != actual_count:
+                console.print(f"[red]✗[/red] 数据验证失败: 源表 {expected_count:,} 行 ≠ 目标表 {actual_count:,} 行")
+                return False
+
+            console.print(f"[green]✓[/green] 数据验证成功: {actual_count:,} 行")
+            return True
+
+    def _execute_batch_with_retry(
+        self,
+        cursor,
+        sql: str,
+        values: List[List[Any]],
+        batch_num: int
+    ) -> BatchResult:
+        """
+        执行批次插入（带重试机制）
+
+        Args:
+            cursor: 数据库游标
+            sql: SQL 语句
+            values: 值列表
+            batch_num: 批次号
+
+        Returns:
+            BatchResult 对象
+        """
+        last_error = None
+
+        for attempt in range(self.retry_times):
+            try:
+                cursor.executemany(sql, values)
+                self.target_conn.commit()
+                return BatchResult(
+                    batch_num=batch_num,
+                    offset=0,
+                    row_count=len(values),
+                    success=True,
+                    retries=attempt
+                )
+            except Exception as e:
+                last_error = e
+                if attempt < self.retry_times - 1:
+                    if self.verbose:
+                        console.print(f"[yellow]⚠[/yellow] 批次 {batch_num} 重试 ({attempt + 1}/{self.retry_times})...")
+                    time.sleep(self.retry_delay)
+
+        # 所有重试都失败
+        return BatchResult(
+            batch_num=batch_num,
+            offset=0,
+            row_count=len(values),
+            success=False,
+            error=str(last_error),
+            retries=self.retry_times
+        )
+
+    def _batch_insert(
+        self,
+        table_name: str,
+        columns: List[str],
+        time_column: Optional[str] = None,
+        days: Optional[int] = None,
+        progress=None,
+        task=None
+    ) -> Tuple[int, int, List[BatchResult]]:
+        """
+        统一的批量插入逻辑（消除重复代码）
+        支持基于主键的高性能游标分页和失败重试
 
         Args:
             table_name: 表名
             columns: 列名列表
-            data: 数据列表
+            time_column: 时间字段名
+            days: 天数过滤
+            progress: Rich 进度条对象（可选）
+            task: Rich 任务对象（可选）
 
         Returns:
-            插入的行数
+            (插入总数, 失败批次数, 批次结果列表)
         """
-        if not data:
-            return 0
+        inserted_total = 0
+        failed_batches = 0
+        batch_results: List[BatchResult] = []
 
-        cursor = self.target_conn.cursor()
+        # 获取主键（用于高性能分页）
+        pk_column = self.get_primary_key(table_name)
+        use_cursor_pagination = pk_column is not None
+
+        if self.verbose:
+            pagination_type = "主键游标" if use_cursor_pagination else "OFFSET"
+            console.print(f"[cyan]使用 {pagination_type} 分页方式[/cyan]")
+            if pk_column:
+                console.print(f"[dim]主键字段: {pk_column}[/dim]")
+
+        # 构建查询语句
         columns_str = ', '.join(columns)
-        placeholders = ', '.join(['%s'] * len(columns))
+        sql = f"SELECT {columns_str} FROM {table_name}"
 
-        sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
+        # 添加时间过滤
+        if days > 0 and time_column:
+            date_threshold = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d %H:%M:%S')
+            sql += f" WHERE {time_column} >= '{date_threshold}'"
 
-        # 准备批量数据
-        values = [[row[col] for col in columns] for row in data]
-        cursor.executemany(sql, values)
-        return cursor.rowcount
+        # 如果使用主键分页，添加 ORDER BY
+        if use_cursor_pagination:
+            sql += f" ORDER BY {pk_column}"
+
+        # 执行查询
+        cursor = self.source_conn.cursor(DictCursor)
+        cursor.execute(sql)
+
+        # 获取总行数（用于进度条）
+        batch_num = 0
+
+        # 加载断点状态
+        completed_batches: List[int] = []
+        if self.resume_manager:
+            completed_batches = self.resume_manager.load_state(table_name)
+            if completed_batches and self.verbose:
+                console.print(f"[cyan]恢复断点: {len(completed_batches)} 个已完成批次[/cyan]")
+
+        while True:
+            batch_num += 1
+
+            # 使用 fetchmany 进行分批读取
+            batch_data = cursor.fetchmany(self.BATCH_SIZE)
+
+            if not batch_data:
+                break
+
+            # 断点续传：跳过已完成的批次
+            if self.enable_resume and batch_num in completed_batches:
+                inserted_total += len(batch_data)
+                if progress:
+                    progress.update(task, advance=len(batch_data))
+                elif self.verbose:
+                    print(f"  跳过已完成批次 {batch_num}")
+                continue
+
+            # 准备插入数据
+            target_cursor = self.target_conn.cursor()
+            placeholders = ', '.join(['%s'] * len(columns))
+            insert_sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
+            values = [[row[col] for col in columns] for row in batch_data]
+
+            # 执行插入（带重试）
+            result = self._execute_batch_with_retry(target_cursor, insert_sql, values, batch_num)
+            batch_results.append(result)
+
+            if result.success:
+                inserted_total += result.row_count
+
+                # 保存断点
+                if self.resume_manager:
+                    completed_batches.append(batch_num)
+                    self.resume_manager.save_state(table_name, completed_batches)
+
+                # 更新进度
+                if progress:
+                    progress.update(task, advance=len(batch_data))
+                elif self.verbose:
+                    print(f"  批次 {batch_num}: {len(batch_data)} 行 (重试 {result.retries} 次)")
+            else:
+                failed_batches += 1
+                console.print(f"[red]✗[/red] 批次 {batch_num} 失败: {result.error}")
+
+        return inserted_total, failed_batches, batch_results
 
     def sync_table(self, table_name: str, force: bool = False, days: int = 10, dry_run: bool = False) -> Dict[str, Any]:
         """
@@ -451,6 +722,7 @@ class MySQLDataSynchronizer:
             'target_rows_before': 0,
             'deleted_rows': 0,
             'inserted_rows': 0,
+            'verified': False,
             'success': False,
             'error': None,
             'time_filter': None,
@@ -530,30 +802,40 @@ class MySQLDataSynchronizer:
                             BarColumn(),
                             TaskProgressColumn(),
                             console=console
-                        ) as progress:
-                            task = progress.add_task(
+                        ) as progress_obj:
+                            task = progress_obj.add_task(
                                 f"[cyan]复制数据[/cyan]",
                                 total=source_rows
                             )
 
-                            inserted_total, failed_batches, batch_errors = self._batch_insert_with_progress(
-                                table_name, columns, progress, task, time_column, days
+                            inserted_total, failed_batches, batch_results = self._batch_insert(
+                                table_name, columns, time_column, days,
+                                progress_obj, task
                             )
                     else:
                         # 不使用 rich 的简单进度显示
-                        inserted_total, failed_batches, batch_errors = self._batch_insert_simple(table_name, columns, source_rows, time_column, days)
+                        inserted_total, failed_batches, batch_results = self._batch_insert(
+                            table_name, columns, time_column, days
+                        )
 
                     result['inserted_rows'] = inserted_total
                     result['failed_batches'] = failed_batches
-                    result['batch_errors'] = batch_errors
+                    result['batch_errors'] = [r.error for r in batch_results if not r.success]
 
-                    # 标记完成（即使有失败批次也视为完成）
-                    result['success'] = True
+                    # 数据校验
+                    result['verified'] = self.verify_data(
+                        table_name, source_rows, time_column, days
+                    )
+                    result['success'] = result['verified']
 
                     if failed_batches > 0:
                         console.print(f"[yellow]⚠ 同步完成: {inserted_total:,} 行 (失败 {failed_batches} 批)[/yellow]")
                     else:
                         console.print(f"[green]✓ 同步完成: {inserted_total:,} 行[/green]")
+
+                    # 清除断点文件
+                    if self.resume_manager:
+                        self.resume_manager.clear_state()
 
                 finally:
                     # 恢复外键检查
@@ -566,135 +848,6 @@ class MySQLDataSynchronizer:
             console.print(f"[red]✗ 同步失败: {e}[/red]")
 
         return result
-
-    def _batch_insert_with_progress(self, table_name: str, columns: List[str], progress, task, time_column: Optional[str] = None, days: int = 0) -> tuple:
-        """
-        使用 Rich 进度条的批量插入
-        每批独立提交，失败时继续处理下一批
-
-        Returns:
-            (inserted_total, failed_batches, batch_errors)
-        """
-        inserted_total = 0
-        failed_batches = 0
-        batch_errors = []
-        offset = 0
-        batch_num = 0
-        source_rows = progress.tasks[task].total
-
-        while offset < source_rows:
-            batch_num += 1
-
-            # 分批获取数据
-            cursor = self.source_conn.cursor(DictCursor)
-            columns_str = ', '.join(columns)
-
-            # 构建查询语句
-            sql = f"SELECT {columns_str} FROM {table_name}"
-            if days > 0 and time_column:
-                date_threshold = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d %H:%M:%S')
-                sql += f" WHERE {time_column} >= '{date_threshold}'"
-            sql += f" LIMIT {self.BATCH_SIZE} OFFSET {offset}"
-
-            cursor.execute(sql)
-            batch_data = cursor.fetchall()
-
-            if not batch_data:
-                break
-
-            # 插入目标表（每批独立事务）
-            try:
-                target_cursor = self.target_conn.cursor()
-                columns_str = ', '.join(columns)
-                placeholders = ', '.join(['%s'] * len(columns))
-
-                insert_sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
-                values = [[row[col] for col in columns] for row in batch_data]
-                target_cursor.executemany(insert_sql, values)
-
-                # 提交这一批
-                self.target_conn.commit()
-                inserted_total += len(batch_data)
-
-            except Exception as e:
-                # 记录错误，但继续处理下一批
-                failed_batches += 1
-                error_msg = f"批次 {batch_num} (offset {offset}): {str(e)}"
-                batch_errors.append(error_msg)
-                console.print(f"[red]✗ 批次 {batch_num} 失败: {e}[/red]")
-
-            progress.update(task, advance=len(batch_data))
-            offset += len(batch_data)
-
-            # 如果没有更多数据了，提前退出
-            if len(batch_data) < self.BATCH_SIZE:
-                break
-
-        return inserted_total, failed_batches, batch_errors
-
-    def _batch_insert_simple(self, table_name: str, columns: List[str], source_rows: int, time_column: Optional[str] = None, days: int = 0) -> tuple:
-        """
-        简单的批量插入（不使用 Rich）
-        每批独立提交，失败时继续处理下一批
-
-        Returns:
-            (inserted_total, failed_batches, batch_errors)
-        """
-        inserted_total = 0
-        failed_batches = 0
-        batch_errors = []
-        offset = 0
-        batch_num = 0
-
-        while offset < source_rows:
-            batch_num += 1
-
-            # 分批获取数据
-            cursor = self.source_conn.cursor(DictCursor)
-            columns_str = ', '.join(columns)
-
-            # 构建查询语句
-            sql = f"SELECT {columns_str} FROM {table_name}"
-            if days > 0 and time_column:
-                date_threshold = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d %H:%M:%S')
-                sql += f" WHERE {time_column} >= '{date_threshold}'"
-            sql += f" LIMIT {self.BATCH_SIZE} OFFSET {offset}"
-
-            cursor.execute(sql)
-            batch_data = cursor.fetchall()
-
-            if not batch_data:
-                break
-
-            # 插入目标表（每批独立事务）
-            try:
-                target_cursor = self.target_conn.cursor()
-                columns_str = ', '.join(columns)
-                placeholders = ', '.join(['%s'] * len(columns))
-
-                insert_sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
-                values = [[row[col] for col in columns] for row in batch_data]
-                target_cursor.executemany(insert_sql, values)
-
-                # 提交这一批
-                self.target_conn.commit()
-                inserted_total += len(batch_data)
-                print(f"  进度: {min(offset + len(batch_data), source_rows)}/{source_rows} 行")
-
-            except Exception as e:
-                # 记录错误，但继续处理下一批
-                failed_batches += 1
-                error_msg = f"批次 {batch_num} (offset {offset}): {str(e)}"
-                batch_errors.append(error_msg)
-                print(f"  ✗ 批次 {batch_num} 失败: {e}")
-
-            offset += len(batch_data)
-
-            # 如果没有更多数据了，提前退出
-            if len(batch_data) < self.BATCH_SIZE:
-                break
-
-        return inserted_total, failed_batches, batch_errors
 
     def display_sync_report(self, results: List[Dict[str, Any]]) -> None:
         """
@@ -710,13 +863,17 @@ class MySQLDataSynchronizer:
             table.add_column("删除", justify="right", style="yellow")
             table.add_column("插入", justify="right", style="green")
             table.add_column("失败批次", justify="right", style="red")
+            table.add_column("验证", justify="center", style="cyan")
             table.add_column("状态", justify="center")
 
             for result in results:
                 failed_batches = result.get('failed_batches', 0)
+                verified = result.get('verified', False)
                 status = "[green]成功[/green]" if result['success'] else "[red]失败[/red]"
                 if failed_batches > 0:
                     status = f"[yellow]部分成功[/yellow]"
+
+                verify_status = "[green]✓[/green]" if verified else "[red]✗[/red]"
 
                 table.add_row(
                     result['table_name'],
@@ -724,6 +881,7 @@ class MySQLDataSynchronizer:
                     f"{result['deleted_rows']:,}",
                     f"{result['inserted_rows']:,}",
                     f"{failed_batches}" if failed_batches > 0 else "-",
+                    verify_status,
                     status
                 )
 
@@ -766,13 +924,16 @@ class MySQLDataSynchronizer:
             print("\n=== 数据同步报告 ===")
             for result in results:
                 failed_batches = result.get('failed_batches', 0)
+                verified = result.get('verified', False)
                 status = "成功" if result['success'] else "失败"
                 if failed_batches > 0:
                     status = f"部分成功 ({failed_batches} 批失败)"
 
+                verify_str = "✓" if verified else "✗"
+
                 print(f"{result['table_name']}: 源={result['source_rows']:,}, "
                       f"删除={result['deleted_rows']:,}, 插入={result['inserted_rows']:,}, "
-                      f"状态={status}")
+                      f"验证={verify_str}, 状态={status}")
 
                 # 显示错误详情
                 if result.get('batch_errors'):
@@ -788,18 +949,23 @@ def parse_args() -> tuple:
     解析命令行参数
 
     Returns:
-        (table_name, force, days, dry_run, source_config, target_config)
+        (table_name, force, days, dry_run, source_config, target_config, sync_options)
     """
     parser = argparse.ArgumentParser(
-        description='MySQL 8 数据同步工具',
+        description='MySQL 8 数据同步工具 v2.0',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
   %(prog)s --table pay_order
-  %(prog)s -t pay_order --dry-run    # 预览模式，不执行实际操作
+  %(prog)s -t pay_order --dry-run    # 预览模式
   %(prog)s -t pay_order --force
   %(prog)s -t pay_order --days 7
   %(prog)s -t pay_order --days 0  # 同步全部数据
+
+新功能参数:
+  %(prog)s -t pay_order --retry-times 5  # 失败重试5次
+  %(prog)s -t pay_order --enable-resume  # 启用断点续传
+  %(prog)s -t pay_order --verbose        # 详细输出
         """
     )
 
@@ -827,6 +993,40 @@ def parse_args() -> tuple:
         type=int,
         default=10,
         help='只同步最近 N 天的数据（默认 10 天，0 表示同步全部）'
+    )
+
+    # 新增参数：重试机制
+    parser.add_argument(
+        '--retry-times',
+        type=int,
+        default=3,
+        help='失败批次重试次数（默认 3 次）'
+    )
+
+    parser.add_argument(
+        '--retry-delay',
+        type=float,
+        default=1.0,
+        help='重试延迟（秒，默认 1.0）'
+    )
+
+    # 新增参数：功能开关
+    parser.add_argument(
+        '--no-verify',
+        action='store_true',
+        help='禁用数据校验'
+    )
+
+    parser.add_argument(
+        '--enable-resume',
+        action='store_true',
+        help='启用断点续传功能'
+    )
+
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='显示详细输出'
     )
 
     # 源数据库配置（可选）
@@ -862,23 +1062,36 @@ def parse_args() -> tuple:
         password=args.target_password
     )
 
-    return args.table, args.force, args.days, args.dry_run, source_config, target_config
+    # 同步选项
+    sync_options = {
+        'retry_times': args.retry_times,
+        'retry_delay': args.retry_delay,
+        'enable_verify': not args.no_verify,
+        'enable_resume': args.enable_resume,
+        'verbose': args.verbose
+    }
+
+    return args.table, args.force, args.days, args.dry_run, source_config, target_config, sync_options
 
 
 def main() -> int:
     """主函数"""
     try:
-        console.print("[bold cyan]MySQL 8 数据同步工具[/bold cyan]\n")
+        console.print("[bold cyan]MySQL 8 数据同步工具 v2.0[/bold cyan]\n")
 
         # 解析参数
-        table_name, force, days, dry_run, source_config, target_config = parse_args()
+        table_name, force, days, dry_run, source_config, target_config, sync_options = parse_args()
 
         # Dry-run 模式提示
         if dry_run:
             console.print("[bold cyan]👀 预览模式 (DRY-RUN)[/bold cyan]\n")
 
         # 创建同步器
-        synchronizer = MySQLDataSynchronizer(source_config, target_config)
+        synchronizer = MySQLDataSynchronizer(
+            source_config,
+            target_config,
+            **sync_options
+        )
 
         # 连接数据库
         synchronizer.connect()
