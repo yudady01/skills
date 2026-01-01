@@ -231,6 +231,75 @@ class MySQLDataSynchronizer:
         cursor = self.target_conn.cursor()
         cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
 
+    def _display_sync_info(self, table_name: str, source_rows: int, target_rows: int, column_count: int) -> None:
+        """
+        显示同步信息给用户确认
+
+        Args:
+            table_name: 表名
+            source_rows: 源表行数
+            target_rows: 目标表行数
+            column_count: 列数
+        """
+        if RICH_AVAILABLE:
+            # 使用 Rich 显示漂亮的表格
+            from rich.table import Table as RichTable
+            from rich.panel import Panel
+
+            # 创建信息表格
+            info_table = RichTable(title="📋 同步信息", show_header=True, header_style="bold cyan")
+            info_table.add_column("项目", style="cyan")
+            info_table.add_column("值", style="yellow")
+
+            # 源数据库信息
+            info_table.add_row("源数据库", f"{self.source.host}:{self.source.port}/{self.source.database}")
+            info_table.add_row("目标数据库", f"{self.target.host}:{self.target.port}/{self.target.database}")
+            info_table.add_row("表名", f"[bold]{table_name}[/bold]")
+            info_table.add_row("列数", f"{column_count}")
+            info_table.add_row("源表数据量", f"{source_rows:,} 行")
+            info_table.add_row("目标表现有数据", f"{target_rows:,} 行")
+
+            console.print(info_table)
+
+            # 警告信息
+            if target_rows > 0:
+                console.print(Panel(
+                    f"[bold red]⚠️  警告: 目标表已有 {target_rows:,} 行数据[/bold red]\n"
+                    f"[yellow]这些数据将被清除并替换为源表数据[/yellow]",
+                    title="操作提示",
+                    border_style="red"
+                ))
+            else:
+                console.print(Panel(
+                    f"[green]✓ 目标表为空，将直接复制数据[/green]",
+                    title="操作提示",
+                    border_style="green"
+                ))
+        else:
+            # 简单文本输出
+            print("\n=== 同步信息 ===")
+            print(f"源数据库: {self.source.host}:{self.source.port}/{self.source.database}")
+            print(f"目标数据库: {self.target.host}:{self.target.port}/{self.target.database}")
+            print(f"表名: {table_name}")
+            print(f"列数: {column_count}")
+            print(f"源表数据量: {source_rows:,} 行")
+            print(f"目标表现有数据: {target_rows:,} 行")
+            if target_rows > 0:
+                print(f"\n⚠️  警告: 目标表的 {target_rows:,} 行数据将被清除！")
+
+    def _confirm_sync(self) -> bool:
+        """
+        请求用户确认是否执行同步
+
+        Returns:
+            用户是否确认
+        """
+        try:
+            response = input("\n[yellow]是否开始同步? [y/N]: [/yellow]").strip().lower()
+            return response in ['y', 'yes', '是']
+        except (EOFError, KeyboardInterrupt):
+            return False
+
     def clear_target_table(self, table_name: str) -> int:
         """
         清除目标表数据
@@ -314,10 +383,16 @@ class MySQLDataSynchronizer:
             target_rows_before = self.get_row_count(table_name, is_source=False)
             result['target_rows_before'] = target_rows_before
 
-            if target_rows_before > 0 and not force:
-                console.print(f"[yellow]⚠ 目标表已有 {target_rows_before:,} 行数据[/yellow]")
+            # 6. 显示同步信息并请求用户确认
+            self._display_sync_info(table_name, source_rows, target_rows_before, len(columns))
 
-            # 6. 开始同步
+            if not force:
+                if not self._confirm_sync():
+                    console.print("[yellow]同步已取消[/yellow]")
+                    result['error'] = '用户取消操作'
+                    return result
+
+            # 7. 开始同步
             with console.status("[bold yellow]开始同步..."):
                 # 禁用外键检查
                 self.disable_foreign_key_checks()
