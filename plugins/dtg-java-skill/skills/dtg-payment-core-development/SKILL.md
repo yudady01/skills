@@ -1,6 +1,6 @@
 ---
 name: dtg-payment-core-development
-description: xxpay-pay 支付核心模块开发技能
+description: This skill should be used when the user asks to "develop payment module", "create payment channel", "implement payment gateway", "add payment method", "payment callback", "payment integration", or mentions payment processing, payment channels, payment notification, or deposit/withdrawal implementation. Provides xxpay-pay payment core module development guidance for Spring Boot 2.7 + Dubbo 3 payment system.
 version: 3.0.0
 tags: ["payment", "payment-gateway", "channel-integration", "callback"]
 ---

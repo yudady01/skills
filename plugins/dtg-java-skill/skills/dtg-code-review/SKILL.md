@@ -1,6 +1,6 @@
 ---
 name: dtg-code-review
-description: 智能化 Spring Boot 2.7 + Dubbo 3 微服务代码审查技能。提供 OWASP Top 10 安全检查、企业级 Java 编码规范验证、Dubbo 服务安全审查、MyBatis-Plus 防注入检查和自动化问题识别。集成静态代码分析、安全漏洞扫描和架构质量度量功能。
+description: This skill should be used when the user asks to "code review", "review code", "check code quality", "analyze code", "security review", "OWASP", "find vulnerabilities", "check for bugs", or mentions code quality, security issues, static analysis, code smells, or code inspection. Provides OWASP Top 10 security checks, enterprise-grade Java code review, Dubbo service security, MyBatis-Plus injection prevention, and automated issue identification for Spring Boot 2.7 + Dubbo 3 microservices.
 version: 3.0.0
 tags:
   - code-review

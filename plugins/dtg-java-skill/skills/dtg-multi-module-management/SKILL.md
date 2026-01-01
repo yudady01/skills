@@ -1,6 +1,6 @@
 ---
 name: dtg-multi-module-management
-description: dtg-pay 多模块 Maven 项目管理
+description: This skill should be used when the user asks to "manage modules", "compile multiple modules", "build maven project", "module dependencies", "project structure", or mentions maven multi-module project, module compilation, or module coordination. Provides dtg-pay multi-module Maven project management guidance including module structure, dependencies, build order, and environment configuration.
 version: 3.0.0
 tags: ["multi-module", "maven", "project-structure", "module-detection"]
 ---

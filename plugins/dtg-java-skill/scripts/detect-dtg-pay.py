@@ -151,6 +151,21 @@ def main():
     }
 
     print(json.dumps(result, ensure_ascii=False, indent=2))
+
+    # 新增：如果检测到项目，设置环境变量到 $CLAUDE_ENV_FILE
+    if detected:
+        env_file = os.environ.get("CLAUDE_ENV_FILE")
+        if env_file:
+            try:
+                with open(env_file, 'a') as f:
+                    f.write(f"export DTG_PAY_PROJECT=true\n")
+                    f.write(f"export DTG_PAY_PATH='{result['project_path']}'\n")
+                    if versions:
+                        versions_json = json.dumps(versions).replace('"', '\\"')
+                        f.write(f"export DTG_PAY_VERSIONS='{versions_json}'\n")
+            except Exception as e:
+                print(f"# Warning: Could not write to env file: {e}", file=sys.stderr)
+
     sys.exit(0 if detected else 1)
 
 

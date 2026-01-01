@@ -1,6 +1,6 @@
 ---
 name: dtg-common-module-development
-description: xxpay-core 公共模块开发技能
+description: This skill should be used when the user asks to "develop common module", "create shared utilities", "define common entities", "API interfaces", "common services", or mentions shared code, common libraries, entity definitions, or API interfaces. Provides xxpay-core common module development guidance including entity beans, API interfaces, constants, and utilities.
 version: 3.0.0
 tags: ["common-module", "entity", "service-interface", "utilities", "constants"]
 ---

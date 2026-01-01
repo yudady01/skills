@@ -1,6 +1,6 @@
 ---
 name: dtg-intelligent-architecture-analysis
-description: 智能架构分析技能，针对 Spring Boot 2.7 + Apache Dubbo 3 微服务架构
+description: This skill should be used when the user asks to "analyze architecture", "review architecture", "assess design", "evaluate microservices", "check service boundaries", "DDD analysis", "domain driven design", or mentions architecture patterns, microservices design, distributed system architecture, service decomposition, or architectural assessment. Provides intelligent architecture analysis for Spring Boot 2.7 + Apache Dubbo 3 microservices, including service boundary evaluation, pattern recognition, performance architecture assessment, and DDD principles.
 license: Apache 2.0
 ---
 

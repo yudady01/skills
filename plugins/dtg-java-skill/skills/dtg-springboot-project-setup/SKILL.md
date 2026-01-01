@@ -1,6 +1,6 @@
 ---
 name: dtg-springboot-project-setup
-description: 企业级 Spring Boot 2.7 + Apache Dubbo 3.2.14 微服务项目配置
+description: This skill should be used when the user asks to "setup Spring Boot project", "configure Spring Boot", "Spring Boot configuration", "application.yml", "environment setup", or mentions Spring Boot 2.7 setup, project configuration, or environment management. Provides Spring Boot 2.7 + Dubbo 3 enterprise-level microservice project configuration guidance.
 version: 3.0.0
 tags: ["spring-boot", "dubbo", "microservice", "enterprise", "java"]
 ---
