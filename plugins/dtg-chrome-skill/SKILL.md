@@ -1,88 +1,93 @@
 ---
 name: dtg-chrome-skill
-description: Chrome DevTools MCP 集成技能，提供持久化配置的浏览器自动化能力。用于需要控制浏览器、执行页面操作、截图、内容抓取等场景。当用户请求启动调试模式 Chrome、浏览器自动化操作（点击、输入、截图）、页面内容分析或抓取、Web 应用测试或调试、查看浏览器状态或标签页时使用。
+description: |
+  Chrome DevTools MCP integration for browser automation with persistent user configuration.
+  Use when user requests: (1) Launch Chrome in debug mode with user data,
+  (2) Browser automation operations (click, fill, hover, drag, screenshot),
+  (3) Page content analysis or scraping, (4) Web application testing or debugging,
+  (5) Check browser status or manage tabs
 ---
 
 # dtg-chrome-skill
 
-Chrome DevTools MCP 集成技能，提供持久化用户配置的浏览器自动化能力。
+Chrome DevTools MCP integration for browser automation with persistent user configuration.
 
-## 核心功能
+## Core Features
 
-- 🚀 **一键启动**: 启动带用户数据的调试模式 Chrome（保留登录状态、书签）
-- 🤖 **自动化操作**: 点击、输入、拖拽、截图等浏览器操作
-- 📊 **内容获取**: 页面快照、截图、控制台日志、网络请求
-- 🎯 **精确控制**: 基于 A11y 树的元素定位，支持表单填写和文件上传
+- **One-click Launch**: Start Chrome in debug mode with user data (preserves login state, bookmarks)
+- **Automation**: Click, type, drag, screenshot and other browser operations
+- **Content Extraction**: Page snapshots, screenshots, console logs, network requests
+- **Precise Control**: A11y tree-based element targeting with form filling and file upload support
 
-## 快速开始
+## Quick Start
 
-### 1. 启动调试模式 Chrome
+### 1. Launch Debug Mode Chrome
 
 ```bash
-# 赋予执行权限（首次运行）
+# Grant execute permission (first time only)
 chmod +x scripts/launch-connected-chrome.sh
 
-# 启动 Chrome（会自动关闭现有实例并重新打开）
+# Launch Chrome (closes existing instances and reopens)
 ./scripts/launch-connected-chrome.sh
 ```
 
-脚本会：
-- 关闭当前运行的 Chrome
-- 以调试模式启动 Chrome（端口 9222）
-- 保留所有用户数据（登录状态、书签、扩展）
+The script will:
+- Close currently running Chrome instances
+- Launch Chrome in debug mode (port 9222)
+- Preserve all user data (login state, bookmarks, extensions)
 
-### 2. 验证连接
+### 2. Verify Connection
 
 ```bash
 ./scripts/validate-chrome.sh
 ```
 
-验证项目：
-- 端口 9222 是否开放
-- HTTP 连接是否正常
-- Chrome 进程状态
-- MCP 配置检查
+Verification items:
+- Port 9222 availability
+- HTTP connection status
+- Chrome process status
+- MCP configuration check
 
-### 3. 在 Claude Desktop 中使用
+### 3. Use in Claude Desktop
 
-启动 Chrome 后，可以直接在 Claude Desktop 中使用自然语言控制浏览器：
-
-```
-"列出当前所有标签页"
-"给页面截个图"
-"点击登录按钮"
-"在搜索框输入 'Chrome DevTools'"
-```
-
-## 工作流程
-
-### 典型页面操作
-
-1. **获取页面快照**（必需，获取元素 uid）
-   ```
-   用户: "看看页面上有什么"
-   调用: take_snapshot()
-   ```
-
-2. **执行操作**（使用快照中的 uid）
-   ```
-   用户: "点击提交按钮"
-   调用: click(uid="button-123")
-   ```
-
-3. **等待并验证**
-   ```
-   用户: "等待加载完成"
-   调用: wait_for(text="操作成功")
-   ```
-
-### 表单填写
+After launching Chrome, control the browser using natural language in Claude Desktop:
 
 ```
-用户: "填写登录表单，用户名 admin，密码 123456"
+"List all current tabs"
+"Take a screenshot of the page"
+"Click the login button"
+"Type 'Chrome DevTools' in the search box"
 ```
 
-推荐使用 `fill_form` 批量填写：
+## Workflows
+
+### Typical Page Operations
+
+1. **Get Page Snapshot** (required to obtain element uids)
+   ```
+   User: "Show me what's on the page"
+   Call: take_snapshot()
+   ```
+
+2. **Perform Action** (using uid from snapshot)
+   ```
+   User: "Click the submit button"
+   Call: click(uid="button-123")
+   ```
+
+3. **Wait and Verify**
+   ```
+   User: "Wait for loading to complete"
+   Call: wait_for(text="Operation successful")
+   ```
+
+### Form Filling
+
+```
+User: "Fill in the login form, username admin, password 123456"
+```
+
+Recommended to use `fill_form` for batch filling:
 ```json
 {
   "elements": [
@@ -92,22 +97,23 @@ chmod +x scripts/launch-connected-chrome.sh
 }
 ```
 
-### 页面导航
+### Page Navigation
 
 ```
-用户: "打开 GitHub 并搜索 Chrome DevTools"
+User: "Open GitHub and search for Chrome DevTools"
 ```
-执行流程：
+
+Execution flow:
 1. `navigate_page(url="https://github.com")`
-2. `take_snapshot()` 找搜索框
+2. `take_snapshot()` to find search box
 3. `fill(uid="search-input", value="Chrome DevTools")`
 4. `press_key(key="Enter")`
 
-## MCP 配置
+## MCP Configuration
 
-配置文件: `scripts/config.json`
+Configuration file: `scripts/config.json`
 
-需要在 Claude Desktop 配置中添加：
+Add to Claude Desktop configuration:
 
 ```json
 {
@@ -124,49 +130,49 @@ chmod +x scripts/launch-connected-chrome.sh
 }
 ```
 
-配置路径: `~/Library/Application Support/Claude/claude_desktop_config.json`
+Configuration path: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-## 重要提示
+## Important Notes
 
-- ⚠️ **不要手动打开普通 Chrome 窗口**：调试模式下会使用默认配置目录，手动打开普通窗口可能导致调试断开
-- ✅ **关闭方式**：使用完毕后完全退出 Chrome，然后正常启动即可恢复
-- 📍 **端口占用**：如果端口 9222 被占用，需要修改脚本中的 PORT 变量
+- **Do not manually open regular Chrome windows**: Debug mode uses the default profile, manually opening normal windows may disconnect debugging
+- **Proper shutdown**: Fully quit Chrome when done, then launch normally to restore
+- **Port conflicts**: If port 9222 is occupied, modify the PORT variable in the script
 
-## 常见问题
+## Troubleshooting
 
-### Chrome 无法启动
+### Chrome Won't Start
 ```bash
-# 检查是否有残留进程
+# Check for residual processes
 pkill -9 "Google Chrome"
-# 重新运行启动脚本
+# Re-run launch script
 ./scripts/launch-connected-chrome.sh
 ```
 
-### MCP 连接失败
+### MCP Connection Failed
 ```bash
-# 运行验证脚本检查状态
+# Run validation script to check status
 ./scripts/validate-chrome.sh
 ```
 
-### 无法找到元素
-- 确保先调用 `take_snapshot()` 获取最新页面结构
-- 使用快照返回的 uid，而非手动猜测
-- 检查元素是否在 iframe 中（需要先切换上下文）
+### Cannot Find Elements
+- Ensure `take_snapshot()` is called first to get latest page structure
+- Use uid returned from snapshot, don't guess manually
+- Check if element is in iframe (need to switch context first)
 
-## 资源
+## Resources
 
 ### scripts/
 
-- **launch-connected-chrome.sh**: 启动调试模式 Chrome（带用户数据）
-- **validate-chrome.sh**: 验证 Chrome DevTools MCP 连接状态
+- **launch-connected-chrome.sh**: Launch debug mode Chrome (with user data)
+- **validate-chrome.sh**: Validate Chrome DevTools MCP connection status
 
 ### references/
 
-- **mcp-tools.md**: 完整的 MCP 工具参考文档
-  - 页面管理工具（list_pages, new_page, select_page 等）
-  - 交互工具（click, fill, hover, drag 等）
-  - 内容获取（take_snapshot, take_screenshot）
-  - 高级操作（upload_file, handle_dialog, emulate）
-  - 性能分析和网络监控
+- **mcp-tools.md**: Complete MCP tool reference documentation
+  - Page management tools (list_pages, new_page, select_page, etc.)
+  - Interaction tools (click, fill, hover, drag, etc.)
+  - Content retrieval (take_snapshot, take_screenshot)
+  - Advanced operations (upload_file, handle_dialog, emulate)
+  - Performance analysis and network monitoring
 
-查看完整工具文档：`references/mcp-tools.md`
+View full tool documentation: `references/mcp-tools.md`
