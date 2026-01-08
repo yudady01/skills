@@ -1,0 +1,9 @@
+{
+  "name": "deckling",
+  "version": "0.1.0",
+  "description": "Generate native PPTX files using Anthropic Platform Skills. No ugly python-pptx - uses Anthropic's server-side rendering engine.",
+  "author": {
+    "name": "ooiyeefei"
+  },
+  "commands": ["./commands/deckling.md"]
+}
