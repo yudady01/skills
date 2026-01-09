@@ -265,7 +265,7 @@ class MySQLDataSynchronizer:
 
     def get_table_columns(self, table_name: str) -> List[str]:
         """
-        获取表的列名
+        获取表的列名（排除生成列）
 
         Args:
             table_name: 表名
@@ -275,13 +275,20 @@ class MySQLDataSynchronizer:
         """
         cursor = self.source_conn.cursor()
         cursor.execute("""
-            SELECT column_name
+            SELECT column_name, extra
             FROM information_schema.columns
             WHERE table_schema = %s AND table_name = %s
             ORDER BY ordinal_position
         """, (self.source.database, table_name))
 
-        return [row['COLUMN_NAME'] for row in cursor.fetchall()]
+        # 排除生成列（extra 字段包含 'STORED' 或 'VIRTUAL'）
+        columns = []
+        for row in cursor.fetchall():
+            extra = row['EXTRA'].upper() if row['EXTRA'] else ''
+            if 'STORED' not in extra and 'VIRTUAL' not in extra:
+                columns.append(row['COLUMN_NAME'])
+
+        return columns
 
     def get_primary_key(self, table_name: str) -> Optional[str]:
         """
