@@ -1,9 +1,0 @@
-{
-  "name": "repeatable-sql",
-  "description": "可重复执行SQL技能",
-  "version": "3.0.0",
-  "author": {
-    "name": "yudady",
-    "email": "yudady@gmail.com"
-  }
-}
