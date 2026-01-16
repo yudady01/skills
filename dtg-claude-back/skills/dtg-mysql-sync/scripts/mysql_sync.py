@@ -263,23 +263,26 @@ class MySQLDataSynchronizer:
         result = cursor.fetchone()
         return result['count'] > 0
 
-    def get_table_columns(self, table_name: str) -> List[str]:
+    def get_table_columns(self, table_name: str, is_source: bool = True) -> List[str]:
         """
         获取表的列名（排除生成列）
 
         Args:
             table_name: 表名
+            is_source: 是否为源数据库
 
         Returns:
             列名列表
         """
-        cursor = self.source_conn.cursor()
+        conn = self.source_conn if is_source else self.target_conn
+        database = self.source.database if is_source else self.target.database
+        cursor = conn.cursor()
         cursor.execute("""
             SELECT column_name, extra
             FROM information_schema.columns
             WHERE table_schema = %s AND table_name = %s
             ORDER BY ordinal_position
-        """, (self.source.database, table_name))
+        """, (database, table_name))
 
         # 排除生成列（extra 字段包含 'STORED' 或 'VIRTUAL'）
         columns = []
@@ -747,9 +750,23 @@ class MySQLDataSynchronizer:
             if not self.check_table_exists(table_name, is_source=False):
                 raise MySQLTableNotFoundError(f"目标表 '{table_name}' 不存在")
 
-            # 3. 获取表结构
-            columns = self.get_table_columns(table_name)
-            console.print(f"[cyan]检测到 {len(columns)} 个列[/cyan]")
+            # 3. 获取表结构（源表和目标表）
+            source_columns = self.get_table_columns(table_name, is_source=True)
+            target_columns = self.get_table_columns(table_name, is_source=False)
+
+            # 找出目标表缺失的列
+            missing_columns = set(source_columns) - set(target_columns)
+
+            # 只同步两者都有的列（交集）
+            columns = [col for col in source_columns if col in target_columns]
+
+            console.print(f"[cyan]源表: {len(source_columns)} 列, 目标表: {len(target_columns)} 列[/cyan]")
+
+            if missing_columns:
+                console.print(f"[yellow]⚠ 目标表缺失 {len(missing_columns)} 个列，将被忽略: {', '.join(sorted(missing_columns))}[/yellow]")
+                console.print(f"[cyan]将同步 {len(columns)} 个共有列[/cyan]")
+            else:
+                console.print(f"[cyan]检测到 {len(columns)} 个列[/cyan]")
 
             # 3.5 检测时间字段（如果需要时间过滤）
             if days > 0:
