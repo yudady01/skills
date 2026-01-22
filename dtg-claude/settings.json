@@ -1,0 +1,13 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "d19faf3f6ef54b1e8f3c7c7c0d8b21cf.iDlbXso6FwRikSPM",
+    "API_TIMEOUT_MS": "3000000",
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "MCP_TOOL_TIMEOUT": "30000",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "z.ai/glm-4.5-air",
+    "ANTHROPIC_DEFAULT_MODEL": "z.ai/glm-4.7",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "z.ai/glm-4.7",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "z.ai/glm-4.7",
+    "Z_AI_API_KEY": "d19faf3f6ef54b1e8f3c7c7c0d8b21cf.iDlbXso6FwRikSPM"
+  }
+}
