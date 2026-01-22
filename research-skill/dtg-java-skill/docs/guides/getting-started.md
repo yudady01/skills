@@ -241,8 +241,8 @@ curl http://localhost:8080/dubbo/registry
 ## [LIBRARY] 进一步学习
 
 ### 高级功能
-- [微服务架构设计指南](./microservice-development.md)
-- [Dubbo 高级配置](./dubbo-configuration.md)
+- [微服务架构设计指南](microservice-development.md)
+- [Dubbo 高级配置](dubbo-configuration.md)
 - [数据库集成最佳实践](./database-integration.md)
 - [测试策略指南](./testing-strategies.md)
 
