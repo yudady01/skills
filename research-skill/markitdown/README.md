@@ -1,45 +1,45 @@
-# MarkItDown Skill
+# MarkItDown 技能
 
-This skill provides comprehensive support for converting various file formats to Markdown using Microsoft's MarkItDown tool.
+此技能提供使用 Microsoft MarkItDown 工具将各种文件格式转换为 Markdown 的全面支持。
 
-## Overview
+## 概述
 
-MarkItDown is a Python tool that converts files and office documents to Markdown format. This skill includes:
+MarkItDown 是一个将文件和办公文档转换为 Markdown 格式的 Python 工具。此技能包括：
 
-- Complete API documentation
-- Format-specific conversion guides
-- Utility scripts for batch processing
-- AI-enhanced conversion examples
-- Integration with scientific workflows
+- 完整的 API 文档
+- 针对特定格式的转换指南
+- 批处理实用脚本
+- AI 增强型转换示例
+- 与科学工作流的集成
 
-## Contents
+## 内容
 
-### Main Skill File
-- **SKILL.md** - Complete guide to using MarkItDown with quick start, examples, and best practices
+### 主技能文件
+- **SKILL.md** - 使用 MarkItDown 的完整指南，包含快速入门、示例和最佳实践
 
-### References
-- **api_reference.md** - Detailed API documentation, class references, and method signatures
-- **file_formats.md** - Format-specific details for all supported file types
+### 参考资料
+- **api_reference.md** - 详细的 API 文档、类参考和方法签名
+- **file_formats.md** - 所有支持文件类型的特定格式详情
 
-### Scripts
-- **batch_convert.py** - Batch convert multiple files with parallel processing
-- **convert_with_ai.py** - AI-enhanced conversion with custom prompts
-- **convert_literature.py** - Scientific literature conversion with metadata extraction
+### 脚本
+- **batch_convert.py** - 支持并行处理的批量文件转换
+- **convert_with_ai.py** - 支持自定义提示词的 AI 增强型转换
+- **convert_literature.py** - 带元数据提取的科学文献转换
 
-### Assets
-- **example_usage.md** - Practical examples for common use cases
+### 资源
+- **example_usage.md** - 常见用例的实用示例
 
-## Installation
+## 安装
 
 ```bash
-# Install with all features
+# 安装所有功能
 pip install 'markitdown[all]'
 
-# Or install specific features
+# 或安装特定功能
 pip install 'markitdown[pdf,docx,pptx,xlsx]'
 ```
 
-## Quick Start
+## 快速开始
 
 ```python
 from markitdown import MarkItDown
@@ -49,24 +49,24 @@ result = md.convert("document.pdf")
 print(result.text_content)
 ```
 
-## Supported Formats
+## 支持的格式
 
-- **Documents**: PDF, DOCX, PPTX, XLSX, EPUB
-- **Images**: JPEG, PNG, GIF, WebP (with OCR)
-- **Audio**: WAV, MP3 (with transcription)
-- **Web**: HTML, YouTube URLs
-- **Data**: CSV, JSON, XML
-- **Archives**: ZIP files
+- **文档**: PDF, DOCX, PPTX, XLSX, EPUB
+- **图片**: JPEG, PNG, GIF, WebP (支持 OCR)
+- **音频**: WAV, MP3 (支持转录)
+- **网页**: HTML, YouTube URL
+- **数据**: CSV, JSON, XML
+- **压缩包**: ZIP 文件
 
-## Key Features
+## 核心功能
 
-### 1. AI-Enhanced Conversions
-Use AI models via OpenRouter to generate detailed image descriptions:
+### 1. AI 增强型转换
+通过 OpenRouter 使用 AI 模型生成详细的图片描述：
 
 ```python
 from openai import OpenAI
 
-# OpenRouter provides access to 100+ AI models
+# OpenRouter 提供对 100+ AI 模型的访问
 client = OpenAI(
     api_key="your-openrouter-api-key",
     base_url="https://openrouter.ai/api/v1"
@@ -74,111 +74,110 @@ client = OpenAI(
 
 md = MarkItDown(
     llm_client=client,
-    llm_model="anthropic/claude-sonnet-4.5"  # recommended for vision
+    llm_model="anthropic/claude-sonnet-4.5"  # 视觉任务推荐
 )
 result = md.convert("presentation.pptx")
 ```
 
-### 2. Batch Processing
-Convert multiple files efficiently:
+### 2. 批量处理
+高效转换多个文件：
 
 ```bash
 python scripts/batch_convert.py papers/ output/ --extensions .pdf .docx
 ```
 
-### 3. Scientific Literature
-Convert and organize research papers:
+### 3. 科学文献
+转换和组织研究论文：
 
 ```bash
 python scripts/convert_literature.py papers/ output/ --organize-by-year --create-index
 ```
 
-### 4. Azure Document Intelligence
-Enhanced PDF conversion with Microsoft Document Intelligence:
+### 4. Azure 文档智能
+使用 Microsoft Document Intelligence 增强 PDF 转换：
 
 ```python
 md = MarkItDown(docintel_endpoint="https://YOUR-ENDPOINT.cognitiveservices.azure.com/")
 result = md.convert("complex_document.pdf")
 ```
 
-## Use Cases
+## 使用场景
 
-### Literature Review
-Convert research papers to Markdown for easier analysis and note-taking.
+### 文献综述
+将研究论文转换为 Markdown 以便于分析和做笔记。
 
-### Data Extraction
-Extract tables from Excel files into Markdown format.
+### 数据提取
+将 Excel 文件中的表格提取为 Markdown 格式。
 
-### Presentation Processing
-Convert PowerPoint slides with AI-generated descriptions.
+### 演示文稿处理
+转换 PowerPoint 幻灯片并生成 AI 描述。
 
-### Document Analysis
-Process documents for LLM consumption with token-efficient Markdown.
+### 文档分析
+处理文档供 LLM 使用，使用 token 高效的 Markdown 格式。
 
-### YouTube Transcripts
-Fetch and convert YouTube video transcriptions.
+### YouTube 字幕
+获取并转换 YouTube 视频转录。
 
-## Scripts Usage
+## 脚本使用
 
-### Batch Convert
+### 批量转换
 ```bash
-# Convert all PDFs in a directory
+# 转换目录中的所有 PDF
 python scripts/batch_convert.py input_dir/ output_dir/ --extensions .pdf
 
-# Recursive with multiple formats
+# 递归处理多种格式
 python scripts/batch_convert.py docs/ markdown/ --extensions .pdf .docx .pptx -r
 ```
 
-### AI-Enhanced Conversion
+### AI 增强型转换
 ```bash
-# Convert with AI descriptions via OpenRouter
+# 通过 OpenRouter 使用 AI 描述进行转换
 export OPENROUTER_API_KEY="sk-or-v1-..."
 python scripts/convert_with_ai.py paper.pdf output.md --prompt-type scientific
 
-# Use different models
+# 使用不同模型
 python scripts/convert_with_ai.py image.png output.md --model anthropic/claude-sonnet-4.5
 
-# Use custom prompt
-python scripts/convert_with_ai.py image.png output.md --custom-prompt "Describe this diagram"
+# 使用自定义提示词
+python scripts/convert_with_ai.py image.png output.md --custom-prompt "描述此图表"
 ```
 
-### Literature Conversion
+### 文献转换
 ```bash
-# Convert papers with metadata extraction
+# 转换论文并提取元数据
 python scripts/convert_literature.py papers/ markdown/ --organize-by-year --create-index
 ```
 
-## Integration with Scientific Writer
+## 与 Scientific Writer 集成
 
-This skill integrates seamlessly with the Scientific Writer CLI for:
-- Converting source materials for paper writing
-- Processing literature for reviews
-- Extracting data from various document formats
-- Preparing documents for LLM analysis
+此技能与 Scientific Writer CLI 无缝集成，用于：
+- 转换论文写作的源材料
+- 处理综述文献
+- 从各种文档格式提取数据
+- 准备文档供 LLM 分析
 
-## Resources
+## 资源
 
 - **MarkItDown GitHub**: https://github.com/microsoft/markitdown
 - **PyPI**: https://pypi.org/project/markitdown/
-- **OpenRouter**: https://openrouter.ai (AI model access)
-- **OpenRouter API Keys**: https://openrouter.ai/keys
-- **OpenRouter Models**: https://openrouter.ai/models
-- **License**: MIT
+- **OpenRouter**: https://openrouter.ai (AI 模型访问)
+- **OpenRouter API 密钥**: https://openrouter.ai/keys
+- **OpenRouter 模型**: https://openrouter.ai/models
+- **许可证**: MIT
 
-## Requirements
+## 系统要求
 
 - Python 3.10+
-- Optional dependencies based on formats needed
-- OpenRouter API key (for AI-enhanced conversions) - Get at https://openrouter.ai/keys
-- Azure subscription (optional, for Document Intelligence)
+- 基于所需格式的可选依赖项
+- OpenRouter API 密钥（用于 AI 增强型转换）- 在 https://openrouter.ai/keys 获取
+- Azure 订阅（可选，用于文档智能）
 
-## Examples
+## 示例
 
-See `assets/example_usage.md` for comprehensive examples covering:
-- Basic conversions
-- Scientific workflows
-- AI-enhanced processing
-- Batch operations
-- Error handling
-- Integration patterns
-
+详见 `assets/example_usage.md` 获取全面示例，涵盖：
+- 基础转换
+- 科学工作流
+- AI 增强型处理
+- 批量操作
+- 错误处理
+- 集成模式
