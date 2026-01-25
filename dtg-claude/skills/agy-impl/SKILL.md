@@ -14,6 +14,13 @@ Antigravity 计划实作涉及读取存储在 `~/.gemini/antigravity/brain` 目�
 
 ## 计划检索
 
+### 判断用户输入
+
+**首先检查用户是否提供了计划名称：**
+
+1. **用户提供计划名称**：执行「搜索计划文件」流程
+2. **用户未提供计划名称**：执行「列出所有可用计划」流程
+
 ### 搜索计划文件
 
 当用户提供计划名称时：
@@ -29,12 +36,36 @@ Antigravity 计划实作涉及读取存储在 `~/.gemini/antigravity/brain` 目�
 - 如果找到多个匹配文件，向用户确认应该使用哪一个
 - 如果找不到匹配文件，向用户报告并列出可用的计划
 
-### 可用的计划列表
+### 列出所有可用计划
 
-如果找不到计划，使用以下命令列出所有可用计划：
+**当用户未提供计划名称时，或者找不到匹配的计划时：**
 
-```bash
-ls ~/.gemini/antigravity/brain/*/implementation_plan.md.resolved
+1. 使用 Glob 工具搜索所有计划文件
+2. 读取每个计划文件的标题（第一行 `#` 标题）
+3. 以列表形式展示所有可用计划
+
+**输出格式**：
+```
+📋 可用的 Antigravity 计划：
+
+1. [计划名称1] - [简短描述]
+   📁 ~/.gemini/antigravity/brain/[uuid-1]/implementation_plan.md.resolved
+
+2. [计划名称2] - [简短描述]
+   📁 ~/.gemini/antigravity/brain/[uuid-2]/implementation_plan.md.resolved
+
+...
+
+💡 使用 /agy-impl [计划名称] 执行指定计划
+```
+
+**如果没有任何计划文件**：
+```
+❌ 未找到任何 Antigravity 计划文件
+
+可能的原因：
+1. 计划目录 ~/.gemini/antigravity/brain/ 不存在或为空
+2. 没有任何已解析的计划文件（implementation_plan.md.resolved）
 ```
 
 ## 计划解析

@@ -20,12 +20,16 @@ cp -r agy-impl ~/.claude/plugins/
 直接使用 `/agy-impl` 命令：
 
 ```bash
-# 执行指定的 Antigravity 计划
-/agy-impl EZPAY-730-3
-
 # 列出所有可用的计划
 /agy-impl
+
+# 执行指定的 Antigravity 计划
+/agy-impl EZPAY-730-3
 ```
+
+**参数说明**：
+- 无参数 → 列出所有可用的 Antigravity 计划
+- 有参数 `[plan-name]` → 执行指定的计划
 
 ### 方式 2：自然语言触发
 
