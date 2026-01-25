@@ -88,6 +88,51 @@
       "skills": [
         "obsidian-canvas-creator"
       ]
+    },
+    {
+      "name": "agy-impl",
+      "description": "Antigravity 计划实现执行工具",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "agy-impl"
+      ]
+    },
+    {
+      "name": "excalidraw",
+      "description": "从代码库分析生成架构图",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "excalidraw"
+      ]
+    },
+    {
+      "name": "json-canvas",
+      "description": "创建和编辑 JSON Canvas 文件",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "json-canvas"
+      ]
+    },
+    {
+      "name": "obsidian-bases",
+      "description": "创建和编辑 Obsidian Bases 文件",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "obsidian-bases"
+      ]
+    },
+    {
+      "name": "obsidian-markdown",
+      "description": "创建和编辑 Obsidian Flavored Markdown",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "obsidian-markdown"
+      ]
     }
   ]
 }
