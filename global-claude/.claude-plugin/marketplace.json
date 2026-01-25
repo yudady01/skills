@@ -25,6 +25,24 @@
       "skills": [
         "./repeatable-sql/skills"
       ]
+    },
+    {
+      "name": "theme-factory",
+      "description": "用于为工件应用主题样式的工具包",
+      "source": "./skills/",
+      "strict": false,
+      "skills": [
+        "./theme-factory"
+      ]
+    },
+    {
+      "name": "video-downloader",
+      "description": "下载 YouTube 视频，支持可自定义的质量和格式选项",
+      "source": "./skills/",
+      "strict": false,
+      "skills": [
+        "./video-downloader"
+      ]
     }
   ]
 }

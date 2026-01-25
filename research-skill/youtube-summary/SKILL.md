@@ -1,99 +1,103 @@
 ---
 name: youtube-summary
-description: Summarize YouTube videos. Check if transcript exists at `youtube/{Channel Name}/transcript-{Video Title}.md`. If exists, skip to summarization. If not, download first. Create summary at `youtube/{Channel Name}/summary-{Video Title}.md` with topics and clickable timestamp links.
+description: 总结 YouTube 视频。首先检查 `youtube/{频道名称}/transcript-{视频标题}.md` 是否存在。如果存在，跳转到总结步骤。如果不存在，先下载。在 `youtube/{频道名称}/summary-{视频标题}.md` 创建摘要，包含主题和可点击的时间戳链接。
 allowed-tools: Bash,Read,Write
 ---
 
-# YouTube Video Summarization
+# YouTube 视频摘要
 
-## Quick Start
+## 快速开始
 
-**Check if transcript exists first:**
-1. Look for `youtube/{Channel Name}/transcript-{Video Title}.md` located at the root of this project
-2. **If exists**: Skip to Step 2 (Create Summary)
-3. **If not exists**: Run Step 1 (Download Transcript)
+**首先检查字幕文件是否存在：**
+1. 查找位于项目根目录的 `youtube/{频道名称}/transcript-{视频标题}.md`
+2. **如果存在**：跳转到步骤 2（创建摘要）
+3. **如果不存在**：运行步骤 1（下载字幕）
 
-### Step 1: Download Transcript (Only if needed)
+### 步骤 1：下载字幕（仅在需要时）
 
 ```bash
 uv run script.py "YOUTUBE_URL"
 ```
 
-Creates: `youtube/{Channel Name}/transcript-{Video Title}.md` located at the root of this project
+创建：位于项目根目录的 `youtube/{频道名称}/transcript-{视频标题}.md`
 
-### Step 2: Create Summary
+### 步骤 2：创建摘要
 
-1. Read the transcript file
-2. Identify main topics with start/end timestamps
-3. Create `youtube/{Channel Name}/summary-{Video Title}.md` located at the root of this project
+1. 读取字幕文件
+2. 识别主要主题及其开始/结束时间戳
+3. 创建位于项目根目录的 `youtube/{频道名称}/summary-{视频标题}.md`
 
-Summary format:
-- Executive summary paragraph
-- Topics with clickable timestamp links: `https://www.youtube.com/watch?v=VIDEO_ID&t=XXXs`
-- Key points for each topic
+摘要格式：
+- 执行摘要段落
+- 主题附带可点击的时间戳链接：`https://www.youtube.com/watch?v=VIDEO_ID&t=XXXs`
+- 每个主题的关键要点
 
-## Script Details (for reference)
+## 脚本详情（仅供参考）
 
-Downloads subtitles (manual or auto-generated), converts to timestamped markdown in 1-minute windows, saves to `youtube/{channel_name}/transcript-{video_title}.md`. UV handles dependencies.
+下载字幕（人工或自动生成），转换为带有时间戳的 markdown 格式，以 1 分钟为时间窗口，保存到 `youtube/{channel_name}/transcript-{video_title}.md`。UV 处理依赖项。
 
-## Output Files
+## 输出文件
 
-### Transcript File: `transcript-{Video Title}.md`
+### 字幕文件：`transcript-{视频标题}.md`
 
-The transcript file includes:
-- Video title and URL at the top
-- Full transcript organized into 1-minute time windows
-- Each line prefixed with its timestamp (e.g., `[00:45]`)
-- Time window headers (e.g., `[00:00 - 01:00]`)
+字幕文件包括：
+- 顶部的视频标题和 URL
+- 以 1 分钟时间窗口组织的完整字幕
+- 每行带有时间戳前缀（例如 `[00:45]`）
+- 时间窗口标题（例如 `[00:00 - 01:00]`）
 
-Example structure:
+示例结构：
 ```markdown
-# Video Title
+# 视频标题
 
-**Video URL:** https://youtube.com/...
+**视频 URL：** https://youtube.com/...
 
 ---
 
-## Full Transcript
+## 完整字幕
 
 ### [00:00 - 01:00]
 
-**[00:05]** Introduction to the topic...
+**[00:05]** 主题介绍...
 
-**[00:32]** First main point...
-Summary Format
+**[00:32]** 第一个主要观点...
+```
 
-Create `summary-{Video Title}.md` with clickable timestamp links (`https://www.youtube.com/watch?v=VIDEO_ID&t=XXXs`)
+### 摘要格式
 
-**Timestamp Conversion**: Convert MM:SS or HH:MM:SS timestamps to seconds for the URL:
+创建带有可点击时间戳链接的 `summary-{视频标题}.md`（`https://www.youtube.com/watch?v=VIDEO_ID&t=XXXs`）
+
+**时间戳转换**：将 MM:SS 或 HH:MM:SS 时间戳转换为 URL 所需的秒数：
 - `00:00` → `0s`
-- `02:30` → `150s` (2×60 + 30)
-- `08:15` → `495s` (8×60 + 15)
-- `01:05:30` → `3930s` (1×3600 + 5×60 + 30)
+- `02:30` → `150s`（2×60 + 30）
+- `08:15` → `495s`（8×60 + 15）
+- `01:05:30` → `3930s`（1×3600 + 5×60 + 30）
 
-## Error Handling
+## 错误处理
 
-The script handles common issues:
+脚本处理常见问题：
 
-**1. No subtitles available**
-- Script tries manual subtitles first, then auto-generated
-- If both fail, exits with error message
+**1. 无可用字幕**
+- 脚本首先尝试人工字幕，然后尝试自动生成字幕
+- 如果两者都失败，则显示错误消息并退出
 
-**2. Invalid or private video**
-- Check if URL is correct format: `https://www.youtube.com/watch?v=VIDEO_ID`
-- Some videos may be private, age-restricted, or geo-blocked
-- Script will show the specific error from yt-dlp
+**2. 无效或私密视频**
+- 检查 URL 格式是否正确：`https://www.youtube.com/watch?v=VIDEO_ID`
+- 某些视频可能是私密的、有年龄限制或地区限制
+- 脚本将显示来自 yt-dlp 的具体错误
 
-**3. Download interrupted or failed**
-- Check internet connection
-- Verify sufficient disk space
+**3. 下载中断或失败**
+- 检查网络连接
+- 确保有足够的磁盘空间
 
-## Notes
+## 注意事项
 
-- The script automatically downloads the first available subtitle language (usually English)
-- YouTube's auto-generated VTT files contain duplicate lines due to progressive captions - the script deduplicates while preserving speaking order
-- Timestamps are preserved and formatted as clickable references
-- Output is organized by channel in the `youtube/` directory
-- Filenames are sanitized for filesystem compatibility
-- Temporary VTT files are automatically cleaned up
-- **The script creates only the transcript file. After reviewing the transcript, create the summary file separately with topic analysis and timestamps**`MM:SS` → seconds (e.g., `02:30` → `150s`, `08:15` → `495s`)
+- 脚本自动下载第一个可用的字幕语言（通常是英语）
+- YouTube 自动生成的 VTT 文件由于渐进式字幕包含重复行 - 脚本会在保持发言顺序的同时去重
+- 时间戳被保留并格式化为可点击的引用
+- 输出按频道组织在 `youtube/` 目录中
+- 文件名经过清理以兼容文件系统
+- 临时 VTT 文件会自动清理
+- **脚本仅创建字幕文件。查看字幕后，单独创建摘要文件，包含主题分析和时间戳**
+
+**时间戳转换**：`MM:SS` → 秒（例如 `02:30` → `150s`，`08:15` → `495s`）
