@@ -1,0 +1,30 @@
+{
+  "name": "global-claude",
+  "owner": {
+    "name": "local"
+  },
+  "metadata": {
+    "description": "Local custom skills collection",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "en2zh",
+      "description": "专业的英中翻译工具，专门处理技术和编程内容",
+      "source": "./skills/",
+      "strict": false,
+      "skills": [
+        "./en2zh/skills"
+      ]
+    },
+    {
+      "name": "repeatable-sql",
+      "description": "可重复执行的 SQL 技能",
+      "source": "./skills/",
+      "strict": false,
+      "skills": [
+        "./repeatable-sql/skills"
+      ]
+    }
+  ]
+}
