@@ -1,0 +1,11 @@
+{
+  "name": "agy-impl",
+  "version": "1.0.0",
+  "description": "Antigravity 计划实作插件 - 根据 implementation_plan.md.resolved 执行代码修改和验证",
+  "author": "Claude Code",
+  "agents": [],
+  "skills": ["skills/*/SKILL.md"],
+  "commands": ["commands/*.md"],
+  "hooks": [],
+  "settings": []
+}
