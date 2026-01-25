@@ -133,6 +133,15 @@
       "skills": [
         "obsidian-markdown"
       ]
+    },
+    {
+      "name": "ob-fm",
+      "description": "Apple 风格的 Markdown 文档格式化工具，提供优雅的排版和设计规范",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "ob-fm"
+      ]
     }
   ]
 }
