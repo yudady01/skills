@@ -11,37 +11,82 @@
     {
       "name": "en2zh",
       "description": "专业的英中翻译工具，专门处理技术和编程内容",
-      "source": "./skills/",
+      "source": "../skills/",
       "strict": false,
       "skills": [
-        "./en2zh/skills"
+        "en2zh"
       ]
     },
     {
       "name": "repeatable-sql",
-      "description": "可重复执行的 SQL 技能",
-      "source": "./skills/",
+      "description": "可重复执行的 SQL 技能生成器",
+      "source": "../skills/",
       "strict": false,
       "skills": [
-        "./repeatable-sql/skills"
+        "repeatable-sql"
       ]
     },
     {
       "name": "theme-factory",
       "description": "用于为工件应用主题样式的工具包",
-      "source": "./skills/",
+      "source": "../skills/",
       "strict": false,
       "skills": [
-        "./theme-factory"
+        "theme-factory"
       ]
     },
     {
       "name": "video-downloader",
       "description": "下载 YouTube 视频，支持可自定义的质量和格式选项",
-      "source": "./skills/",
+      "source": "../skills/",
       "strict": false,
       "skills": [
-        "./video-downloader"
+        "video-downloader"
+      ]
+    },
+    {
+      "name": "mermaid-visualizer",
+      "description": "将文本内容转换为专业的 Mermaid 图表",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "mermaid-visualizer"
+      ]
+    },
+    {
+      "name": "excalidraw-diagram",
+      "description": "从文本内容生成 Excalidraw 图表",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "excalidraw-diagram"
+      ]
+    },
+    {
+      "name": "create-plan",
+      "description": "创建简洁的计划",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "create-plan"
+      ]
+    },
+    {
+      "name": "markitdown",
+      "description": "将文件和 Office 文档转换为 Markdown",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "markitdown"
+      ]
+    },
+    {
+      "name": "obsidian-canvas-creator",
+      "description": "从文本内容创建 Obsidian Canvas 文件",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "obsidian-canvas-creator"
       ]
     }
   ]
