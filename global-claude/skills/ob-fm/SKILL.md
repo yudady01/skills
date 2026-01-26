@@ -1,7 +1,7 @@
 ---
 name: ob-fm
-description: 当用户要求"使用 Apple 风格格式化"、"Apple 官网风格"、"Obsidian Apple Style Architect"、"重新格式化为 Apple 风格笔记"、"应用 Apple 官网美学"，或请求将原始文本转换为 Apple 官网风格的 Obsidian 笔记时使用此技能。全面的 Apple 风格格式化，包含 H1-H3 层级结构、1.8 行高、1.2em 段落间距和 Callout 转换。重要：直接替换原始文件，禁止创建新文件。
-version: 2.1.0
+description: 当用户要求"使用 Apple 风格格式化"、"Apple 官网风格"、"Obsidian Apple Style Architect"、"重新格式化为 Apple 风格笔记"、"应用 Apple 官网美学"，或请求将原始文本转换为 Apple 官网风格的 Obsidian 笔记时使用此技能。全面的 Apple 风格格式化，包含 H1-H3 层级结构、1.8 行高、1.2em 段落间距和 Callout 转换。重要：直接替换原始文件，禁止创建新文件。必需：必须包含 `cssclass: apple-style` 字段。
+version: 2.1.1
 ---
 
 # Obsidian Apple Style Architect (ob-fm)
@@ -194,15 +194,26 @@ H1: 主要文档章节（每个文档 2-4 个）
 
 注入 Obsidian 特定的元数据和组件：
 
-**YAML frontmatter 注入**：
+> [!warning] 关键要求
+> **`cssclass: apple-style` 是必需字段**，没有它 CSS 样式将无法生效！
+
+**YAML frontmatter 注入**（必需格式）：
 ```yaml
 ---
 title: [从第一个 H1 提取或生成描述性标题]
 created: [YYYY-MM-DD]
-tags: [从内容关键词自动生成]
-cssclass: apple-style
+updated: [YYYY-MM-DD]
+tags: [从内容关键词自动生成，3-5个相关标签]
+cssclass: apple-style  # ⚠️ 必需！CSS 样式生效的关键
 ---
 ```
+
+**字段说明**：
+- `title` - 文档标题（必需）
+- `created` - 创建日期（必需）
+- `updated` - 更新日期（可选）
+- `tags` - 相关标签（推荐，3-5个）
+- `cssclass: apple-style` - **CSS 类名（必需，否则样式不生效）**
 
 **组件转换**：
 - 识别关键概念 → 包裹在 `> [!abstract]` 中
@@ -233,15 +244,19 @@ font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
 
 生成完整的 Obsidian 笔记，包含：
 
-1. **YAML frontmatter**（始终包含）：
+1. **YAML frontmatter**（始终包含，**`cssclass: apple-style` 必需**）：
 ```yaml
 ---
-title: [文档标题]
-created: [YYYY-MM-DD]
-tags: [相关的、标签、自动提取]
-cssclass: apple-style
+title: [文档标题]                     # 必需
+created: [YYYY-MM-DD]                 # 必需
+updated: [YYYY-MM-DD]                 # 可选
+tags: [相关的、标签、自动提取]         # 推荐
+cssclass: apple-style                 # ⚠️ 必需！CSS 样式生效关键
 ---
 ```
+
+> [!warning] 重要提醒
+> 如果缺少 `cssclass: apple-style`，Apple 风格的 CSS 样式将**不会生效**！
 
 2. **标题层级**（仅 H1-H3）：
 ```markdown
@@ -288,6 +303,7 @@ cssclass: apple-style
 
 **内容**：
 - [ ] YAML frontmatter 存在且完整
+- [ ] **`cssclass: apple-style` 存在（必需！）**
 - [ ] 关键内容转换为 Callouts
 - [ ] 标点符号标准化
 - [ ] 没有多余的格式残留
@@ -299,6 +315,21 @@ cssclass: apple-style
 - [ ] 链接使用 Apple 蓝（#0071E3）
 
 ## 附加资源
+
+### 资产文件（Assets）
+
+可直接使用的 CSS 样式文件：
+- **`assets/apple-style.css`** - 完整的 Apple 风格 CSS，可直接用于 Obsidian
+- **`assets/README.md`** - CSS 使用指南和安装说明
+- **`assets/cssclass-quick-reference.md`** - `cssclass: apple-style` 快速参考 ⭐ 新增
+
+**使用方法**：
+1. 将 `apple-style.css` 复制到 Obsidian 的 snippets 目录
+2. 在笔记中添加 `cssclass: apple-style` 到 YAML frontmatter（**必需！**）
+3. 享受 Apple 官网风格的排版！
+
+> [!warning] 重要
+> `cssclass: apple-style` 是必需字段，没有它 CSS 样式将无法生效！
 
 ### 参考文件
 
@@ -339,7 +370,7 @@ refinement in details.
 title: Apple Design Principles
 created: 2024-01-25
 tags: [design, apple, principles]
-cssclass: apple-style
+cssclass: apple-style  # ⚠️ 必需！CSS 生效关键
 ---
 
 # Apple Design Principles
@@ -402,6 +433,24 @@ Refinement in details. Every pixel counts.
 用户提供文件路径后，期望：
 - 文件原地升级为 Apple 风格
 - 文件路径保持不变
+- YAML frontmatter 包含 `cssclass: apple-style`（必需）
 - 简洁的完成通知
+
+### YAML Frontmatter 必需字段
+
+> [!warning] 最重要
+> **每个格式化的笔记必须包含以下 YAML frontmatter：**
+
+```yaml
+---
+title: [标题]
+created: [YYYY-MM-DD]
+cssclass: apple-style  # ⚠️ 必需！CSS 样式生效的关键！
+---
+```
+
+**后果**：
+- ✅ 有 `cssclass: apple-style` → CSS 样式生效，Apple 风格呈现
+- ❌ 缺少 `cssclass: apple-style` → CSS 样式无效，普通 Markdown 显示
 
 **记住**：Apple 风格的核心是简洁——文件操作也应如此直接。 🍎
