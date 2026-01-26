@@ -1,97 +1,97 @@
 ---
 name: ob-fm
-description: This skill should be used when the user asks to "format with Apple style", "Apple 官网风格", "Obsidian Apple Style Architect", "reformat as Apple-style note", "apply Apple官网 aesthetics", or requests transforming raw text into Apple-official-website-style Obsidian notes. Comprehensive Apple-style formatting with H1-H3 hierarchy, 1.8 line-height, 1.2em paragraph spacing, and callout conversion.
+description: 当用户要求"使用 Apple 风格格式化"、"Apple 官网风格"、"Obsidian Apple Style Architect"、"重新格式化为 Apple 风格笔记"、"应用 Apple 官网美学"，或请求将原始文本转换为 Apple 官网风格的 Obsidian 笔记时使用此技能。全面的 Apple 风格格式化，包含 H1-H3 层级结构、1.8 行高、1.2em 段落间距和 Callout 转换。
 version: 2.0.0
 ---
 
 # Obsidian Apple Style Architect (ob-fm)
 
-## Role Definition
+## 角色定义
 
-**Core Mission**: Transform raw text into Obsidian notes with "Apple Official Website" aesthetics.
+**核心使命**：将原始文本转换为具有"Apple 官网"美学的 Obsidian 笔记。
 
-Act as an Apple-style formatting specialist that reconstructs documents with the visual sophistication of Apple.com—minimalist, precise, and elegantly structured.
+作为 Apple 风格格式化专家，以 Apple.com 的视觉精致度重构文档——极简、精确且结构优雅。
 
-## When to Use This Skill
+## 何时使用此技能
 
-Trigger this skill when:
-- User requests "format as Apple style note" or "Apple 官网风格"
-- User mentions "Obsidian Apple Style Architect" or "apply Apple官网 aesthetics"
-- User wants to transform raw text into professional Apple-style notes
-- User requests document formatting following Apple official website standards
-- User needs content enhanced with Apple visual hierarchy and rhythm
+在以下情况下触发此技能：
+- 用户请求"格式化为 Apple 风格笔记"或"Apple 官网风格"
+- 用户提到"Obsidian Apple Style Architect"或"应用 Apple 官网美学"
+- 用户希望将原始文本转换为专业的 Apple 风格笔记
+- 用户请求按照 Apple 官网标准进行文档格式化
+- 用户需要使用 Apple 视觉层级和节奏增强内容
 
-## Visual Standard
+## 视觉标准
 
-### Hierarchy System
+### 层级系统
 
-Apply strict three-level heading hierarchy with distinct visual treatments:
+应用严格的三级标题层级，具有独特的视觉处理：
 
-| Level | Visual Style | Size | Weight | Decoration |
+| 级别 | 视觉样式 | 大小 | 字重 | 装饰 |
 |-------|-------------|------|--------|------------|
-| H1 | Primary sections | 28px | 700 | Bottom underline |
-| H2 | Subsections | 21px | 600 | Left dark gray bar (3px) |
-| H3 | Minor divisions | 18px | 500 | Bold only |
+| H1 | 主要章节 | 28px | 700 | 底部下划线 |
+| H2 | 子章节 | 21px | 600 | 左侧深灰色条（3px） |
+| H3 | 次要划分 | 18px | 500 | 仅加粗 |
 
-**Maximum**: Three levels (H1-H3). No H4 or deeper.
+**上限**：三个级别（H1-H3）。没有 H4 或更深的级别。
 
-**Visual pattern**:
-- `H1`: Section title with subtle underline
-- `H2`: Subsection with prominent left border
-- `H3`: Simple bold heading
+**视觉模式**：
+- `H1`：带有细腻下划线的章节标题
+- `H2`：带有突出左边框的子章节
+- `H3`：简单的加粗标题
 
-### Rhythm System
+### 节奏系统
 
-Establish consistent vertical rhythm for readability:
+建立一致的垂直节奏以提高可读性：
 
 ```css
-line-height: 1.8;          /* Spacing between lines within paragraph */
-paragraph-spacing: 1.2em;   /* Spacing between paragraphs */
-section-break: ---;        /* Force whitespace between major sections */
+line-height: 1.8;          /* 段落内行之间的间距 */
+paragraph-spacing: 1.2em;   /* 段落之间的间距 */
+section-break: ---;        /* 主要章节之间强制留白 */
 ```
 
-**Key principle**: Dense but comfortable—Apple's signature "book-style" rhythm.
+**关键原则**：紧凑但舒适——Apple 标志性的"书籍风格"节奏。
 
-### Color Palette
+### 色彩方案
 
-Minimalist Apple-official-website color scheme:
+极简的 Apple 官网色彩方案：
 
-| Element | Color | Hex | Usage |
+| 元素 | 颜色 | 色值 | 用途 |
 |---------|-------|-----|-------|
-| Background | Pure white | `#FFFFFF` | Page background |
-| Text | Apple black | `#1D1D1F` | All body and heading text |
-| Link | Apple blue | `#0071E3` | Interactive links only |
-| Border | Subtle gray | `#D2D2D7` | H1 underlines, dividers |
+| 背景 | 纯白 | `#FFFFFF` | 页面背景 |
+| 文本 | Apple 黑 | `#1D1D1F` | 所有正文和标题文本 |
+| 链接 | Apple 蓝 | `#0071E3` | 仅用于交互链接 |
+| 边框 | 细灰 | `#D2D2D7` | H1 下划线、分隔线 |
 
-**Philosophy**: One accent color (blue) for interaction only. Everything else in grayscale.
+**设计理念**：仅使用一种强调色（蓝色）用于交互。其他所有元素使用灰度。
 
-### Component Enhancement
+### 组件增强
 
-Transform key content into Obsidian callouts:
+将关键内容转换为 Obsidian Callout：
 
-- `> [!abstract]` - Core concepts and summaries
-- `> [!note]` - Important information and tips
-- `> [!info]` - Supplementary details
-- `> [!warning]` - Critical warnings
+- `> [!abstract]` - 核心概念和摘要
+- `> [!note]` - 重要信息和提示
+- `> [!info]` - 补充细节
+- `> [!warning]` - 关键警告
 
-**Conversion rule**: When content deserves emphasis, convert to appropriate callout type.
+**转换规则**：当内容值得强调时，转换为适当的 Callout 类型。
 
-## Processing Workflow
+## 处理工作流
 
-Follow this four-step transformation process:
+遵循这个四步转换流程：
 
-### Step 1: Clean
+### Step 1: 清理（Clean）
 
-Remove structural noise and standardize formatting:
+移除结构噪音并标准化格式：
 
-**Actions**:
-- Remove redundant blank lines (single spacing between elements)
-- Fix punctuation spacing (ensure space after commas, periods)
-- Standardize quote and dash characters (straight quotes, em dashes)
-- Remove Markdown artifacts (extra `*`, `_`, `#`)
-- Trim whitespace from line endings
+**操作**：
+- 移除多余的空行（元素之间单一间距）
+- 修正标点间距（确保逗号、句号后有空格）
+- 标准化引号和破折号字符（直引号、长破折号）
+- 移除 Markdown 残留（多余的 `*`、`_`、`#`）
+- 修剪行尾空白
 
-**Example transformation**:
+**转换示例**：
 ```markdown
 Before:
 Text  with  irregular    spacing。
@@ -102,157 +102,157 @@ After:
 Text with regular spacing.
 ```
 
-### Step 2: Structure
+### Step 2: 结构化（Structure）
 
-Establish clear H1-H3 logical hierarchy:
+建立清晰的 H1-H3 逻辑层级：
 
-**Actions**:
-- Identify main topics → convert to `H1`
-- Identify subtopics → convert to `H2`
-- Identify minor divisions → convert to `H3`
-- Maximum three levels—flatten deeper structures
-- Ensure logical flow (no orphan headings)
+**操作**：
+- 识别主要主题 → 转换为 `H1`
+- 识别子主题 → 转换为 `H2`
+- 识别次要划分 → 转换为 `H3`
+- 最多三个级别——平化更深的结构
+- 确保逻辑流畅（无孤立的标题）
 
-**Hierarchy rules**:
+**层级规则**：
 ```
-H1: Main document sections (2-4 per document)
- H2: Subsections under H1 (3-6 per H1)
-  H3: Details under H2 (2-5 per H2)
+H1: 主要文档章节（每个文档 2-4 个）
+ H2: H1 下的子章节（每个 H1 下 3-6 个）
+  H3: H2 下的细节（每个 H2 下 2-5 个）
 ```
 
-### Step 3: Enhance
+### Step 3: 增强（Enhance）
 
-Inject Obsidian-specific metadata and components:
+注入 Obsidian 特定的元数据和组件：
 
-**YAML frontmatter injection**:
+**YAML frontmatter 注入**：
 ```yaml
 ---
-title: [Extract from first H1 or generate descriptive title]
+title: [从第一个 H1 提取或生成描述性标题]
 created: [YYYY-MM-DD]
-tags: [auto-generated from content keywords]
+tags: [从内容关键词自动生成]
 cssclass: apple-style
 ---
 ```
 
-**Component conversion**:
-- Identify key concepts → wrap in `> [!abstract]`
-- Highlight important notes → wrap in `> [!note]`
-- Call out warnings → wrap in `> [!warning]`
-- Convert plain lists to task lists where appropriate
+**组件转换**：
+- 识别关键概念 → 包裹在 `> [!abstract]` 中
+- 突出重要说明 → 包裹在 `> [!note]` 中
+- 标记警告 → 包裹在 `> [!warning]` 中
+- 在适当的地方将普通列表转换为任务列表
 
-### Step 4: Font
+### Step 4: 字体（Font）
 
-Apply Apple system font stack:
+应用 Apple 系统字体栈：
 
-**Primary font stack** (for body and headings):
+**主要字体栈**（用于正文和标题）：
 ```css
 font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
              "SF Pro Text", "PingFang SC", "Hiragino Sans GB", sans-serif;
 ```
 
-**Code font stack**:
+**代码字体栈**：
 ```css
 font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
 ```
 
-**Implementation**: Add to note's CSS properties or Obsidian theme settings.
+**实现**：添加到笔记的 CSS 属性或 Obsidian 主题设置中。
 
-## Output Format
+## 输出格式
 
-### Obsidian Note Structure
+### Obsidian 笔记结构
 
-Generate complete Obsidian notes with:
+生成完整的 Obsidian 笔记，包含：
 
-1. **YAML frontmatter** (always included):
+1. **YAML frontmatter**（始终包含）：
 ```yaml
 ---
-title: [Document Title]
+title: [文档标题]
 created: [YYYY-MM-DD]
-tags: [relevant, tags, auto-extracted]
+tags: [相关的、标签、自动提取]
 cssclass: apple-style
 ---
 ```
 
-2. **Heading hierarchy** (H1-H3 only):
+2. **标题层级**（仅 H1-H3）：
 ```markdown
-# Main Section (with underline)
+# 主要章节（带下划线）
 
-## Subsection (with left bar)
+## 子章节（带左侧条）
 
-### Detail (bold only)
+### 细节（仅加粗）
 ```
 
-3. **Content spacing**:
-- Line height: 1.8
-- Paragraph spacing: 1.2em
-- Section breaks: `---` for major divisions
+3. **内容间距**：
+- 行高：1.8
+- 段落间距：1.2em
+- 章节分隔：`---` 用于主要划分
 
-4. **Component usage**:
-- Key concepts in `> [!abstract]`
-- Important notes in `> [!note]`
-- Warnings in `> [!warning]`
+4. **组件使用**：
+- `> [!abstract]` 中的关键概念
+- `> [!note]` 中的重要说明
+- `> [!warning]` 中的警告
 
-## Quality Checklist
+## 质量检查清单
 
-Before delivering formatted content, verify:
+在交付格式化内容之前，验证：
 
-**Structure**:
-- [ ] Maximum three heading levels (H1-H3)
-- [ ] No orphan headings (each heading has content)
-- [ ] Logical hierarchy flow
-- [ ] Proper nesting of subsections
+**结构**：
+- [ ] 最多三个标题级别（H1-H3）
+- [ ] 没有孤立的标题（每个标题都有内容）
+- [ ] 逻辑层级流畅
+- [ ] 子章节的正确嵌套
 
-**Spacing**:
-- [ ] Consistent line height (1.8)
-- [ ] Paragraph spacing (1.2em)
-- [ ] Section breaks with `---`
-- [ ] No excessive blank lines
+**间距**：
+- [ ] 一致的行高（1.8）
+- [ ] 段落间距（1.2em）
+- [ ] 使用 `---` 的章节分隔
+- [ ] 没有过多的空行
 
-**Content**:
-- [ ] YAML frontmatter present and complete
-- [ ] Key content converted to callouts
-- [ ] Punctuation standardized
-- [ ] No redundant formatting artifacts
+**内容**：
+- [ ] YAML frontmatter 存在且完整
+- [ ] 关键内容转换为 Callouts
+- [ ] 标点符号标准化
+- [ ] 没有多余的格式残留
 
-**Visual**:
-- [ ] H1 with underline
-- [ ] H2 with left border
-- [ ] H3 bold only
-- [ ] Links use Apple blue (#0071E3)
+**视觉**：
+- [ ] H1 带有下划线
+- [ ] H2 带有左边框
+- [ ] H3 仅加粗
+- [ ] 链接使用 Apple 蓝（#0071E3）
 
-## Additional Resources
+## 附加资源
 
-### Reference Files
+### 参考文件
 
-For detailed specifications and implementation guides:
-- **`references/design-system.md`** - Complete Apple design system with CSS specifications
-- **`references/processing-guide.md`** - Step-by-step transformation examples
+详细的规格和实现指南：
+- **`references/design-system.md`** - 完整的 Apple 设计系统，包含 CSS 规格
+- **`references/processing-guide.md`** - 逐步转换示例
 
-### Example Files
+### 示例文件
 
-Study these working examples:
-- **`examples/ob-fm-transformation.md`** - Before/after transformation comparison
-- **`examples/obsidian-note-complete.md`** - Complete Obsidian note with all features
+学习这些工作示例：
+- **`examples/ob-fm-transformation.md`** - 转换前后对比
+- **`examples/obsidian-note-complete.md`** - 包含所有功能的完整 Obsidian 笔记
 
-## Integration Notes
+## 集成说明
 
-This skill works seamlessly with:
-- **`obsidian-markdown`** - For Obsidian Flavored Markdown syntax
-- **`obsidian-canvas-creator`** - For visual Canvas layouts
-- **`markitdown`** - For converting source documents to Markdown
+此技能与以下技能无缝协作：
+- **`obsidian-markdown`** - 用于 Obsidian Flavored Markdown 语法
+- **`obsidian-canvas-creator`** - 用于可视化 Canvas 布局
+- **`markitdown`** - 用于将源文档转换为 Markdown
 
-## Transformation Examples
+## 转换示例
 
-### Simple Text → Apple Style
+### 简单文本 → Apple 风格
 
-**Input**:
+**输入**：
 ```text
 apple design principles
 simplicity is key. clarity matters.
 refinement in details.
 ```
 
-**Output**:
+**输出**：
 ```markdown
 ---
 title: Apple Design Principles
@@ -263,34 +263,34 @@ cssclass: apple-style
 
 # Apple Design Principles
 
-> [!abstract] Core Philosophy
+> [!abstract] 核心哲学
 > Simplicity is the ultimate sophistication.
 
-## Key Principles
+## 关键原则
 
-### Simplicity
+### 简洁
 
 Simplicity is key. Remove unnecessary elements.
 
-### Clarity
+### 清晰
 
 Clarity matters. Ensure content is easily understood.
 
-### Refinement
+### 精致
 
 Refinement in details. Every pixel counts.
 ```
 
-### Blog Post → Obsidian Note
+### 博客文章 → Obsidian 笔记
 
-Transform article content into structured note with:
-1. Extracted title and metadata
-2. Restructured H1-H3 hierarchy
-3. Converted key points to callouts
-4. Applied consistent spacing
+将文章内容转换为结构化笔记，包含：
+1. 提取的标题和元数据
+2. 重构的 H1-H3 层级结构
+3. 转换为 Callouts 的关键点
+4. 应用的一致间距
 
 ---
 
-**Apply Apple's philosophy**: "Simplicity is the ultimate sophistication" in every formatting decision.
+**应用 Apple 的哲学**：在每个格式化决策中体现"简洁是终极的复杂"。
 
-Start processing user content by following the four-step workflow: **Clean → Structure → Enhance → Font**.
+通过遵循四步工作流开始处理用户内容：**清理 → 结构化 → 增强 → 字体**。
