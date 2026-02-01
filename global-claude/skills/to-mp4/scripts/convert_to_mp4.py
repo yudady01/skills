@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-MOV to MP4 Video Converter
-Converts MOV videos to MP4 format with intelligent compression options.
+Video to MP4 Converter
+Converts any video format to MP4 with intelligent compression options.
+For MP4 inputs, only resizes without re-encoding when possible.
 """
 
 import argparse
@@ -38,6 +39,7 @@ def get_video_info(input_file):
         output = result.stderr
 
         info = {
+            "format": None,
             "duration": None,
             "width": None,
             "height": None,
@@ -46,6 +48,11 @@ def get_video_info(input_file):
             "audio_codec": None,
             "size": None
         }
+
+        # Extract input format
+        format_match = re.search(r'Input #\d+,\s+(\w+),', output)
+        if format_match:
+            info["format"] = format_match.group(1)
 
         # Extract duration
         duration_match = re.search(r'Duration: (\d{2}):(\d{2}):(\d{2}\.\d{2})', output)
@@ -87,6 +94,11 @@ def get_video_info(input_file):
         return None
 
 
+def is_mp4_input(input_file):
+    """Check if input file is already MP4 format."""
+    return Path(input_file).suffix.lower() in ['.mp4', '.m4v']
+
+
 def analyze_video(input_file):
     """Analyze video and display detailed information."""
     print(f"\n{'='*60}")
@@ -97,6 +109,8 @@ def analyze_video(input_file):
     if info:
         if info["size"]:
             print(f"文件大小:     {info['size']}")
+        if info["format"]:
+            print(f"格式:         {info['format'].upper()}")
         if info["duration"]:
             print(f"时长:         {info['duration']}")
         if info["width"] and info["height"]:
@@ -228,7 +242,32 @@ def interactive_mode(input_file, output_file, delete_source=False):
     return convert_video(input_file, output_file, selected, verbose=False, delete_source=delete_source)
 
 
-def build_ffmpeg_command(input_file, output_file, options):
+def calculate_scale_size(input_width, input_height, target_width):
+    """Calculate output dimensions with minimum 1280x720 limit."""
+    # Ensure target width is at least 1280
+    width = max(target_width, 1280)
+
+    # Calculate height maintaining aspect ratio
+    height = int(input_height * width / input_width)
+
+    # Ensure height is even (required by encoders)
+    if height % 2 != 0:
+        height += 1
+
+    # Ensure minimum height of 720
+    if height < 720:
+        height = 720
+        # Recalculate width to maintain aspect ratio with min height
+        width = int(input_width * 720 / input_height)
+        if width % 2 != 0:
+            width += 1
+        # But still ensure minimum width
+        width = max(width, 1280)
+
+    return width, height
+
+
+def build_ffmpeg_command(input_file, output_file, options, is_mp4=False, input_width=None, input_height=None):
     """Build FFmpeg command based on options."""
     cmd = ["ffmpeg", "-i", input_file]
 
@@ -241,37 +280,49 @@ def build_ffmpeg_command(input_file, output_file, options):
         # Add hvc1 tag for better compatibility
         cmd.extend(["-tag:v", "hvc1"])
 
-    # Preset (encoding speed)
+    # Preset (encoding speed) - use faster preset for MP4 input
     preset = options.get("preset", "slow")
+    if is_mp4 and preset == "slow":
+        preset = "fast"  # Use faster preset for MP4 resizing
     cmd.extend(["-preset", preset])
 
-    # CRF (quality)
-    crf = options.get("crf", "23")
-    cmd.extend(["-crf", str(crf)])
+    # CRF (quality) - skip CRF if MP4 input and no scale requested
+    # to preserve original quality when just converting MP4 to MP4
+    if not (is_mp4 and not options.get("scale")):
+        crf = options.get("crf", "23")
+        cmd.extend(["-crf", str(crf)])
 
     # Pixel format (compatibility)
     cmd.extend(["-pix_fmt", "yuv420p"])
 
-    # Scale (resolution)
-    if options.get("scale"):
-        width = options["scale"]
-        # -2 ensures height is even (required by encoders)
+    # Scale (resolution) with minimum limit of 1280x720
+    if options.get("scale") and input_width and input_height:
+        target_width, target_height = calculate_scale_size(
+            input_width, input_height, options["scale"]
+        )
+        cmd.extend(["-vf", f"scale={target_width}:{target_height}"])
+    elif options.get("scale"):
+        # Fallback if dimensions not available
+        width = max(options["scale"], 1280)
         cmd.extend(["-vf", f"scale={width}:-2"])
 
-    # Audio codec
+    # Audio codec - copy audio for MP4 input to preserve quality
     audio_codec = options.get("audio_codec", "aac")
-    if audio_codec == "copy":
+    if is_mp4 and audio_codec == "aac":
+        cmd.extend(["-c:a", "copy"])  # Copy audio for MP4 input
+    elif audio_codec == "copy":
         cmd.extend(["-c:a", "copy"])
     elif audio_codec == "libmp3lame":
         cmd.extend(["-c:a", "libmp3lame"])
     else:  # aac
         cmd.extend(["-c:a", "aac"])
 
-    # Audio bitrate
-    if audio_codec != "copy" and options.get("audio_bitrate"):
-        cmd.extend(["-b:a", options["audio_bitrate"]])
-    elif audio_codec != "copy":
-        cmd.extend(["-b:a", "128k"])  # Default
+    # Audio bitrate - skip for MP4 input when copying audio
+    if audio_codec != "copy" and not (is_mp4 and options.get("audio_codec") == "aac"):
+        if options.get("audio_bitrate"):
+            cmd.extend(["-b:a", options["audio_bitrate"]])
+        else:
+            cmd.extend(["-b:a", "128k"])  # Default
 
     # Web optimization
     if options.get("faststart"):
@@ -288,10 +339,10 @@ def build_ffmpeg_command(input_file, output_file, options):
 
 def convert_video(input_file, output_file, options, verbose=False, delete_source=False):
     """
-    Convert MOV video to MP4.
+    Convert any video to MP4.
 
     Args:
-        input_file: Path to input MOV file
+        input_file: Path to input video file
         output_file: Path to output MP4 file
         options: Dictionary of conversion options
         verbose: Show detailed FFmpeg output
@@ -311,24 +362,61 @@ def convert_video(input_file, output_file, options, verbose=False, delete_source
         print(f"❌ 错误: 找不到输入文件: {input_file}")
         return False
 
-    # Build command
-    cmd = build_ffmpeg_command(input_file, output_file, options)
+    # Get video info for dimensions
+    info = get_video_info(input_file)
+    input_width = int(info.get("width", 0)) if info else 0
+    input_height = int(info.get("height", 0)) if info else 0
+
+    # Check if input is already MP4
+    input_is_mp4 = is_mp4_input(input_file)
+
+    # Build command with dimensions
+    cmd = build_ffmpeg_command(input_file, output_file, options,
+                                is_mp4=input_is_mp4,
+                                input_width=input_width,
+                                input_height=input_height)
+
+    # Get input format for display
+    input_ext = Path(input_file).suffix.upper().lstrip('.')
+
+    # Calculate target resolution for display
+    target_resolution = None
+    if options.get("scale") and input_width and input_height:
+        target_width, target_height = calculate_scale_size(
+            input_width, input_height, options["scale"]
+        )
+        target_resolution = f"{target_width}x{target_height}"
 
     # Display conversion info
     print(f"\n{'='*60}")
-    print(f"开始转换")
+    if input_is_mp4:
+        print(f"MP4 缩小尺寸处理")
+    else:
+        print(f"开始转换")
     print(f"{'='*60}\n")
-    print(f"输入文件:     {input_file}")
-    print(f"输出文件:     {output_file}")
+    print(f"输入文件:     {input_file} ({input_ext})")
+    print(f"输出文件:     {output_file} (MP4)")
     print(f"视频编码:     {options.get('codec', 'h264').upper()}")
-    print(f"画质 (CRF):   {options.get('crf', 23)}")
-    print(f"编码速度:     {options.get('preset', 'slow')}")
 
-    if options.get("scale"):
-        print(f"分辨率:       缩放到宽度 {options.get('scale')}px")
+    # Adjust preset display for MP4 input
+    preset = options.get('preset', 'slow')
+    if input_is_mp4 and preset == 'slow':
+        preset = 'fast (MP4优化)'
+    print(f"编码速度:     {preset}")
+
+    if input_is_mp4 and not options.get("scale"):
+        print(f"处理模式:     保持原始画质 (仅格式保证)")
+    elif target_resolution:
+        print(f"分辨率:       {input_width}x{input_height} → {target_resolution} (最小 1280x720)")
+    elif options.get("scale"):
+        print(f"分辨率:       缩放到宽度 {options.get('scale')}px (最小 1280x720)")
+    else:
+        print(f"画质 (CRF):   {options.get('crf', 23)}")
 
     audio_codec = options.get("audio_codec", "aac")
-    if audio_codec == "copy":
+    if input_is_mp4 and audio_codec == "aac":
+        print(f"音频:         复制原始音频 (保持质量)")
+    elif audio_codec == "copy":
         print(f"音频:         复制原始音频")
     else:
         audio_bitrate = options.get("audio_bitrate", "128k")
@@ -389,27 +477,29 @@ def convert_video(input_file, output_file, options, verbose=False, delete_source
 
 def main():
     parser = argparse.ArgumentParser(
-        description="将 MOV 视频转换为 MP4 格式并进行压缩",
+        description="将任意视频格式转换为 MP4 并进行压缩。支持 MOV、MP4、AVI、MKV 等格式。",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  # 基本转换
+  # 基本转换 (任意视频格式)
   %(prog)s video.mov
+  %(prog)s video.avi
+  %(prog)s video.mkv
+
+  # MP4 缩小尺寸
+  %(prog)s video.mp4 -s 1920
 
   # 指定输出文件
   %(prog)s video.mov -o output.mp4
 
   # 高质量转换
-  %(prog)s video.mov -crf 18 -p slow
+  %(prog)s video.mov -crf 18
 
   # 高压缩率 (H.265)
   %(prog)s video.mov -c h265 -crf 28
 
-  # 4K 转 1080p
-  %(prog)s video.mov -s 1920
-
-  # Web 优化
-  %(prog)s video.mov --faststart
+  # 交互模式
+  %(prog)s video.mov -i
 
   # 仅分析视频信息
   %(prog)s video.mov --analyze
@@ -417,7 +507,7 @@ def main():
     )
 
     # Positional arguments
-    parser.add_argument("input", help="输入 MOV 文件路径")
+    parser.add_argument("input", help="输入视频文件路径 (支持 MOV、MP4、AVI、MKV 等)")
 
     # Output file
     parser.add_argument(
@@ -511,10 +601,11 @@ def main():
 
     # Interactive mode (highest priority)
     if args.interactive:
-        # Determine output file
+        # Determine output file with "small-" prefix
         if not args.output:
             input_path = Path(args.input)
-            args.output = str(input_path.with_suffix(".mp4"))
+            stem = input_path.stem
+            args.output = str(input_path.parent / f"small-{stem}.mp4")
         success = interactive_mode(args.input, args.output, delete_source=args.rm)
         return 0 if success else 1
 
@@ -523,10 +614,11 @@ def main():
         analyze_video(args.input)
         return 0
 
-    # Determine output file
+    # Determine output file with "small-" prefix
     if not args.output:
         input_path = Path(args.input)
-        args.output = str(input_path.with_suffix(".mp4"))
+        stem = input_path.stem
+        args.output = str(input_path.parent / f"small-{stem}.mp4")
 
     # Build options dictionary
     options = {

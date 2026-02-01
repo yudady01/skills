@@ -1,10 +1,11 @@
-# MOV 转 MP4 视频转换器
+# 视频转 MP4 转换器
 
-将 MOV 视频转换为 MP4 格式并进行智能压缩，显著减小文件体积的同时保持良好画质。
+将任意视频格式转换为 MP4 格式并进行智能压缩。支持 MOV、MP4、AVI、MKV 等格式，显著减小文件体积的同时保持良好画质。
 
 ## 功能特性
 
-- **格式转换**: MOV → MP4
+- **任意格式支持**: MOV、MP4、AVI、MKV、FLV 等
+- **MP4 优化**: 对 MP4 输入自动使用更快的处理方式
 - **智能压缩**: 支持 H.264 和 H.265 编码
 - **交互模式**: 提供 3 种预设压缩方案供选择
 - **画质控制**: 可调节 CRF 值（18-28）
@@ -12,6 +13,7 @@
 - **音频优化**: 支持多种音频编码和比特率
 - **Web 优化**: 支持快速开始播放
 - **视频分析**: 查看视频详细信息
+- **自动清理**: 转换成功后可自动删除源文件
 
 ## 快速开始
 
@@ -44,9 +46,16 @@ ffmpeg -version
 python scripts/convert_to_mp4.py video.mov -i
 ```
 
-**基本转换**:
+**基本转换（任意格式）**:
 ```bash
 python scripts/convert_to_mp4.py video.mov
+python scripts/convert_to_mp4.py video.avi
+python scripts/convert_to_mp4.py video.mkv
+```
+
+**MP4 缩小尺寸**:
+```bash
+python scripts/convert_to_mp4.py video.mp4 -s 1920
 ```
 
 ## 交互模式
@@ -84,7 +93,7 @@ python scripts/convert_to_mp4.py video.mov -o output.mp4
 ### 高质量转换
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -crf 18 -p slow
+python scripts/convert_to_mp4.py video.mov -crf 18
 ```
 
 ### 高压缩率（H.265）
@@ -97,6 +106,18 @@ python scripts/convert_to_mp4.py video.mov -c h265 -crf 28
 
 ```bash
 python scripts/convert_to_mp4.py video_4k.mov -s 1920
+```
+
+### MP4 缩小尺寸
+
+对于已经是 MP4 格式的视频，自动优化处理：
+
+```bash
+# 4K MP4 转 1080p
+python scripts/convert_to_mp4.py video_4k.mp4 -s 1920
+
+# 自动复制音频，保持原始质量
+python scripts/convert_to_mp4.py video.mp4 -s 1280
 ```
 
 ### Web 优化
@@ -131,10 +152,10 @@ python scripts/convert_to_mp4.py video.mov -i --rm
 
 | 选项 | 说明 | 默认值 |
 |------|------|--------|
-| `input` | 输入 MOV 文件路径 | - |
+| `input` | 输入视频文件路径（支持任意格式） | - |
 | `-o, --output` | 输出 MP4 文件路径 | 输入文件名.mp4 |
 | `-i, --interactive` | 交互模式：从 3 个推荐方案中选择 | false |
-| `--rm` | 转换成功后删除原始 MOV 文件 | false |
+| `--rm` | 转换成功后删除原始文件 | false |
 
 ### 视频设置
 
@@ -159,6 +180,31 @@ python scripts/convert_to_mp4.py video.mov -i --rm
 | `--faststart` | 启用 Web 优化（快速开始播放） |
 | `-v, --verbose` | 显示详细转换信息 |
 | `--analyze` | 仅分析视频信息，不执行转换 |
+
+## MP4 输入优化
+
+当输入文件已经是 MP4 格式时，脚本会自动优化处理：
+
+- **更快的编码速度**: 自动使用 `fast` 预设（而不是 `slow`）
+- **音频复制**: 自动复制音频流而不重新编码，保持原始质量
+- **智能处理**: 当只需要缩小尺寸时，避免不必要的重新编码
+
+```bash
+# MP4 输入会自动优化
+python scripts/convert_to_mp4.py video.mp4 -s 1920
+
+# 输出示例：
+# ============================================================
+# MP4 缩小尺寸处理
+# ============================================================
+#
+# 输入文件:     video.mp4 (MP4)
+# 输出文件:     output.mp4 (MP4)
+# 视频编码:     H264
+# 编码速度:     fast (MP4优化)
+# 分辨率:       缩放到宽度 1920px
+# 音频:         复制原始音频 (保持质量)
+```
 
 ## 参数说明
 
@@ -194,7 +240,7 @@ python scripts/convert_to_mp4.py video.mov -i --rm
 适合大多数使用场景，兼容性好：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -c h264 -crf 23 -p slow
+python scripts/convert_to_mp4.py video.mov -c h264 -crf 23
 ```
 
 ### Web 分享方案
@@ -202,7 +248,7 @@ python scripts/convert_to_mp4.py video.mov -c h264 -crf 23 -p slow
 适合上传到网站或在线播放：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -c h264 -crf 23 -p slow --faststart
+python scripts/convert_to_mp4.py video.mov -c h264 -crf 23 --faststart
 ```
 
 ### 高压缩率方案
@@ -210,7 +256,7 @@ python scripts/convert_to_mp4.py video.mov -c h264 -crf 23 -p slow --faststart
 使用 H.265 编码，体积减少 30-50%：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -c h265 -crf 28 -p slow
+python scripts/convert_to_mp4.py video.mov -c h265 -crf 28
 ```
 
 ### 4K 降分辨率方案
@@ -218,7 +264,7 @@ python scripts/convert_to_mp4.py video.mov -c h265 -crf 28 -p slow
 将 4K 视频缩小到 1080p：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -s 1920 -crf 23
+python scripts/convert_to_mp4.py video.mov -s 1920
 ```
 
 ### 快速预览方案
@@ -239,6 +285,10 @@ python scripts/convert_to_mp4.py video.mov -p fast -crf 26 -s 1280
 
 ## 常见问题
 
+### Q: 支持哪些输入格式？
+
+A: 支持几乎所有视频格式，包括 MOV、MP4、AVI、MKV、FLV、WMV、WebM 等。
+
 ### Q: 如何选择 CRF 值？
 
 A: 从 CRF 23 开始，根据结果调整：
@@ -250,6 +300,13 @@ A: 从 CRF 23 开始，根据结果调整：
 A:
 - **选择 H.264**：需要最佳兼容性、Web 使用、跨平台分享
 - **选择 H.265**：存储空间有限、Apple 设备、不介意兼容性
+
+### Q: MP4 输入有什么特殊处理？
+
+A: 对 MP4 输入：
+- 自动使用更快的编码预设
+- 自动复制音频而不重新编码
+- 主要针对缩小尺寸场景优化
 
 ### Q: 转换时间很长怎么办？
 
@@ -313,6 +370,10 @@ ffmpeg -i input.mov \
 to-mp4/
 ├── SKILL.md              # Skill 定义文件
 ├── README.md             # 使用文档
+├── references/           # 参考文档目录
+│   ├── PROJECT.md        # 项目概述
+│   ├── QUICKSTART.md     # 快速开始
+│   └── USAGE_EXAMPLES.md # 详细示例
 └── scripts/
     └── convert_to_mp4.py # 转换脚本
 ```
