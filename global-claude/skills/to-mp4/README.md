@@ -15,7 +15,7 @@
 - **Web 优化**: 支持快速开始播放
 - **视频分析**: 查看视频详细信息
 - **自动清理**: 转换成功后可自动删除源文件
-- **自动命名**: 输出文件自动添加 `small-` 前缀
+- **默认输出**: 自动输出到 `small/` 文件夹，保持原文件名
 
 ## 快速开始
 
@@ -46,18 +46,30 @@ ffmpeg -version
 **交互模式（推荐）**:
 ```bash
 python scripts/convert_to_mp4.py video.mov -i
+# 输出: video/small/video.mp4
 ```
 
 **基本转换（任意格式）**:
 ```bash
 python scripts/convert_to_mp4.py video.mov
+# 输出: video/small/video.mp4
+
 python scripts/convert_to_mp4.py video.avi
+# 输出: video/small/video.mp4
+
 python scripts/convert_to_mp4.py video.mkv
+# 输出: video/small/video.mp4
 ```
 
 **MP4 缩小尺寸**:
 ```bash
 python scripts/convert_to_mp4.py video.mp4 -s 1920
+# 输出: video/small/video.mp4
+```
+
+**指定输出文件**:
+```bash
+python scripts/convert_to_mp4.py video.mov -o output.mp4
 ```
 
 ## 交互模式
@@ -99,9 +111,9 @@ python scripts/convert_to_mp4.py /path/to/videos --rm
 - **自动查找**: 自动扫描文件夹中的所有视频文件
 - **待处理清单**: 转换前显示所有视频信息（格式、分辨率、大小）
 - **并发处理**: 同时处理多个视频，提升效率
-- **实时进度**: 显示每个视频的转换进度和压缩率
+- **实时进度**: 每 10 秒显示一次转换进度
 - **输出目录**: 默认输出到 `input_dir/small/` 目录
-- **自动命名**: 每个输出文件自动添加 `small-` 前缀
+- **文件命名**: 保持原文件名，不添加前缀
 
 ### 输出示例
 
@@ -119,13 +131,24 @@ python scripts/convert_to_mp4.py /path/to/videos --rm
 
 开始并发转换 (最多 2 个任务)...
 
+每 10 秒报告一次进度
+
+[ 10s] 进度报告:
+  [1] test1.mp4                      进度: 4%
+  [2] test2.mov                      进度: 99%
+
+[ 20s] 进度报告:
+  [1] test1.mp4                      进度: 6%
+  [2] test2.mov                      进度: 99%
+  [3] test3.mp4                      进度: 1%
+
 ✅ [1/4] test2.mov                     5.55MB → 0.54MB (90.2%)
 ✅ [2/4] test3.mp4                     1.80GB → 715.09MB (60.3%)
 ✅ [3/4] test4.mp4                     1.20GB → 432.00MB (64.0%)
 ✅ [4/4] test1.mp4                     765.19MB → 1.37GB (-83.0%)
 
 ============================================================
-批量转换完成!
+批量转换完成! (耗时: 390秒)
 ============================================================
 
 成功:       4/4

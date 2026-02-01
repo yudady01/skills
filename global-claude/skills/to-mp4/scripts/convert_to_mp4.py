@@ -290,7 +290,7 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
     for i, input_file in enumerate(input_files, 1):
         input_path = Path(input_file)
         stem = input_path.stem
-        output_file = str(output_path / f"small-{stem}.mp4")
+        output_file = str(output_path / f"{stem}.mp4")
 
         tasks.append((input_file, output_file, i))
 
@@ -831,7 +831,7 @@ def main():
     # Output file/directory
     parser.add_argument(
         "-o", "--output",
-        help="输出 MP4 文件路径或输出目录 (默认: small-{filename}.mp4 或 input_dir/small)"
+        help="输出 MP4 文件路径或输出目录 (默认: input_dir/small/{filename}.mp4)"
     )
 
     # Video codec
@@ -969,11 +969,14 @@ def main():
 
     # Interactive mode (highest priority)
     if args.interactive:
-        # Determine output file with "small-" prefix
+        # Determine output file (default: small/ folder without prefix)
         if not args.output:
             input_path = Path(args.input)
             stem = input_path.stem
-            args.output = str(input_path.parent / f"small-{stem}.mp4")
+            # Default to small/ folder
+            small_dir = input_path.parent / "small"
+            small_dir.mkdir(parents=True, exist_ok=True)
+            args.output = str(small_dir / f"{stem}.mp4")
         success = interactive_mode(args.input, args.output, delete_source=args.rm)
         return 0 if success else 1
 
@@ -982,11 +985,14 @@ def main():
         analyze_video(args.input)
         return 0
 
-    # Determine output file with "small-" prefix
+    # Determine output file (default: small/ folder without prefix)
     if not args.output:
         input_path = Path(args.input)
         stem = input_path.stem
-        args.output = str(input_path.parent / f"small-{stem}.mp4")
+        # Default to small/ folder
+        small_dir = input_path.parent / "small"
+        small_dir.mkdir(parents=True, exist_ok=True)
+        args.output = str(small_dir / f"{stem}.mp4")
 
     # Build options dictionary
     options = {
