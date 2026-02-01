@@ -15,16 +15,22 @@ description: MOV 视频转换为 MP4 格式并进行压缩。当用户要求转�
 python scripts/convert_to_mp4.py input.mov
 ```
 
-这会使用默认设置（H.264 + CRF 23）将视频转换为 MP4，输出文件为 `input.mp4`。
+这会使用默认设置（H.264 + CRF 23）将视频转换为 MP4，**输出文件默认为 `small/input.mp4`**（在输入文件同目录下的 `small/` 文件夹中）。
 
 ## 基本选项
 
 ### 指定输出文件
 
-使用 `-o` 或 `--output` 指定输出文件名：
+**默认行为**：输出文件会保存在输入文件同目录下的 `small/` 文件夹中。
+
+使用 `-o` 或 `--output` 指定自定义输出路径：
 
 ```bash
-python scripts/convert_to_mp4.py input.mov -o output.mp4
+# 指定输出文件名（仍在 small/ 文件夹中）
+python scripts/convert_to_mp4.py input.mov -o small/output.mp4
+
+# 指定完整输出路径
+python scripts/convert_to_mp4.py input.mov -o /path/to/output.mp4
 ```
 
 ### 选择编码格式
@@ -315,11 +321,17 @@ A:
 
 ## 重要说明
 
-- 默认输出文件与输入文件同名，扩展名改为 `.mp4`
-- 转换过程会显示实时进度和预估完成时间
+### 默认输出位置
+- **单文件转换**：默认输出到 `输入文件同目录/small/文件名.mp4`
+- **批量转换**：默认输出到 `输入目录/small/文件名.mp4`
+- 使用 `-o` 参数可指定自定义输出路径
+
+### 其他说明
+- 转换过程会显示实时进度条和预估完成时间
 - H.265 编码需要较长时间，但压缩率更高
 - Web 优化（`--faststart`）不会影响画质，仅影响播放加载速度
 - 脚本会自动处理 FFmpeg 的安装检查
+- `small/` 文件夹会自动创建，无需手动创建
 
 ## 环境要求
 

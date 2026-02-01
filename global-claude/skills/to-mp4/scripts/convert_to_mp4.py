@@ -13,9 +13,124 @@ import os
 import re
 import glob
 import shutil
+import time
+import threading
+import signal
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
+
+
+# ============================================================================
+# 进度条类 - 实时显示转换进度
+# ============================================================================
+
+class ProgressBar:
+    """基于 ANSI 转义序列的实时进度条"""
+
+    def __init__(self, total=100, width=50, desc="处理中"):
+        self.total = total
+        self.width = width
+        self.desc = desc
+        self.current = 0
+        self.start_time = time.time()
+        self.last_update = 0
+        self.hidden = False
+        self._lock = Lock()
+
+    def update(self, value):
+        """更新进度"""
+        with self._lock:
+            self.current = min(value, self.total)
+            self._display()
+
+    def _display(self):
+        """显示进度条（使用 ANSI 转义序列覆盖同一行）"""
+        if self.hidden:
+            return
+
+        # 计算进度百分比
+        percent = self.current / self.total
+        filled = int(self.width * percent)
+        bar = "█" * filled + "░" * (self.width - filled)
+
+        # 计算速度和预计剩余时间
+        elapsed = time.time() - self.start_time
+        if self.current > 0 and elapsed > 0:
+            speed = self.current / elapsed
+            if speed > 0:
+                remaining = (self.total - self.current) / speed
+                eta_str = self._format_time(remaining)
+            else:
+                eta_str = "--:--"
+        else:
+            eta_str = "--:--"
+
+        # 构建进度条行
+        line = f"\r{self.desc} [{bar}] {self.current:3.0f}/{self.total} ({percent*100:5.1f}%) ETA: {eta_str}"
+
+        # 使用 \r 回到行首，然后输出新内容
+        sys.stdout.write(line)
+        sys.stdout.flush()
+
+    def _format_time(self, seconds):
+        """格式化时间显示"""
+        if seconds < 60:
+            return f"{int(seconds)}秒"
+        elif seconds < 3600:
+            m = int(seconds // 60)
+            s = int(seconds % 60)
+            return f"{m}分{s}秒"
+        else:
+            h = int(seconds // 3600)
+            m = int((seconds % 3600) // 60)
+            return f"{h}时{m}分"
+
+    def finish(self, message=None):
+        """完成进度条"""
+        with self._lock:
+            self.current = self.total
+            if not self.hidden:
+                self._display()
+                if message:
+                    sys.stdout.write(f" {message}\n")
+                else:
+                    sys.stdout.write("\n")
+                sys.stdout.flush()
+            self.hidden = True
+
+    def hide(self):
+        """隐藏进度条"""
+        with self._lock:
+            if not self.hidden:
+                sys.stdout.write("\r" + " " * (self.width + 50) + "\r")
+                sys.stdout.flush()
+            self.hidden = True
+
+    def show(self):
+        """显示进度条"""
+        with self._lock:
+            self.hidden = False
+            self._display()
+
+
+# 全局进度条实例（用于单文件转换）
+global_progress_bar = None
+global_progress_lock = Lock()
+
+
+def set_global_progress_bar(bar):
+    """设置全局进度条"""
+    global global_progress_bar
+    with global_progress_lock:
+        global_progress_bar = bar
+
+
+def get_global_progress_bar():
+    """获取全局进度条"""
+    global global_progress_bar
+    with global_progress_lock:
+        return global_progress_bar
 
 
 def check_ffmpeg():
@@ -311,32 +426,35 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             print(f"  [{idx}] {name}")
 
     print(f"\n开始并发转换 (最多 {max_workers} 个任务)...\n")
-    print("每 10 秒报告一次进度\n")
 
     # Import for progress reporting
-    import time
-
-    # Progress reporting
-    stop_progress = False
     start_time = time.time()
+
+    # Create overall progress bar
+    overall_progress = ProgressBar(total=total, desc="总体进度")
+
+    # Progress reporting thread
+    stop_progress = False
 
     # Store file names for progress display
     file_names = {i: Path(f).name for i, f in enumerate(input_files, 1)}
 
     def progress_reporter():
-        """Thread that reports progress every 10 seconds."""
+        """Thread that reports progress every 5 seconds."""
         nonlocal stop_progress
         last_report_time = start_time
 
         while not stop_progress:
-            time.sleep(1)
+            time.sleep(0.5)
             current_time = time.time()
 
-            # Report every 10 seconds
-            if current_time - last_report_time >= 10:
+            # Report every 5 seconds
+            if current_time - last_report_time >= 5:
+                overall_progress.hide()
+
                 with print_lock:
                     elapsed = int(current_time - start_time)
-                    print(f"[{elapsed:3d}s] 进度报告:", flush=True)
+                    print(f"[{elapsed:3d}s] 任务进度:", flush=True)
 
                 current_progress = get_progress_report()
 
@@ -345,13 +463,18 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
                 else:
                     for idx, progress in sorted(current_progress.items()):
                         name = file_names.get(idx, "Unknown")
-                        safe_print(f"  [{idx}] {name:30} 进度: {progress}%")
+                        # Truncate name if too long
+                        display_name = name[:28] if len(name) > 28 else name
+                        bar_width = 20
+                        filled = int(bar_width * progress / 100)
+                        bar = "█" * filled + "░" * (bar_width - filled)
+                        safe_print(f"  [{idx:2d}] {display_name:28} [{bar}] {progress:3d}%")
 
                 safe_print("")  # Empty line for readability
+                overall_progress.show()
                 last_report_time = current_time
 
     # Start progress reporter thread
-    import threading
     progress_thread = threading.Thread(target=progress_reporter, daemon=True)
     progress_thread.start()
 
@@ -377,24 +500,32 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             completed += 1
             total_input_size += result["input_size"]
 
+            # Update overall progress
+            overall_progress.update(completed)
+
             if result["success"]:
                 total_output_size += result["output_size"]
                 compression = (1 - result["output_size"] / result["input_size"]) * 100
+                overall_progress.hide()
                 safe_print(
                     f"✅ [{completed}/{total}] {Path(input_file).name:30} "
                     f"{result['input_size']:.1f}MB → {result['output_size']:.1f}MB "
                     f"({compression:.1f}%)"
                 )
+                overall_progress.show()
             else:
                 failed += 1
+                overall_progress.hide()
                 safe_print(
                     f"❌ [{completed}/{total}] {Path(input_file).name:30} "
                     f"失败: {result['error']}"
                 )
+                overall_progress.show()
 
     # Stop progress reporter
     stop_progress = True
     progress_thread.join(timeout=2)
+    overall_progress.finish("✅")
 
     # Final summary
     overall_compression = (1 - total_output_size / total_input_size) * 100 if total_input_size > 0 else 0
@@ -741,20 +872,53 @@ def convert_video(input_file, output_file, options, verbose=False, delete_source
 
     print(f"\n{'='*60}\n")
 
-    try:
-        # Run conversion
-        if verbose:
-            # Show full FFmpeg output
-            result = subprocess.run(cmd)
-        else:
-            # Suppress FFmpeg output, only show progress
-            result = subprocess.run(
-                cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
+    # Get duration for progress tracking
+    duration_str = info.get("duration", "") if info else ""
+    duration_seconds = 0
+    if duration_str:
+        try:
+            h, m, s = duration_str.split(':')
+            duration_seconds = int(h) * 3600 + int(m) * 60 + float(s)
+        except:
+            pass
 
-        if result.returncode == 0:
+    # Create progress bar
+    file_name = Path(input_file).name
+    progress = ProgressBar(total=100, desc=f"转换 {file_name[:30]}")
+
+    try:
+        # Run conversion with progress tracking
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+
+        # Track progress by parsing FFmpeg output
+        last_progress = 0
+        for line in process.stderr:
+            if verbose:
+                # In verbose mode, also print FFmpeg output (but hide progress bar temporarily)
+                progress.hide()
+                print(line.strip())
+                progress.show()
+
+            # Parse progress from FFmpeg output
+            prog = parse_ffmpeg_progress(line, duration_seconds)
+            if prog is not None and prog > last_progress:
+                progress.update(prog)
+                last_progress = prog
+
+        process.wait()
+
+        # Finish progress bar
+        if process.returncode == 0:
+            progress.finish("✅")
+        else:
+            progress.finish("❌")
+
+        if process.returncode == 0:
             # Get file sizes
             input_size = os.path.getsize(input_file) / (1024 * 1024)
             output_size = os.path.getsize(output_file) / (1024 * 1024)
