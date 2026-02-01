@@ -3,6 +3,7 @@
 Video to MP4 Converter
 Converts any video format to MP4 with intelligent compression options.
 For MP4 inputs, only resizes without re-encoding when possible.
+Supports batch processing of folders.
 """
 
 import argparse
@@ -10,7 +11,11 @@ import sys
 import subprocess
 import os
 import re
+import glob
+import shutil
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Lock
 
 
 def check_ffmpeg():
@@ -97,6 +102,214 @@ def get_video_info(input_file):
 def is_mp4_input(input_file):
     """Check if input file is already MP4 format."""
     return Path(input_file).suffix.lower() in ['.mp4', '.m4v']
+
+
+def is_video_file(file_path):
+    """Check if file is a video file based on extension."""
+    video_extensions = {
+        '.mp4', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.webm',
+        '.m4v', '.mpg', '.mpeg', '.3gp', '.ogv', '.ts', '.m2ts',
+        '.mov', '.f4v', '.asf', '.rm', '.rmvb', '.vob', '.divx'
+    }
+    return Path(file_path).suffix.lower() in video_extensions
+
+
+def find_videos_in_directory(directory):
+    """Find all video files in a directory."""
+    video_files = []
+    directory_path = Path(directory)
+
+    if not directory_path.is_dir():
+        return video_files
+
+    # Common video file patterns
+    patterns = [
+        '*.mp4', '*.mov', '*.avi', '*.mkv', '*.flv', '*.wmv',
+        '*.webm', '*.m4v', '*.mpg', '*.mpeg', '*.3gp', '*.ogv',
+        '*.ts', '*.m2ts', '*.f4v', '*.asf', '*.rm', '*.rmvb',
+        '*.vob', '*.divx', '*.MP4', '*.MOV', '*.AVI', '*.MKV'
+    ]
+
+    for pattern in patterns:
+        video_files.extend(directory_path.glob(pattern))
+
+    # Remove duplicates and sort
+    video_files = sorted(list(set(video_files)))
+    return [str(f) for f in video_files]
+
+
+# Thread-safe print for concurrent processing
+print_lock = Lock()
+
+
+def safe_print(*args, **kwargs):
+    """Thread-safe print function."""
+    with print_lock:
+        print(*args, **kwargs)
+
+
+def convert_single_video(input_file, output_file, options, verbose=False, delete_source=False, index=None, total=None):
+    """Convert a single video file, returning result info."""
+    result = {
+        "input": input_file,
+        "output": output_file,
+        "success": False,
+        "error": None,
+        "input_size": 0,
+        "output_size": 0
+    }
+
+    try:
+        # Check FFmpeg
+        if not check_ffmpeg():
+            result["error"] = "FFmpeg 未安装"
+            return result
+
+        # Check input file
+        if not os.path.exists(input_file):
+            result["error"] = "找不到输入文件"
+            return result
+
+        # Get input file size
+        result["input_size"] = os.path.getsize(input_file) / (1024 * 1024)
+
+        # Get video info for dimensions
+        info = get_video_info(input_file)
+        input_width = int(info.get("width", 0)) if info else 0
+        input_height = int(info.get("height", 0)) if info else 0
+
+        # Check if input is already MP4
+        input_is_mp4 = is_mp4_input(input_file)
+
+        # Build command
+        cmd = build_ffmpeg_command(input_file, output_file, options,
+                                    is_mp4=input_is_mp4,
+                                    input_width=input_width,
+                                    input_height=input_height)
+
+        # Run conversion
+        if verbose:
+            result_proc = subprocess.run(cmd)
+        else:
+            result_proc = subprocess.run(
+                cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
+        if result_proc.returncode == 0:
+            result["output_size"] = os.path.getsize(output_file) / (1024 * 1024)
+            result["success"] = True
+
+            # Delete source if requested
+            if delete_source:
+                try:
+                    os.remove(input_file)
+                except:
+                    pass
+        else:
+            result["error"] = f"转换失败 (退出码: {result_proc.returncode})"
+
+    except Exception as e:
+        result["error"] = str(e)
+
+    return result
+
+
+def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=False,
+                         delete_source=False, max_workers=2):
+    """Convert multiple videos concurrently."""
+    total = len(input_files)
+    if total == 0:
+        print("❌ 没有找到视频文件")
+        return
+
+    print(f"\n{'='*60}")
+    print(f"批量转换: {total} 个视频")
+    print(f"{'='*60}\n")
+
+    # Prepare output directory
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # Prepare conversion tasks
+    tasks = []
+    for i, input_file in enumerate(input_files, 1):
+        input_path = Path(input_file)
+        stem = input_path.stem
+        output_file = str(output_path / f"small-{stem}.mp4")
+
+        tasks.append((input_file, output_file, i))
+
+    # Display task list
+    print(f"待处理清单:\n")
+    for idx, input_file, _ in tasks:
+        info = get_video_info(input_file)
+        name = Path(input_file).name
+        if info and info.get("size"):
+            size = info.get("size", "Unknown")
+            fmt = info.get("format") or "Unknown"
+            fmt = fmt.upper() if fmt else "Unknown"
+            width = str(info.get("width") or "?")
+            height = str(info.get("height") or "?")
+            res_str = f"{width}x{height}"
+            print(f"  [{idx}] {name:30} {fmt:6} {res_str:10}  {size}")
+        else:
+            print(f"  [{idx}] {name}")
+
+    print(f"\n开始并发转换 (最多 {max_workers} 个任务)...\n")
+
+    # Convert videos concurrently
+    completed = 0
+    failed = 0
+    total_input_size = 0
+    total_output_size = 0
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_task = {}
+        for input_file, output_file, idx in tasks:
+            future = executor.submit(
+                convert_single_video,
+                input_file, output_file, options, verbose, delete_source, idx, total
+            )
+            future_to_task[future] = (input_file, output_file, idx)
+
+        for future in as_completed(future_to_task):
+            input_file, output_file, idx = future_to_task[future]
+            result = future.result()
+
+            completed += 1
+            total_input_size += result["input_size"]
+
+            if result["success"]:
+                total_output_size += result["output_size"]
+                compression = (1 - result["output_size"] / result["input_size"]) * 100
+                safe_print(
+                    f"✅ [{completed}/{total}] {Path(input_file).name:30} "
+                    f"{result['input_size']:.1f}MB → {result['output_size']:.1f}MB "
+                    f"({compression:.1f}%)"
+                )
+            else:
+                failed += 1
+                safe_print(
+                    f"❌ [{completed}/{total}] {Path(input_file).name:30} "
+                    f"失败: {result['error']}"
+                )
+
+    # Summary
+    overall_compression = (1 - total_output_size / total_input_size) * 100 if total_input_size > 0 else 0
+
+    print(f"\n{'='*60}")
+    print(f"批量转换完成!")
+    print(f"{'='*60}\n")
+    print(f"成功:       {completed - failed}/{total}")
+    print(f"失败:       {failed}/{total}")
+    print(f"原始大小:   {total_input_size:.1f} MB")
+    print(f"转换后大小: {total_output_size:.1f} MB")
+    print(f"总体压缩率: {overall_compression:.1f}%")
+    print(f"输出目录:   {output_dir}\n")
+
+    return completed - failed == total
 
 
 def analyze_video(input_file):
@@ -477,7 +690,7 @@ def convert_video(input_file, output_file, options, verbose=False, delete_source
 
 def main():
     parser = argparse.ArgumentParser(
-        description="将任意视频格式转换为 MP4 并进行压缩。支持 MOV、MP4、AVI、MKV 等格式。",
+        description="将任意视频格式转换为 MP4 并进行压缩。支持 MOV、MP4、AVI、MKV 等格式。支持批量处理文件夹。",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
@@ -488,6 +701,11 @@ def main():
 
   # MP4 缩小尺寸
   %(prog)s video.mp4 -s 1920
+
+  # 批量转换文件夹
+  %(prog)s /path/to/videos
+  %(prog)s /path/to/videos -s 1920
+  %(prog)s /path/to/videos -j 4
 
   # 指定输出文件
   %(prog)s video.mov -o output.mp4
@@ -507,12 +725,12 @@ def main():
     )
 
     # Positional arguments
-    parser.add_argument("input", help="输入视频文件路径 (支持 MOV、MP4、AVI、MKV 等)")
+    parser.add_argument("input", help="输入视频文件路径或文件夹 (支持 MOV、MP4、AVI、MKV 等)")
 
-    # Output file
+    # Output file/directory
     parser.add_argument(
         "-o", "--output",
-        help="输出 MP4 文件路径 (默认: 输入文件名.mp4)"
+        help="输出 MP4 文件路径或输出目录 (默认: small-{filename}.mp4 或 input_dir/small)"
     )
 
     # Video codec
@@ -594,10 +812,59 @@ def main():
     parser.add_argument(
         "--rm",
         action="store_true",
-        help="转换成功后删除原始 MOV 文件"
+        help="转换成功后删除原始文件"
+    )
+
+    # Batch mode
+    parser.add_argument(
+        "-j", "--jobs",
+        type=int,
+        default=2,
+        help="批量转换时的并发任务数 (默认: 2)"
     )
 
     args = parser.parse_args()
+
+    # Check if input is a directory
+    input_path = Path(args.input)
+    if input_path.is_dir():
+        # Batch mode: process all videos in directory
+        video_files = find_videos_in_directory(args.input)
+
+        if not video_files:
+            print(f"❌ 在目录 {args.input} 中没有找到视频文件")
+            return 1
+
+        # Determine output directory (default: input_dir/small)
+        if args.output:
+            output_dir = args.output
+        else:
+            output_dir = str(input_path / "small")
+
+        # Build options
+        options = {
+            "codec": args.codec,
+            "crf": args.crf,
+            "preset": args.preset,
+            "audio_codec": args.audio_codec,
+            "audio_bitrate": args.audio_bitrate,
+            "faststart": args.faststart
+        }
+
+        if args.scale:
+            options["scale"] = args.scale
+
+        # Run batch conversion
+        success = batch_convert_videos(
+            video_files, output_dir, options,
+            scale=args.scale,
+            verbose=args.verbose,
+            delete_source=args.rm,
+            max_workers=args.jobs
+        )
+        return 0 if success else 1
+
+    # Single file mode continues below...
 
     # Interactive mode (highest priority)
     if args.interactive:

@@ -154,7 +154,7 @@
     },
     {
       "name": "to-mp4",
-      "description": "视频转 MP4 转换器，支持任意视频格式（MOV、MP4、AVI、MKV 等）。智能压缩，交互式方案选择，MP4 输入自动优化。",
+      "description": "视频转 MP4 转换器，支持任意视频格式（MOV、MP4、AVI、MKV 等）。批量处理文件夹，智能压缩，交互式方案选择，MP4 输入自动优化。",
       "source": "../skills/",
       "strict": false,
       "skills": [
