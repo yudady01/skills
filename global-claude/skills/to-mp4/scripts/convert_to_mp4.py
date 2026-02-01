@@ -411,7 +411,7 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
 
     # Display task list
     print(f"待处理清单:\n")
-    for idx, input_file, _ in tasks:
+    for input_file, output_file, idx in tasks:
         info = get_video_info(input_file)
         name = Path(input_file).name
         if info and info.get("size"):
@@ -421,9 +421,9 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             width = str(info.get("width") or "?")
             height = str(info.get("height") or "?")
             res_str = f"{width}x{height}"
-            print(f"  [{idx}] {name:30} {fmt:6} {res_str:10}  {size}")
+            print(f"  [{idx:2d}] {name:30} {fmt:6} {res_str:10}  {size}")
         else:
-            print(f"  [{idx}] {name}")
+            print(f"  [{idx:2d}] {name}")
 
     print(f"\n开始并发转换 (最多 {max_workers} 个任务)...\n")
 
@@ -436,11 +436,14 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
     # Progress reporting thread
     stop_progress = False
 
-    # Store file names for progress display
+    # Store file names and task status for progress display
     file_names = {i: Path(f).name for i, f in enumerate(input_files, 1)}
+    # Track task status: 'pending', 'running', 'completed', 'failed'
+    task_status = {i: 'pending' for i in range(1, total + 1)}
+    task_status_lock = Lock()
 
     def progress_reporter():
-        """Thread that reports progress every 5 seconds."""
+        """Thread that reports progress every 10 seconds."""
         nonlocal stop_progress
         last_report_time = start_time
 
@@ -448,29 +451,76 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             time.sleep(0.5)
             current_time = time.time()
 
-            # Report every 5 seconds
-            if current_time - last_report_time >= 5:
+            # Report every 10 seconds
+            if current_time - last_report_time >= 10:
                 overall_progress.hide()
 
                 with print_lock:
                     elapsed = int(current_time - start_time)
-                    print(f"[{elapsed:3d}s] 任务进度:", flush=True)
+                    print(f"\n{'='*60}")
+                    print(f"[{elapsed:3d}s] 任务清单 (已过 {elapsed//60}分{elapsed%60}秒)")
+                    print(f"{'='*60}")
+
+                # Get current status snapshot
+                with task_status_lock:
+                    status_snapshot = task_status.copy()
 
                 current_progress = get_progress_report()
 
-                if not current_progress:
-                    safe_print("  等待任务开始...")
-                else:
-                    for idx, progress in sorted(current_progress.items()):
-                        name = file_names.get(idx, "Unknown")
-                        # Truncate name if too long
-                        display_name = name[:28] if len(name) > 28 else name
+                # 分类任务
+                completed_tasks = []
+                running_tasks = []
+                pending_tasks = []
+                failed_tasks = []
+
+                for idx in range(1, total + 1):
+                    status = status_snapshot.get(idx, 'pending')
+                    name = file_names.get(idx, "Unknown")
+                    display_name = name[:30] if len(name) > 30 else name
+
+                    if status == 'completed':
+                        completed_tasks.append((idx, display_name))
+                    elif status == 'failed':
+                        failed_tasks.append((idx, display_name))
+                    elif status == 'running':
+                        progress = current_progress.get(idx, 0)
+                        running_tasks.append((idx, display_name, progress))
+                    else:  # pending
+                        pending_tasks.append((idx, display_name))
+
+                # 显示已完成的任务
+                if completed_tasks:
+                    safe_print("\n✅ 已完成:")
+                    for idx, name in completed_tasks:
+                        safe_print(f"   [{idx:2d}] {name}")
+
+                # 显示执行中的任务
+                if running_tasks:
+                    safe_print("\n🔄 执行中:")
+                    for idx, name, progress in running_tasks:
                         bar_width = 20
                         filled = int(bar_width * progress / 100)
                         bar = "█" * filled + "░" * (bar_width - filled)
-                        safe_print(f"  [{idx:2d}] {display_name:28} [{bar}] {progress:3d}%")
+                        safe_print(f"   [{idx:2d}] {name:30} [{bar}] {progress:3d}%")
 
-                safe_print("")  # Empty line for readability
+                # 显示待处理的任务
+                if pending_tasks:
+                    safe_print(f"\n⏳ 待处理 ({len(pending_tasks)} 个):")
+                    for idx, name in pending_tasks:
+                        safe_print(f"   [{idx:2d}] {name}")
+
+                # 显示失败的任务
+                if failed_tasks:
+                    safe_print(f"\n❌ 失败 ({len(failed_tasks)} 个):")
+                    for idx, name in failed_tasks:
+                        safe_print(f"   [{idx:2d}] {name}")
+
+                # 总体进度
+                total_completed = len(completed_tasks)
+                total_percent = int(total_completed / total * 100)
+                safe_print(f"\n📊 总体进度: {total_completed}/{total} ({total_percent}%)")
+                safe_print(f"{'='*60}\n")
+
                 overall_progress.show()
                 last_report_time = current_time
 
@@ -487,6 +537,9 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_task = {}
         for input_file, output_file, idx in tasks:
+            # Mark as running when task is submitted
+            with task_status_lock:
+                task_status[idx] = 'running'
             future = executor.submit(
                 convert_single_video,
                 input_file, output_file, options, verbose, delete_source, idx, total
@@ -504,6 +557,9 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             overall_progress.update(completed)
 
             if result["success"]:
+                # Mark as completed
+                with task_status_lock:
+                    task_status[idx] = 'completed'
                 total_output_size += result["output_size"]
                 compression = (1 - result["output_size"] / result["input_size"]) * 100
                 overall_progress.hide()
@@ -514,6 +570,9 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
                 )
                 overall_progress.show()
             else:
+                # Mark as failed
+                with task_status_lock:
+                    task_status[idx] = 'failed'
                 failed += 1
                 overall_progress.hide()
                 safe_print(
