@@ -6,6 +6,7 @@
 
 - **格式转换**: MOV → MP4
 - **智能压缩**: 支持 H.264 和 H.265 编码
+- **交互模式**: 提供 3 种预设压缩方案供选择
 - **画质控制**: 可调节 CRF 值（18-28）
 - **分辨率调整**: 自动缩放并保持宽高比
 - **音频优化**: 支持多种音频编码和比特率
@@ -38,11 +39,31 @@ ffmpeg -version
 
 ### 3. 转换视频
 
-最简单的使用方式：
+**交互模式（推荐）**:
+```bash
+python scripts/convert_to_mp4.py video.mov -i
+```
 
+**基本转换**:
 ```bash
 python scripts/convert_to_mp4.py video.mov
 ```
+
+## 交互模式
+
+使用 `-i` 或 `--interactive` 参数启动交互模式，系统会根据视频信息提供 3 种压缩方案：
+
+```bash
+python scripts/convert_to_mp4.py video.mov -i
+```
+
+### 三种预设方案
+
+| 方案 | 编码 | 画质 | 分辨率 | 预估压缩率 | 适用场景 |
+|------|------|------|--------|-----------|----------|
+| **方案 1** | H.264 | CRF 23 | 保持原始 | 70-85% | 通用、分享、存档 |
+| **方案 2** | H.264 | CRF 23 | 缩小一半 | 85-92% | Web 上传、移动设备 |
+| **方案 3** | H.265 | CRF 28 | 缩小一半 | 92-96% | 存储受限、极限压缩 |
 
 ## 使用示例
 
@@ -90,6 +111,20 @@ python scripts/convert_to_mp4.py video.mov --faststart
 python scripts/convert_to_mp4.py video.mov --analyze
 ```
 
+### 转换后删除原始文件
+
+```bash
+python scripts/convert_to_mp4.py video.mov --rm
+```
+
+结合交互模式使用：
+
+```bash
+python scripts/convert_to_mp4.py video.mov -i --rm
+```
+
+> 注意：只有在转换成功后才会删除原始文件。
+
 ## 命令行选项
 
 ### 基本选项
@@ -98,6 +133,8 @@ python scripts/convert_to_mp4.py video.mov --analyze
 |------|------|--------|
 | `input` | 输入 MOV 文件路径 | - |
 | `-o, --output` | 输出 MP4 文件路径 | 输入文件名.mp4 |
+| `-i, --interactive` | 交互模式：从 3 个推荐方案中选择 | false |
+| `--rm` | 转换成功后删除原始 MOV 文件 | false |
 
 ### 视频设置
 

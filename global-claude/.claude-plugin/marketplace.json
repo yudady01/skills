@@ -151,6 +151,15 @@
       "skills": [
         "api-analyzer"
       ]
+    },
+    {
+      "name": "to-mp4",
+      "description": "MOV 转 MP4 视频转换器，智能压缩视频并保持良好画质。支持 H.264/H.265 编码、分辨率调整、交互式方案选择。",
+      "source": "../skills/",
+      "strict": false,
+      "skills": [
+        "to-mp4"
+      ]
     }
   ]
 }

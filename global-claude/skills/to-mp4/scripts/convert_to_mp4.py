@@ -108,6 +108,124 @@ def analyze_video(input_file):
         if info["audio_codec"]:
             print(f"音频编码:     {info['audio_codec']}")
         print(f"\n{'='*60}\n")
+    return info
+
+
+def show_compression_presets(info):
+    """Show 3 compression preset options based on video analysis."""
+    width = int(info.get("width", 1920))
+    height = int(info.get("height", 1080))
+    size_mb = float(info["size"].split()[0]) if info.get("size") else 100
+
+    print(f"\n{'='*60}")
+    print("推荐压缩方案")
+    print(f"{'='*60}\n")
+
+    # 方案 1: 保持分辨率，H.264 + CRF 23
+    preset1_compression = "70-85%"
+    preset1_size = f"{size_mb * 0.2:.1f} MB"
+
+    # 方案 2: 分辨率减半，H.264 + CRF 23
+    preset2_width = width // 2
+    preset2_compression = "85-92%"
+    preset2_size = f"{size_mb * 0.1:.1f} MB"
+
+    # 方案 3: 分辨率减半 + H.265 + CRF 28 (极限压缩)
+    preset3_width = width // 2
+    preset3_compression = "92-96%"
+    preset3_size = f"{size_mb * 0.05:.1f} MB"
+
+    print("┌─────────────────────────────────────────────────────────────┐")
+    print("│ 方案 1: 标准压缩 (推荐)                                      │")
+    print("├─────────────────────────────────────────────────────────────┤")
+    print(f"│  编码:         H.264                                          │")
+    print(f"│  画质:         CRF 23 (高质量)                                │")
+    print(f"│  分辨率:       {width}x{height} (保持原始)                          │")
+    print(f"│  预估压缩率:   {preset1_compression:>12}                              │")
+    print(f"│  预估大小:     {preset1_size:>12}                              │")
+    print("│  适用场景:     通用、分享、存档                                  │")
+    print("├─────────────────────────────────────────────────────────────┤")
+    print("│ 方案 2: 高压缩率                                              │")
+    print("├─────────────────────────────────────────────────────────────┤")
+    print(f"│  编码:         H.264                                          │")
+    print(f"│  画质:         CRF 23 (高质量)                                │")
+    print(f"│  分辨率:       {preset2_width}x{height * preset2_width // width} (缩小一半)                    │")
+    print(f"│  预估压缩率:   {preset2_compression:>12}                              │")
+    print(f"│  预估大小:     {preset2_size:>12}                              │")
+    print("│  适用场景:     Web 上传、移动设备                                │")
+    print("├─────────────────────────────────────────────────────────────┤")
+    print("│ 方案 3: 极限压缩                                              │")
+    print("├─────────────────────────────────────────────────────────────┤")
+    print("│  编码:         H.265 (HEVC)                                   │")
+    print("│  画质:         CRF 28 (可接受画质)                             │")
+    print(f"│  分辨率:       {preset3_width}x{height * preset3_width // width} (缩小一半)                    │")
+    print(f"│  预估压缩率:   {preset3_compression:>12}                              │")
+    print(f"│  预估大小:     {preset3_size:>12}                              │")
+    print("│  适用场景:     存储受限、极限压缩需求                            │")
+    print("│  注意:         编码时间较长，老设备可能不支持                      │")
+    print("└─────────────────────────────────────────────────────────────┘")
+
+    # 定义预设方案
+    presets = {
+        "1": {
+            "name": "标准压缩",
+            "codec": "h264",
+            "crf": 23,
+            "preset": "slow",
+            "scale": None,
+            "audio_codec": "aac",
+            "audio_bitrate": "128k",
+            "faststart": True
+        },
+        "2": {
+            "name": "高压缩率",
+            "codec": "h264",
+            "crf": 23,
+            "preset": "slow",
+            "scale": preset2_width,
+            "audio_codec": "aac",
+            "audio_bitrate": "128k",
+            "faststart": True
+        },
+        "3": {
+            "name": "极限压缩",
+            "codec": "h265",
+            "crf": 28,
+            "preset": "slow",
+            "scale": preset3_width,
+            "audio_codec": "aac",
+            "audio_bitrate": "96k",
+            "faststart": True
+        }
+    }
+
+    return presets
+
+
+def interactive_mode(input_file, output_file, delete_source=False):
+    """Interactive mode with preset selection."""
+    # Analyze video
+    info = analyze_video(input_file)
+    if not info:
+        print("❌ 无法分析视频信息")
+        return False
+
+    # Show compression presets
+    presets = show_compression_presets(info)
+
+    # Get user choice
+    print("\n请选择压缩方案 [1-3]: ", end="", flush=True)
+    choice = input().strip()
+
+    if choice not in presets:
+        print(f"❌ 无效选择: {choice}")
+        return False
+
+    selected = presets[choice]
+    print(f"\n已选择: 方案 {choice} - {selected['name']}\n")
+
+    # Convert with selected preset
+    return convert_video(input_file, output_file, selected, verbose=False, delete_source=delete_source)
 
 
 def build_ffmpeg_command(input_file, output_file, options):
@@ -168,7 +286,7 @@ def build_ffmpeg_command(input_file, output_file, options):
     return cmd
 
 
-def convert_video(input_file, output_file, options, verbose=False):
+def convert_video(input_file, output_file, options, verbose=False, delete_source=False):
     """
     Convert MOV video to MP4.
 
@@ -177,6 +295,7 @@ def convert_video(input_file, output_file, options, verbose=False):
         output_file: Path to output MP4 file
         options: Dictionary of conversion options
         verbose: Show detailed FFmpeg output
+        delete_source: Delete source file after successful conversion
     """
     # Check FFmpeg
     if not check_ffmpeg():
@@ -246,6 +365,15 @@ def convert_video(input_file, output_file, options, verbose=False):
             print(f"转换后大小:   {output_size:.2f} MB")
             print(f"压缩率:       {compression:.1f}%")
             print(f"输出文件:     {output_file}\n")
+
+            # Delete source file if requested
+            if delete_source:
+                try:
+                    os.remove(input_file)
+                    print(f"🗑️  已删除原始文件: {input_file}\n")
+                except Exception as e:
+                    print(f"⚠️  警告: 无法删除原始文件: {e}\n")
+
             return True
         else:
             print(f"\n❌ 转换失败 (退出码: {result.returncode})")
@@ -365,7 +493,30 @@ def main():
         help="仅分析视频信息, 不执行转换"
     )
 
+    # Interactive mode
+    parser.add_argument(
+        "-i", "--interactive",
+        action="store_true",
+        help="交互模式: 从 3 个推荐方案中选择"
+    )
+
+    # Delete source file
+    parser.add_argument(
+        "--rm",
+        action="store_true",
+        help="转换成功后删除原始 MOV 文件"
+    )
+
     args = parser.parse_args()
+
+    # Interactive mode (highest priority)
+    if args.interactive:
+        # Determine output file
+        if not args.output:
+            input_path = Path(args.input)
+            args.output = str(input_path.with_suffix(".mp4"))
+        success = interactive_mode(args.input, args.output, delete_source=args.rm)
+        return 0 if success else 1
 
     # Analyze mode (handle first, before using other options)
     if args.analyze:
@@ -395,7 +546,8 @@ def main():
         input_file=args.input,
         output_file=args.output,
         options=options,
-        verbose=args.verbose
+        verbose=args.verbose,
+        delete_source=args.rm
     )
 
     return 0 if success else 1
