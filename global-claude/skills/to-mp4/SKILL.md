@@ -1,21 +1,55 @@
 ---
 name: to-mp4
-description: MOV 视频转换为 MP4 格式并进行压缩。当用户要求转换 .mov 文件为 .mp4、压缩视频文件、或减小视频体积时使用此技能。支持 H.264 和 H.265 编码、可调节画质（CRF）、分辨率调整、音频压缩等选项。
+description: 将任意视频格式转换为 MP4 格式并进行压缩。当用户要求转换视频为 .mp4、压缩视频文件、缩小视频尺寸、或减小视频体积时使用此技能。支持 MOV、MP4、AVI、MKV 等任意格式输入。对于已经是 MP4 格式的视频，也可以进行缩小尺寸或重新编码处理。支持 H.264 和 H.265 编码、可调节画质（CRF）、分辨率调整、音频压缩、批量处理等选项。
 ---
 
-# MOV 转 MP4 视频转换器
+# 视频转 MP4 转换器
 
-将 MOV 视频转换为 MP4 格式并进行智能压缩，显著减小文件体积的同时保持良好画质。
+将任意视频格式转换为 MP4 格式并进行智能压缩，显著减小文件体积的同时保持良好画质。支持 MOV、MP4、AVI、MKV 等任意格式输入，对 MP4 文件也可以进行缩小尺寸或重新编码处理。
 
 ## 快速开始
 
 最简单的使用方式：
 
 ```bash
+# 转换任意视频格式
 python scripts/convert_to_mp4.py input.mov
+python scripts/convert_to_mp4.py input.avi
+python scripts/convert_to_mp4.py input.mkv
+
+# MP4 文件缩小尺寸
+python scripts/convert_to_mp4.py video.mp4 -s 1920
 ```
 
 这会使用默认设置（H.264 + CRF 23）将视频转换为 MP4，**输出文件默认为 `small/input.mp4`**（在输入文件同目录下的 `small/` 文件夹中）。
+
+## 支持任意格式输入
+
+此技能支持几乎所有视频格式作为输入：
+
+- **常见格式**：MOV、MP4、AVI、MKV、FLV、WMV、WebM
+- **专业格式**：ProRes、DNxHD、AVCHD
+- **其他格式**：3GP、OGV、TS、M2TS、F4V 等
+
+### MP4 输入的特殊处理
+
+当输入文件已经是 MP4 格式时，脚本会自动优化处理：
+
+- **缩小尺寸**：对 MP4 输入使用更快的编码速度
+- **音频复制**：自动复制音频流而不重新编码，保持原始质量
+- **避免重编码**：当只需要缩小尺寸时，避免不必要的视频重新编码
+
+示例：
+
+```bash
+# 4K MP4 转 1080p（自动优化处理）
+python scripts/convert_to_mp4.py video_4k.mp4 -s 1920
+# 输出：small/video_4k.mp4（1080p，快速处理）
+
+# 重新编码 MP4（强制重新压缩）
+python scripts/convert_to_mp4.py video.mp4 -c h264 -crf 23
+# 输出：small/video.mp4（重新编码）
+```
 
 ## 基本选项
 
@@ -206,6 +240,33 @@ python scripts/convert_to_mp4.py input.mov -v
 python scripts/convert_to_mp4.py input.mov --analyze
 ```
 
+## 批量处理
+
+支持批量转换整个文件夹中的视频文件：
+
+```bash
+# 批量转换文件夹（默认 2 个并发任务）
+python scripts/convert_to_mp4.py /path/to/videos
+
+# 批量转换并缩小尺寸
+python scripts/convert_to_mp4.py /path/to/videos -s 1920
+
+# 指定并发任务数（4 个任务同时进行）
+python scripts/convert_to_mp4.py /path/to/videos -j 4
+
+# 批量转换并删除原始文件
+python scripts/convert_to_mp4.py /path/to/videos --rm
+```
+
+### 批量处理特性
+
+- **自动查找**: 自动扫描文件夹中的所有视频文件（支持任意格式）
+- **待处理清单**: 转换前显示所有视频信息（格式、分辨率、大小）
+- **并发处理**: 同时处理多个视频，提升效率
+- **实时进度**: 每 5 秒显示一次转换进度，带进度条
+- **输出目录**: 默认输出到 `input_dir/small/` 目录
+- **文件命名**: 保持原文件名，不添加前缀
+
 ## 完整示例
 
 ### 示例 1：标准转换
@@ -246,6 +307,33 @@ python scripts/convert_to_mp4.py video_4k.mov -s 1920 -crf 23 -o video_1080p.mp4
 
 ```bash
 python scripts/convert_to_mp4.py video.mov --faststart -crf 23 -ab 128k -o video_web.mp4
+```
+
+### 示例 6：MP4 缩小尺寸
+
+对已经是 MP4 格式的视频进行缩小尺寸处理（自动优化）：
+
+```bash
+# 4K MP4 转 1080p
+python scripts/convert_to_mp4.py video_4k.mp4 -s 1920
+
+# 任意格式 MP4 缩小到 720p
+python scripts/convert_to_mp4.py video.mp4 -s 1280
+
+# 批量处理文件夹中的所有视频
+python scripts/convert_to_mp4.py /path/to/videos -s 1920 -j 4
+```
+
+### 示例 7：批量处理文件夹
+
+批量处理整个文件夹中的所有视频文件：
+
+```bash
+# 批量转换（默认输出到 input_dir/small/）
+python scripts/convert_to_mp4.py /path/to/videos
+
+# 批量转换并缩小尺寸，4 个并发任务
+python scripts/convert_to_mp4.py /path/to/videos -s 1920 -j 4
 ```
 
 ## 工作原理
@@ -318,6 +406,13 @@ A:
 - 使用更快的 preset：`-p fast` 或 `-p ultrafast`
 - 降低 CRF 值（略微牺牲压缩率）
 - 考虑分辨率缩放：`-s 1920` 或 `-s 1280`
+
+### Q: 已经是 MP4 格式的视频需要转换吗？
+
+A: 不一定需要，但此工具可以处理 MP4 输入：
+- **缩小尺寸**：`python scripts/convert_to_mp4.py video.mp4 -s 1920`（4K 转 1080p）
+- **重新压缩**：`python scripts/convert_to_mp4.py video.mp4 -crf 28`（减小文件体积）
+- **自动优化**：MP4 输入会自动使用更快的处理方式，音频直接复制保持质量
 
 ## 重要说明
 

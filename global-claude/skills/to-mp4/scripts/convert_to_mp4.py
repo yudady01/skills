@@ -385,7 +385,7 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
 
 
 def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=False,
-                         delete_source=False, max_workers=2):
+                         delete_source=False, max_workers=7):
     """Convert multiple videos concurrently."""
     total = len(input_files)
     if total == 0:
@@ -1084,8 +1084,8 @@ def main():
     parser.add_argument(
         "-j", "--jobs",
         type=int,
-        default=2,
-        help="批量转换时的并发任务数 (默认: 2)"
+        default=7,
+        help="批量转换时的并发任务数 (默认: 7)"
     )
 
     args = parser.parse_args()
