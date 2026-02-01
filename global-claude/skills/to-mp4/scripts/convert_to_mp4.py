@@ -385,7 +385,7 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
 
 
 def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=False,
-                         delete_source=False, max_workers=7):
+                         delete_source=True, max_workers=7):
     """Convert multiple videos concurrently."""
     total = len(input_files)
     if total == 0:
@@ -1132,11 +1132,11 @@ def main():
         help="交互模式: 从 3 个推荐方案中选择"
     )
 
-    # Delete source file
+    # Keep source file (default is to delete)
     parser.add_argument(
-        "--rm",
+        "--keep",
         action="store_true",
-        help="转换成功后删除原始文件"
+        help="保留原始文件（默认：转换成功后删除）"
     )
 
     # Batch mode
@@ -1183,7 +1183,7 @@ def main():
             video_files, output_dir, options,
             scale=args.scale,
             verbose=args.verbose,
-            delete_source=args.rm,
+            delete_source=not args.keep,
             max_workers=args.jobs
         )
         return 0 if success else 1
@@ -1200,7 +1200,7 @@ def main():
             small_dir = input_path.parent / "small"
             small_dir.mkdir(parents=True, exist_ok=True)
             args.output = str(small_dir / f"{stem}.mp4")
-        success = interactive_mode(args.input, args.output, delete_source=args.rm)
+        success = interactive_mode(args.input, args.output, delete_source=not args.keep)
         return 0 if success else 1
 
     # Analyze mode (handle first, before using other options)
@@ -1236,7 +1236,7 @@ def main():
         output_file=args.output,
         options=options,
         verbose=args.verbose,
-        delete_source=args.rm
+        delete_source=not args.keep
     )
 
     return 0 if success else 1

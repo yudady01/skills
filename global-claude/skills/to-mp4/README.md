@@ -93,7 +93,7 @@ python scripts/convert_to_mp4.py video.mov -i
 支持批量转换整个文件夹中的视频文件：
 
 ```bash
-# 批量转换文件夹（默认 2 个并发任务）
+# 批量转换文件夹（默认 7 个并发任务，转换后删除原始文件）
 python scripts/convert_to_mp4.py /path/to/videos
 
 # 批量转换并缩小尺寸
@@ -102,8 +102,8 @@ python scripts/convert_to_mp4.py /path/to/videos -s 1920
 # 指定并发任务数（4 个任务同时进行）
 python scripts/convert_to_mp4.py /path/to/videos -j 4
 
-# 批量转换并删除原始文件
-python scripts/convert_to_mp4.py /path/to/videos --rm
+# 批量转换并保留原始文件
+python scripts/convert_to_mp4.py /path/to/videos --keep
 ```
 
 ### 批量处理特性
@@ -217,16 +217,18 @@ python scripts/convert_to_mp4.py video.mov --faststart
 python scripts/convert_to_mp4.py video.mov --analyze
 ```
 
-### 转换后删除原始文件
+### 保留原始文件
+
+默认情况下，转换成功后会删除原始文件。使用 `--keep` 参数保留：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov --rm
+python scripts/convert_to_mp4.py video.mov --keep
 ```
 
 结合交互模式使用：
 
 ```bash
-python scripts/convert_to_mp4.py video.mov -i --rm
+python scripts/convert_to_mp4.py video.mov -i --keep
 ```
 
 > 注意：只有在转换成功后才会删除原始文件。
@@ -240,8 +242,8 @@ python scripts/convert_to_mp4.py video.mov -i --rm
 | `input` | 输入视频文件路径或文件夹（支持任意格式） | - |
 | `-o, --output` | 输出 MP4 文件路径或输出目录 | auto |
 | `-i, --interactive` | 交互模式：从 3 个推荐方案中选择 | false |
-| `--rm` | 转换成功后删除原始文件 | false |
-| `-j, --jobs` | 批量转换时的并发任务数 | 2 |
+| `--keep` | 保留原始文件 | false (默认删除) |
+| `-j, --jobs` | 批量转换时的并发任务数 | 7 |
 
 ### 视频设置
 

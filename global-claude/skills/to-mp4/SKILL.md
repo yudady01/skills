@@ -245,7 +245,7 @@ python scripts/convert_to_mp4.py input.mov --analyze
 支持批量转换整个文件夹中的视频文件：
 
 ```bash
-# 批量转换文件夹（默认 2 个并发任务）
+# 批量转换文件夹（默认 7 个并发任务，转换后删除原始文件）
 python scripts/convert_to_mp4.py /path/to/videos
 
 # 批量转换并缩小尺寸
@@ -254,8 +254,8 @@ python scripts/convert_to_mp4.py /path/to/videos -s 1920
 # 指定并发任务数（4 个任务同时进行）
 python scripts/convert_to_mp4.py /path/to/videos -j 4
 
-# 批量转换并删除原始文件
-python scripts/convert_to_mp4.py /path/to/videos --rm
+# 批量转换并保留原始文件
+python scripts/convert_to_mp4.py /path/to/videos --keep
 ```
 
 ### 批量处理特性
