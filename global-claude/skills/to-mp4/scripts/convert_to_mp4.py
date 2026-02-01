@@ -141,11 +141,43 @@ def find_videos_in_directory(directory):
 # Thread-safe print for concurrent processing
 print_lock = Lock()
 
+# Global progress tracking for batch processing
+progress_dict = {}
+progress_lock = Lock()
+
 
 def safe_print(*args, **kwargs):
     """Thread-safe print function."""
     with print_lock:
-        print(*args, **kwargs)
+        print(*args, **kwargs, flush=True)
+
+
+def update_progress(index, progress):
+    """Update progress for a specific task."""
+    with progress_lock:
+        progress_dict[index] = progress
+
+
+def get_progress_report():
+    """Get current progress report for all active tasks."""
+    with progress_lock:
+        return progress_dict.copy()
+
+
+def parse_ffmpeg_progress(line, duration_seconds=None):
+    """Parse FFmpeg progress from stderr line."""
+    try:
+        # Look for time parameter: time=01:23:45
+        time_match = re.search(r'time=(\d+):(\d+):(\d+\.?\d*)', line)
+        if time_match and duration_seconds:
+            h, m, s = time_match.groups()
+            current_seconds = int(h) * 3600 + int(m) * 60 + float(s)
+            if duration_seconds > 0:
+                progress = min(99, int(current_seconds / duration_seconds * 100))
+                return progress
+        return None
+    except:
+        return None
 
 
 def convert_single_video(input_file, output_file, options, verbose=False, delete_source=False, index=None, total=None):
@@ -156,7 +188,8 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
         "success": False,
         "error": None,
         "input_size": 0,
-        "output_size": 0
+        "output_size": 0,
+        "progress": 0
     }
 
     try:
@@ -170,13 +203,22 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
             result["error"] = "找不到输入文件"
             return result
 
-        # Get input file size
+        # Get input file size and video info
         result["input_size"] = os.path.getsize(input_file) / (1024 * 1024)
 
-        # Get video info for dimensions
         info = get_video_info(input_file)
         input_width = int(info.get("width", 0)) if info else 0
         input_height = int(info.get("height", 0)) if info else 0
+
+        # Get duration for progress calculation
+        duration_str = info.get("duration", "") if info else ""
+        duration_seconds = 0
+        if duration_str:
+            try:
+                h, m, s = duration_str.split(':')
+                duration_seconds = int(h) * 3600 + int(m) * 60 + float(s)
+            except:
+                pass
 
         # Check if input is already MP4
         input_is_mp4 = is_mp4_input(input_file)
@@ -187,19 +229,30 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
                                     input_width=input_width,
                                     input_height=input_height)
 
-        # Run conversion
-        if verbose:
-            result_proc = subprocess.run(cmd)
-        else:
-            result_proc = subprocess.run(
-                cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
-            )
+        # Run conversion with progress tracking
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
 
-        if result_proc.returncode == 0:
+        # Track progress
+        for line in process.stderr:
+            if verbose:
+                safe_print(line.strip())
+
+            progress = parse_ffmpeg_progress(line, duration_seconds)
+            if progress and index is not None:
+                update_progress(index, progress)
+                result["progress"] = progress
+
+        process.wait()
+
+        if process.returncode == 0:
             result["output_size"] = os.path.getsize(output_file) / (1024 * 1024)
             result["success"] = True
+            result["progress"] = 100
 
             # Delete source if requested
             if delete_source:
@@ -208,7 +261,7 @@ def convert_single_video(input_file, output_file, options, verbose=False, delete
                 except:
                     pass
         else:
-            result["error"] = f"转换失败 (退出码: {result_proc.returncode})"
+            result["error"] = f"转换失败 (退出码: {process.returncode})"
 
     except Exception as e:
         result["error"] = str(e)
@@ -258,6 +311,49 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
             print(f"  [{idx}] {name}")
 
     print(f"\n开始并发转换 (最多 {max_workers} 个任务)...\n")
+    print("每 10 秒报告一次进度\n")
+
+    # Import for progress reporting
+    import time
+
+    # Progress reporting
+    stop_progress = False
+    start_time = time.time()
+
+    # Store file names for progress display
+    file_names = {i: Path(f).name for i, f in enumerate(input_files, 1)}
+
+    def progress_reporter():
+        """Thread that reports progress every 10 seconds."""
+        nonlocal stop_progress
+        last_report_time = start_time
+
+        while not stop_progress:
+            time.sleep(1)
+            current_time = time.time()
+
+            # Report every 10 seconds
+            if current_time - last_report_time >= 10:
+                with print_lock:
+                    elapsed = int(current_time - start_time)
+                    print(f"[{elapsed:3d}s] 进度报告:", flush=True)
+
+                current_progress = get_progress_report()
+
+                if not current_progress:
+                    safe_print("  等待任务开始...")
+                else:
+                    for idx, progress in sorted(current_progress.items()):
+                        name = file_names.get(idx, "Unknown")
+                        safe_print(f"  [{idx}] {name:30} 进度: {progress}%")
+
+                safe_print("")  # Empty line for readability
+                last_report_time = current_time
+
+    # Start progress reporter thread
+    import threading
+    progress_thread = threading.Thread(target=progress_reporter, daemon=True)
+    progress_thread.start()
 
     # Convert videos concurrently
     completed = 0
@@ -296,11 +392,16 @@ def batch_convert_videos(input_files, output_dir, options, scale=None, verbose=F
                     f"失败: {result['error']}"
                 )
 
-    # Summary
+    # Stop progress reporter
+    stop_progress = True
+    progress_thread.join(timeout=2)
+
+    # Final summary
     overall_compression = (1 - total_output_size / total_input_size) * 100 if total_input_size > 0 else 0
+    elapsed_time = int(time.time() - start_time)
 
     print(f"\n{'='*60}")
-    print(f"批量转换完成!")
+    print(f"批量转换完成! (耗时: {elapsed_time}秒)")
     print(f"{'='*60}\n")
     print(f"成功:       {completed - failed}/{total}")
     print(f"失败:       {failed}/{total}")
