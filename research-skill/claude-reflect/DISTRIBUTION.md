@@ -1,52 +1,52 @@
-# Distribution Strategy for claude-reflect
+# claude-reflect 分发策略
 
-This document outlines submission materials for maximizing plugin distribution across Claude Code plugin marketplaces and awesome-lists.
+本文档概述了在 Claude Code 插件市场和 awesome-lists 中最大化插件分发的提交材料。
 
-## Priority Targets (Ranked by Impact)
+## 优先目标（按影响力排名）
 
-### Tier 1: High Impact
+### 第一层：高影响力
 
-| Platform | Type | Estimated Reach | Status |
+| 平台 | 类型 | 预估覆盖范围 | 状态 |
 |----------|------|-----------------|--------|
-| [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Official Marketplace | Highest | [PR #111](https://github.com/anthropics/claude-plugins-official/pull/111) |
-| [ccplugins/awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) | Curated List | ~1k+ stars | [PR #8](https://github.com/ccplugins/awesome-claude-code-plugins/pull/8) |
-| [jeremylongshore/claude-code-plugins-plus](https://github.com/jeremylongshore/claude-code-plugins-plus) | Marketplace (243+ plugins) | High | [PR #241](https://github.com/jeremylongshore/claude-code-plugins-plus-skills/pull/241) |
+| [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | 官方市场 | 最高 | [PR #111](https://github.com/anthropics/claude-plugins-official/pull/111) |
+| [ccplugins/awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) | 精选列表 | ~1k+ stars | [PR #8](https://github.com/ccplugins/awesome-claude-code-plugins/pull/8) |
+| [jeremylongshore/claude-code-plugins-plus](https://github.com/jeremylongshore/claude-code-plugins-plus) | 市场（243+ 插件） | 高 | [PR #241](https://github.com/jeremylongshore/claude-code-plugins-plus-skills/pull/241) |
 
-### Tier 2: Medium Impact
+### 第二层：中等影响力
 
-| Platform | Type | Status |
+| 平台 | 类型 | 状态 |
 |----------|------|--------|
-| [GiladShoham/awesome-claude-plugins](https://github.com/GiladShoham/awesome-claude-plugins) | Marketplace | Ready |
-| [hekmon8/awesome-claude-code-plugins](https://github.com/hekmon8/awesome-claude-code-plugins) | Curated List | Ready |
-| [jmanhype/awesome-claude-code](https://github.com/jmanhype/awesome-claude-code) | Curated List | Ready |
-| [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | Workflows/Hooks Focus | Ready |
+| [GiladShoham/awesome-claude-plugins](https://github.com/GiladShoham/awesome-claude-plugins) | 市场 | 就绪 |
+| [hekmon8/awesome-claude-code-plugins](https://github.com/hekmon8/awesome-claude-code-plugins) | 精选列表 | 就绪 |
+| [jmanhype/awesome-claude-code](https://github.com/jmanhype/awesome-claude-code) | 精选列表 | 就绪 |
+| [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | 工作流/Hooks 专注 | 就绪 |
 
-### Tier 3: Additional Reach
+### 第三层：额外覆盖
 
-| Platform | Type | Status |
+| 平台 | 类型 | 状态 |
 |----------|------|--------|
-| [claudecodecommands.directory](https://claudecodecommands.directory/submit) | Web Directory | Ready |
-| [claude-plugins.dev](https://claude-plugins.dev) | Community Registry | Ready |
-| [ananddtyagi/cc-marketplace](https://github.com/ananddtyagi/claude-code-marketplace) | Marketplace | Ready |
+| [claudecodecommands.directory](https://claudecodecommands.directory/submit) | Web 目录 | 就绪 |
+| [claude-plugins.dev](https://claude-plugins.dev) | 社区注册表 | 就绪 |
+| [ananddtyagi/cc-marketplace](https://github.com/ananddtyagi/claude-code-marketplace) | 市场 | 就绪 |
 
 ---
 
-## Submission 1: anthropics/claude-plugins-official
+## 提交 1：anthropics/claude-plugins-official
 
-**Target**: `external_plugins/claude-reflect/`
+**目标**：`external_plugins/claude-reflect/`
 
-**Requirements**:
-- Must meet quality and security standards
-- Standard plugin structure with `.claude-plugin/plugin.json`
-- README documentation
-- No hardcoded secrets
+**要求**：
+- 必须符合质量和安全标准
+- 带有 `.claude-plugin/plugin.json` 的标准插件结构
+- README 文档
+- 无硬编码的秘密
 
-### PR Title
+### PR 标题
 ```
 feat: Add claude-reflect - self-learning system for CLAUDE.md
 ```
 
-### PR Description
+### PR 描述
 ```markdown
 ## Summary
 
@@ -91,39 +91,39 @@ Adds **claude-reflect** to external_plugins - a self-learning system that captur
 
 ---
 
-## Submission 2: ccplugins/awesome-claude-code-plugins
+## 提交 2：ccplugins/awesome-claude-code-plugins
 
-**Category**: Workflow Orchestration (or Development Engineering)
+**类别**：工作流编排（或开发工程）
 
-### PR Title
+### PR 标题
 ```
 Add claude-reflect to Workflow Orchestration
 ```
 
-### Entry to Add (in README.md under "Workflow Orchestration")
+### 要添加的条目（在 README.md 中的"Workflow Orchestration"下）
 ```markdown
 - [claude-reflect](https://github.com/bayramannakov/claude-reflect) - Self-learning system that captures corrections during sessions and syncs to CLAUDE.md. Features hook-based detection, confidence scoring, and multi-target export to AGENTS.md.
 ```
 
 ---
 
-## Submission 3: GiladShoham/awesome-claude-plugins
+## 提交 3：GiladShoham/awesome-claude-plugins
 
-**Structure**: Full plugin directory under `plugins/claude-reflect/`
+**结构**：`plugins/claude-reflect/` 下的完整插件目录
 
-### Required Files
+### 所需文件
 
 ```
 plugins/claude-reflect/
 ├── .claude-plugin/
-│   └── plugin.json       # Copy from repo
+│   └── plugin.json       # 从仓库复制
 ├── hooks/
-│   └── hooks.json        # Copy from repo
+│   └── hooks.json        # 从仓库复制
 ├── commands/
 │   ├── reflect.md
 │   ├── skip-reflect.md
 │   └── view-queue.md
-└── README.md             # Summary version
+└── README.md             # 摘要版本
 ```
 
 ### plugin.json
@@ -150,7 +150,7 @@ plugins/claude-reflect/
 }
 ```
 
-### PR Description
+### PR 描述
 ```markdown
 ## Add claude-reflect plugin
 
@@ -169,11 +169,11 @@ A self-learning system for Claude Code that:
 
 ---
 
-## Submission 4: jeremylongshore/claude-code-plugins-plus
+## 提交 4：jeremylongshore/claude-code-plugins-plus
 
-**Option A: External Sync Request** (Recommended - maintainers mirror from your repo daily)
+**选项 A：外部同步请求**（推荐 - 维护者每天从你的仓库镜像）
 
-Email to: jeremy@intentsolutions.io
+电子邮件至：jeremy@intentsolutions.io
 ```
 Subject: External Plugin Sync Request: claude-reflect
 
@@ -196,20 +196,20 @@ Best,
 Bayram Annakov
 ```
 
-**Option B: Direct PR**
+**选项 B：直接 PR**
 
-Add to `plugins/community/claude-reflect/` with standard structure.
+添加到 `plugins/community/claude-reflect/`，使用标准结构。
 
 ---
 
-## Submission 5: hekmon8/awesome-claude-code-plugins
+## 提交 5：hekmon8/awesome-claude-code-plugins
 
-### PR Title
+### PR 标题
 ```
 Add claude-reflect - self-learning CLAUDE.md manager
 ```
 
-### Entry to Add
+### 要添加的条目
 ```markdown
 ### Workflow Orchestration
 - [claude-reflect](https://github.com/bayramannakov/claude-reflect) - Captures corrections during sessions and syncs to CLAUDE.md with human review. Includes hooks for automatic detection and confidence scoring.
@@ -217,11 +217,11 @@ Add claude-reflect - self-learning CLAUDE.md manager
 
 ---
 
-## Submission 6: jmanhype/awesome-claude-code
+## 提交 6：jmanhype/awesome-claude-code
 
-### Category: Plugins & Extensions
+### 类别：插件和扩展
 
-### Entry to Add
+### 要添加的条目
 ```markdown
 - **[claude-reflect](https://github.com/bayramannakov/claude-reflect)** - Self-learning system that captures corrections and updates CLAUDE.md automatically
   ```bash
@@ -232,11 +232,11 @@ Add claude-reflect - self-learning CLAUDE.md manager
 
 ---
 
-## Submission 7: hesreallyhim/awesome-claude-code
+## 提交 7：hesreallyhim/awesome-claude-code
 
-### Category: Hooks (primary) + Agent Skills
+### 类别：Hooks（主要）+ Agent Skills
 
-### Entry to Add
+### 要添加的条目
 ```markdown
 ### Hooks
 - [claude-reflect](https://github.com/bayramannakov/claude-reflect) - Self-learning hooks that capture corrections (PreCompact backup, PostToolUse reminders) and sync to CLAUDE.md via `/reflect` command.
@@ -244,45 +244,45 @@ Add claude-reflect - self-learning CLAUDE.md manager
 
 ---
 
-## Submission 8: claudecodecommands.directory
+## 提交 8：claudecodecommands.directory
 
-**URL**: https://claudecodecommands.directory/submit
+**URL**：https://claudecodecommands.directory/submit
 
-### Form Fields
+### 表单字段
 
-| Field | Value |
+| 字段 | 值 |
 |-------|-------|
-| Name | claude-reflect |
-| Description | Self-learning system that captures corrections during Claude Code sessions and syncs them to CLAUDE.md with human review |
-| Repository URL | https://github.com/bayramannakov/claude-reflect |
-| Category | Workflow / Development Tools |
-| Commands | /reflect, /skip-reflect, /view-queue |
-| Author | Bayram Annakov |
+| 名称 | claude-reflect |
+| 描述 | Self-learning system that captures corrections during Claude Code sessions and syncs them to CLAUDE.md with human review |
+| 仓库 URL | https://github.com/bayramannakov/claude-reflect |
+| 类别 | Workflow / Development Tools |
+| 命令 | /reflect, /skip-reflect, /view-queue |
+| 作者 | Bayram Annakov |
 
 ---
 
-## Submission 9: claude-plugins.dev
+## 提交 9：claude-plugins.dev
 
-**GitHub**: https://github.com/Kamalnrf/claude-code-plugins
+**GitHub**：https://github.com/Kamalnrf/claude-code-plugins
 
-### PR to add to registry
+### PR 添加到注册表
 
-Check their CONTRIBUTING.md or open an issue requesting addition.
+查看他们的 CONTRIBUTING.md 或打开 issue 请求添加。
 
 ---
 
-## Marketing Copy
+## 营销文案
 
-### One-liner
+### 一句话
 > Self-learning system for Claude Code that captures corrections and syncs to CLAUDE.md
 
-### Short Description (125 chars)
+### 简短描述（125 字符）
 > Captures user corrections during sessions, queues with confidence scoring, processes with human review via /reflect command
 
-### Full Description
+### 完整描述
 > claude-reflect is a two-stage self-learning system for Claude Code. Stage 1 automatically captures corrections via hooks - detecting patterns like "no, use X", "actually...", and explicit "remember:" markers. Stage 2 is the `/reflect` command where you review queued learnings before they're written to CLAUDE.md. Supports confidence scoring, historical session scanning, semantic deduplication, and multi-target export to AGENTS.md (Codex, Cursor, Aider, Jules, Zed, Factory).
 
-### Key Features (Bullet Points)
+### 主要功能（要点）
 - Automatic correction detection via hooks
 - Confidence scoring (0.60-0.90)
 - Human review before writing
@@ -292,23 +292,23 @@ Check their CONTRIBUTING.md or open an issue requesting addition.
 
 ---
 
-## Execution Checklist
+## 执行清单
 
-1. [ ] Fork anthropics/claude-plugins-official → PR to external_plugins/
-2. [ ] Fork ccplugins/awesome-claude-code-plugins → PR with entry
-3. [ ] Fork GiladShoham/awesome-claude-plugins → PR with full plugin structure
-4. [ ] Email jeremylongshore for external sync OR fork claude-code-plugins-plus
-5. [ ] Fork hekmon8/awesome-claude-code-plugins → PR with entry
-6. [ ] Fork jmanhype/awesome-claude-code → PR with entry
-7. [ ] Fork hesreallyhim/awesome-claude-code → PR with entry
-8. [ ] Submit form at claudecodecommands.directory/submit
-9. [ ] Open issue/PR at Kamalnrf/claude-code-plugins
+1. [ ] Fork anthropics/claude-plugins-official → PR 到 external_plugins/
+2. [ ] Fork ccplugins/awesome-claude-code-plugins → PR 带条目
+3. [ ] Fork GiladShoham/awesome-claude-plugins → PR 带完整插件结构
+4. [ ] 发送电子邮件给 jeremylongshore 进行外部同步 OR fork claude-code-plugins-plus
+5. [ ] Fork hekmon8/awesome-claude-code-plugins → PR 带条目
+6. [ ] Fork jmanhype/awesome-claude-code → PR 带条目
+7. [ ] Fork hesreallyhim/awesome-claude-code → PR 带条目
+8. [ ] 在 claudecodecommands.directory/submit 提交表单
+9. [ ] 在 Kamalnrf/claude-code-plugins 打开 issue/PR
 
 ---
 
-## Notes
+## 注意事项
 
-- Keep descriptions consistent across platforms
-- Link back to main repo: https://github.com/bayramannakov/claude-reflect
-- Use MIT license (already in place)
-- Version at time of submission: 1.4.1
+- 在平台上保持一致的描述
+- 链接回主仓库：https://github.com/bayramannakov/claude-reflect
+- 使用 MIT 许可证（已就位）
+- 提交时的版本：1.4.1
