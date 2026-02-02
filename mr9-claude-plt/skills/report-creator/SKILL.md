@@ -120,3 +120,140 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 - 簡單報表：查看 `references/RechargeProxyReport.java`
 - 複雜報表：查看 `references/WithdrawSummaryReport.java`
 - 用戶模組報表：查看 `references/UserQueryReport.java`
+
+---
+
+## 完整實作步驟
+
+### Step 1: 分析 API
+
+根據用戶提供的 cURL 命令或 API 路徑，分析：
+1. 請求方法和路徑
+2. 查詢參數（Query DTO）
+3. 響應資料結構（Response VO）
+4. 目標模組
+
+### Step 2: 查找相關代碼
+
+使用 Task tool 或 Explore agent 查找：
+- Controller 層：確認 API 入口
+- DTO/VO 類別：分析資料結構
+- DomainService/FeignClient：確認資料來源方法
+
+### Step 3: 向用戶確認需求
+
+通過 AskUserQuestion 確認：
+1. **子單處理方式**：
+   - 只導出主訂單
+   - 展開子訂單（每個子訂單一行）
+   - 合併顯示
+2. **是否需要隱碼處理**
+3. **資料來源類型**：DomainService 或 FeignClient
+4. **CSV 欄位列表**：確認需要導出的欄位
+
+### Step 4: 創建 Handler 類別
+
+1. 根據需求選擇模板（`simple-handler.java` 或 `complex-handler.java`）
+2. 讀取 `references/module-config.yaml` 獲取模組配置
+3. 替換模板參數生成代碼
+4. 寫入到 `${MODULE}/src/main/java/com/galaxy/handler/downloadReportHanlder/impl/`
+
+**注意事項**：
+- `plt-fund-aggregation` 的枚舉 import：
+  - `WithdrawStatus`: `com.galaxy.enumeration.fund.WithdrawStatus`
+  - `WithdrawMode`: `com.galaxy.enumeration.WithdrawMode`
+  - `OsType`: `com.galaxy.enumeration.OsType`
+- 子單展開時，主單顯示 `--`，子單顯示實際值
+
+### Step 5: 同步更新 ReportType 枚舉
+
+**必須同步三個模組的 ReportType**：
+
+| 模組 | 路徑 | 格式 |
+|------|------|------|
+| plt-fund-aggregation | `enumeration/basics/ReportType.java` | `ENUM_NAME("描述")` |
+| plt-basics | `enumeration/ReportType.java` | `ENUM_NAME("routing-key", "描述", "csv")` |
+| plt-gateway | `enumeration/basics/ReportType.java` | `ENUM_NAME("權限代碼")` |
+
+**命名規則**：
+- 枚舉名稱：`PLT_REPORT_{FEATURE}_DOWNLOAD`
+- 權限代碼：`module:feature:action:export`
+- 例如：`PLT_REPORT_WITHDRAW_APPROVE_OVERVIEW_DOWNLOAD` → `fund:withdraw:approveOverview:export`
+
+### Step 6: 創建 Migration 權限文件
+
+1. 查找最新的 migration 文件版本號
+2. 創建新文件：`V{yyyyMMddHHmmss}__add_auth_{feature}.sql`
+3. 路徑：`plt-account/src/main/resources/migration/pg/common/`
+
+**SQL 模板**：
+```sql
+-- 新增父權限
+INSERT INTO ${tenant}_authority (name, authority, pid, type, creator_id, creator)
+VALUES ('功能名稱', 'module:feature:action',
+        (SELECT id FROM ${tenant}_authority WHERE authority = 'module:feature'), 0, 1, 'superAdmin')
+ON CONFLICT (authority) DO NOTHING;
+
+-- 新增導出子權限
+INSERT INTO ${tenant}_authority (name, authority, pid, type, creator_id, creator)
+VALUES ('导出', 'module:feature:action:export',
+        (SELECT id FROM ${tenant}_authority WHERE authority = 'module:feature:action'), 1, 1, 'superAdmin')
+ON CONFLICT (authority) DO NOTHING;
+```
+
+### Step 7: 驗證編譯
+
+```bash
+cd ${MODULE}
+mvn compile -DskipTests
+```
+
+確保沒有編譯錯誤。
+
+---
+
+## 實作範例：提現審批概觀報表
+
+### 輸入
+```
+curl 'https://admin-ot888-sit.mr9.site/api/v1/fund/withdraw/manage/approve-overview/list?page=1&size=100...'
+```
+
+### 輸出文件
+1. **Handler**: `WithdrawApproveOverviewReport.java`
+2. **ReportType** (3個模組同步)
+3. **Migration**: `V20260202120000__add_auth_withdraw_approve_overview.sql`
+
+### 關鍵代碼片段
+
+#### Handler 類別結構
+```java
+@Component
+@RequiredArgsConstructor
+public class WithdrawApproveOverviewReport implements DownloadReportHandler {
+    private final WithdrawManageDomainService withdrawManageDomainService;
+    private final BasicFeignClient basicFeignClient;
+    private final ObjectMapper mapper;
+
+    @Override
+    public ReportType type() {
+        return ReportType.PLT_REPORT_WITHDRAW_APPROVE_OVERVIEW_DOWNLOAD;
+    }
+
+    @Override
+    public void handle(ReportQryVo qryVo) {
+        // 分頁查詢 + 隱碼處理 + CSV 生成
+    }
+}
+```
+
+#### 子單展開邏輯
+```java
+// 主單行：託售子單號 顯示 "--"
+row.add("--");
+
+// 子單行：展開 subList，每個子單一行
+for (WithdrawChildPayOverviewVo child : record.getSubList()) {
+    row.add(child.getOrderSubId()); // 實際子單號
+}
+```
