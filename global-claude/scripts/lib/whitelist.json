@@ -1,0 +1,17 @@
+{
+  "comment": "技能白名单配置",
+  "whitelist": [
+    "en2zh",
+    "video-downloader",
+    "to-mp4",
+    "markitdown",
+    "mermaid-visualizer",
+    "api-analyzer",
+    "excalidraw-diagram",
+    "obsidian-markdown"
+  ],
+  "settings": {
+    "confidence_threshold": 0.15,
+    "max_results": 3
+  }
+}
