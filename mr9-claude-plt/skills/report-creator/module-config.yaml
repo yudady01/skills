@@ -1,0 +1,105 @@
+# Report Creator Skill - 模組配置映射表
+# 每個模組的 import 路徑和配置都不同，AI 需根據此配置生成正確的代碼
+
+modules:
+  plt-fund-aggregation:
+    name: "財務模組"
+    report_type_path: "com.galaxy.enumeration.basics.ReportType"
+    handler_interface_path: "com.galaxy.handler.downloadReportHanlder.DownloadReportHandler"
+    handler_impl_path: "com.galaxy.handler.downloadReportHanlder.impl"
+    report_qry_vo_path: "com.galaxy.model.basic.vo.ReportQryVo"
+    report_update_dto_path: "com.galaxy.model.basic.dto.ReportUpdateDto"
+    basic_feign_client_path: "com.galaxy.feign.client.basic.BasicFeignClient"
+    basic_feign_client_name: "BasicFeignClient"
+    page_vo_path: "com.galaxy.module.model.vo.PageVo"
+    header_key_path: "com.galaxy.module.constant.HeaderKey"
+    report_convert_utils_path: "com.galaxy.utils.ReportConvertUtils"
+    has_mask_factory: true
+    mask_factory_path: "com.galaxy.utils.ReportMaskFactory"
+    
+  plt-activity-aggregation:
+    name: "活動模組"
+    report_type_path: "com.galaxy.enumeration.ReportType"  # 注意：沒有 basics
+    handler_interface_path: "com.galaxy.handler.downloadReportHanlder.DownloadReportHandler"
+    handler_impl_path: "com.galaxy.handler.downloadReportHanlder.impl"
+    report_qry_vo_path: "com.galaxy.model.basic.vo.ReportQryVo"
+    report_update_dto_path: "com.galaxy.model.basic.dto.ReportUpdateDto"
+    basic_feign_client_path: "com.galaxy.feign.client.basics.BasicsFeignClient"  # 注意：basics 不是 basic
+    basic_feign_client_name: "BasicsFeignClient"
+    page_vo_path: "com.galaxy.module.model.vo.PageVo"
+    header_key_path: "com.galaxy.module.constant.HeaderKey"
+    report_convert_utils_path: "com.galaxy.utils.ReportConvertUtils"
+    has_mask_factory: false
+    
+  plt-proxy-aggregation:
+    name: "代理模組"
+    report_type_path: "com.galaxy.enumeration.basics.ReportType"
+    handler_interface_path: "com.galaxy.handler.downloadReportHanlder.DownloadReportHandler"
+    handler_impl_path: "com.galaxy.handler.downloadReportHanlder.impl"
+    report_qry_vo_path: "com.galaxy.model.basic.vo.ReportQryVo"
+    report_update_dto_path: "com.galaxy.model.basic.dto.ReportUpdateDto"
+    basic_feign_client_path: "com.galaxy.feign.client.basic.BasicsFeignClient"
+    basic_feign_client_name: "BasicsFeignClient"
+    page_vo_path: "com.galaxy.module.model.vo.PageVo"
+    header_key_path: "com.galaxy.module.constant.HeaderKey"
+    report_convert_utils_path: "com.galaxy.utils.ReportConvertUtils"
+    has_mask_factory: false
+    
+  plt-reportagg:
+    name: "報表模組"
+    report_type_path: "com.galaxy.enumeration.ReportType"  # 注意：沒有 basics
+    handler_interface_path: "com.galaxy.handler.downloadReportHanlder.DownloadReportHandler"
+    handler_impl_path: "com.galaxy.handler.downloadReportHanlder.impl"
+    report_qry_vo_path: "com.galaxy.model.basic.vo.ReportQryVo"
+    report_update_dto_path: "com.galaxy.model.basic.dto.ReportUpdateDto"
+    basic_feign_client_path: "com.galaxy.feign.client.basic.BasicsFeignClient"
+    basic_feign_client_name: "BasicsFeignClient"
+    page_vo_path: "com.galaxy.module.model.vo.PageVo"
+    header_key_path: "com.galaxy.module.constant.HeaderKey"
+    report_convert_utils_path: "com.galaxy.utils.ReportConvertUtils"
+    has_mask_factory: false
+    supports_cursor_pagination: true  # 支援游標分頁 (ExportBatchVo)
+    export_batch_dto_path: "com.galaxy.model.basic.dto.ExportBatchDto"
+    export_batch_vo_path: "com.galaxy.model.basic.vo.ExportBatchVo"
+
+  plt-user-aggregation:
+    name: "用戶模組"
+    # ⚠️ 此模組與其他模組差異極大！
+    report_type_path: "com.galaxy.enumeration.ReportType"
+    handler_interface_path: "com.galaxy.handler.downloadReportHandler.DownloadReportHandler"  # 注意：正確拼寫！
+    handler_impl_path: "com.galaxy.handler.downloadReportHandler.impl"  # 注意：正確拼寫！
+    report_qry_vo_path: "com.galaxy.model.vo.ReportQryVo"  # 注意：model.vo 不是 model.basic.vo
+    report_update_dto_path: "com.galaxy.model.dto.ReportUpdateDto"  # 注意：model.dto 不是 model.basic.dto
+    basic_feign_client_path: "com.galaxy.feign.client.basics.BasicsReportFeignClient"  # 完全不同的類別！
+    basic_feign_client_name: "BasicsReportFeignClient"
+    page_vo_path: "com.galaxy.module.model.vo.PageVo"
+    header_key_path: "com.galaxy.module.constant.HeaderKey"
+    report_convert_utils_path: "com.galaxy.util.ReportConvertUtils"  # 注意：util 不是 utils
+    has_mask_factory: true
+    mask_factory_path: "com.galaxy.util.ReportMaskFactory"  # 注意：util 不是 utils
+
+# =====================================================
+# 重要差異摘要
+# =====================================================
+#
+# 1. Handler 路徑拼寫：
+#    - 大多數模組: downloadReportHanlder (拼錯)
+#    - plt-user-aggregation: downloadReportHandler (正確)
+#
+# 2. ReportType 路徑：
+#    - fund, proxy: enumeration.basics.ReportType
+#    - activity, reportagg, user: enumeration.ReportType
+#
+# 3. BasicFeignClient：
+#    - fund: BasicFeignClient
+#    - activity: BasicsFeignClient (basics 包)
+#    - proxy, reportagg: BasicsFeignClient (basic 包)
+#    - user: BasicsReportFeignClient (完全不同！)
+#
+# 4. ReportConvertUtils：
+#    - user: com.galaxy.util (少一個 s)
+#    - 其他: com.galaxy.utils
+#
+# 5. 分頁方式：
+#    - 大多數: PageVo + page/size
+#    - reportagg: ExportBatchVo + lastSortValues (游標分頁)
