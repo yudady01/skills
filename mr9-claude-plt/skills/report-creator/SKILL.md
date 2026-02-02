@@ -26,7 +26,7 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 | `plt-reportagg` | 報表模組 (遊戲注單) |
 | `plt-user-aggregation` | 用戶模組 |
 
-**重要**：讀取 `module-config.yaml` 獲取該模組的配置，特別注意：
+**重要**：讀取 `references/module-config.yaml` 獲取該模組的配置，特別注意：
 - `plt-user-aggregation` 與其他模組差異極大（路徑、類名都不同）
 - Handler 路徑拼寫：大多數模組是 `downloadReportHanlder`（拼錯），但 `plt-user-aggregation` 是 `downloadReportHandler`（正確）
 
@@ -61,16 +61,17 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 
 | 條件 | 使用模板 |
 |------|----------|
-| 單一 VO、無子單、無隱碼需求 | `templates/simple-handler.java` |
-| 有子單 OR 需要隱碼處理 | `templates/complex-handler.java` |
+| 單一 VO、無子單、無隱碼需求 | `assets/simple-handler.java` |
+| 有子單 OR 需要隱碼處理 | `assets/complex-handler.java` |
 | 使用游標分頁 (reportagg 模組) | 需要使用 `ExportBatchVo` 模式 |
 
 ### Step 5: 生成代碼
 
-1. 從 `module-config.yaml` 獲取目標模組配置
-2. 生成 Handler 類別代碼
-3. 生成 `ReportType` 枚舉新增項
-4. 提供完整代碼供用戶審核
+1. 從 `references/module-config.yaml` 獲取目標模組配置
+2. 從 `assets/` 選擇適合的模板
+3. 生成 Handler 類別代碼
+4. 生成 `ReportType` 枚舉新增項
+5. 提供完整代碼供用戶審核
 
 ### Step 6: 驗證
 
@@ -116,6 +117,6 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 
 ## 範例參考
 
-- 簡單報表：查看 `examples/RechargeProxyReport.java`
-- 複雜報表：查看 `examples/WithdrawSummaryReport.java`
-- 用戶模組報表：查看 `examples/UserQueryReport.java`
+- 簡單報表：查看 `references/RechargeProxyReport.java`
+- 複雜報表：查看 `references/WithdrawSummaryReport.java`
+- 用戶模組報表：查看 `references/UserQueryReport.java`
