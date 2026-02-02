@@ -1,0 +1,66 @@
+{
+  "description": "dtg-pay 项目 hooks 配置 - 修复版",
+
+  "UserPromptSubmit": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【UserPromptSubmit Hook】你必须在回复的最开头添加这一行：\n🔔 用户输入已接收\n"
+        }
+      ]
+    }
+  ],
+
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【PreToolUse-Bash Hook】在调用 Bash 工具之前，你必须在工具调用的消息块之前先输出文本说明要执行什么。格式：\n🔧 即将执行命令: [简要描述]\n\n重要：先输出文本说明，然后再调用 Bash 工具。"
+        }
+      ]
+    }
+  ],
+
+  "PostToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【PostToolUse-Bash Hook】Bash 工具执行完成。你必须在回复的末尾添加：\n\n✅ Bash 执行完成"
+        }
+      ]
+    },
+    {
+      "matcher": "Read",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【PostToolUse-Read Hook】Read 工具执行完成。你必须在回复的末尾添加：\n\n✅ Read 执行完成"
+        }
+      ]
+    },
+    {
+      "matcher": "Glob|Grep",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【PostToolUse-Search Hook】搜索工具执行完成。你必须在回复的末尾添加：\n\n✅ 搜索执行完成"
+        }
+      ]
+    },
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "【PostToolUse-File Hook】文件操作完成。你必须在回复的末尾添加：\n\n✅ 文件操作完成"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "dtg-pay-hooks",
+  "version": "1.0.0",
+  "description": "Local hooks for dtg-pay project",
+  "author": "tommy",
+  "hooks": [
+    {
+      "type": "SessionStart",
+      "file": "hooks/session_start.md"
+    },
+    {
+      "type": "PreToolUse",
+      "file": "hooks/pre_tool_use.md"
+    },
+    {
+      "type": "PostToolUse",
+      "file": "hooks/post_tool_use.md"
+    }
+  ]
+}
