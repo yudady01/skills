@@ -3,11 +3,11 @@
 
   "UserPromptSubmit": [
     {
-      "matcher": "*",
+      "matcher": "",
       "hooks": [
         {
-          "type": "prompt",
-          "prompt": "【UserPromptSubmit Hook】你必须在回复的最开头添加这一行：\n🔔 用户输入已接收\n"
+          "type": "command",
+          "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/evaluate_skills.py\""
         }
       ]
     }
