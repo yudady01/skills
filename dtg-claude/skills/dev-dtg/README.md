@@ -147,18 +147,18 @@ claude
 ## 详细文档
 
 ### 使用指南
-- [快速开始指南](docs/guides/quickstart.md)
-- [智能功能指南](docs/guides/intelligent-features.md) - **新增**
+- [快速开始指南](docs/guides/getting-started.md)
+- [智能功能指南](docs/guides/intelligent-features.md)
 - [代理系统说明](docs/guides/agents.md)
 - [最佳实践](docs/guides/best-practices.md)
-- [智能架构分析](docs/guides/architecture-analysis.md) - **新增**
-- [智能问题诊断](docs/guides/problem-diagnosis.md) - **新增**
+- [智能架构分析](docs/guides/architecture-analysis.md)
+- [智能问题诊断](docs/guides/problem-diagnosis.md)
 
 ### 模板参考
 - [PRD 模板](docs/templates/prd.md)
 - [ADR 模板](docs/templates/adr.md)
 - [设计文档模板](docs/templates/design.md)
-- [智能审查报告模板](docs/templates/intelligent-review.md) - **新增**
+- [智能审查报告模板](docs/templates/intelligent-review.md)
 
 ### 开发规则
 - [项目上下文](docs/rules/project-context.md)
