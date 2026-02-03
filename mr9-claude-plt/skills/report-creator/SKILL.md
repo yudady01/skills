@@ -136,9 +136,19 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 ### Step 2: 查找相關代碼
 
 使用 Task tool 或 Explore agent 查找：
-- Controller 層：確認 API 入口
-- DTO/VO 類別：分析資料結構
-- DomainService/FeignClient：確認資料來源方法
+1. **Controller 層**：
+   - 確認 API 入口路徑
+   - **重要**：檢查 `@PreAuthorize` 註解，了解現有權限結構
+   - 例如：`fund:withdraw:operatorOverview:approve` 表示父權限是 `fund:withdraw:operatorOverview`
+
+2. **DTO/VO 類別**：
+   - 分析查詢參數結構（Query DTO）
+   - 分析響應資料結構（Response VO）
+   - 確認是否有子單（subList）嵌套結構
+
+3. **DomainService/FeignClient**：
+   - 確認資料來源方法名稱
+   - 確認方法簽名（參數、返回值）
 
 ### Step 3: 向用戶確認需求
 
@@ -176,17 +186,43 @@ description: 根據資料來源 API 自動生成報表處理器代碼
 | plt-gateway | `enumeration/basics/ReportType.java` | `ENUM_NAME("權限代碼")` |
 
 **命名規則**：
-- 枚舉名稱：`PLT_REPORT_{FEATURE}_DOWNLOAD`
-- 權限代碼：`module:feature:action:export`
-- 例如：`PLT_REPORT_WITHDRAW_APPROVE_OVERVIEW_DOWNLOAD` → `fund:withdraw:approveOverview:export`
+- 枚舉名稱：`PLT_REPORT_{FEATURE}_DOWNLOAD`（使用與功能一致的名稱）
+- 權限代碼：`module:feature:action:export`（需與現有權限結構匹配）
+- 中文描述：業務模組(功能名稱)
+
+**範例對照**：
+| 枚舉名稱 | 權限代碼 | 中文描述 |
+|---------|---------|---------|
+| `PLT_REPORT_WITHDRAW_OPERATOR_OVERVIEW_DOWNLOAD` | `fund:withdraw:operatorOverview:export` | 託售管理(出款操作總覽) |
+| `PLT_REPORT_WITHDRAW_SUMMARY_DOWNLOAD` | `fund:withdraw:summary:export` | 託售管理(出款彙總) |
+
+**重要**：枚舉名稱必須與權限代碼的 action 部分保持一致：
+- `operatorOverview` → `OPERATOR_OVERVIEW`
+- `summary` → `SUMMARY`
 
 ### Step 6: 創建 Migration 權限文件
 
-1. 查找最新的 migration 文件版本號
-2. 創建新文件：`V{yyyyMMddHHmmss}__add_auth_{feature}.sql`
-3. 路徑：`plt-account/src/main/resources/migration/pg/common/`
+1. **查找現有權限結構**
+   - 檢查 Controller 中的 `@PreAuthorize` 註解
+   - 確認父權限是否已存在
+   - 例如：`fund:withdraw:operatorOverview:approve` 表示父權限是 `fund:withdraw:operatorOverview`
 
-**SQL 模板**：
+2. **創建新文件**：`V{yyyyMMddHHmmss}__add_auth_{feature}.sql`
+   - 路徑：`plt-account/src/main/resources/migration/pg/common/`
+   - 版本號需大於現有文件
+
+3. **SQL 模板**：
+
+**情況A：父權限已存在，只需添加導出權限**
+```sql
+-- 新增導出子權限（掛在現有父權限下）
+INSERT INTO ${tenant}_authority (name, authority, pid, type, creator_id, creator)
+VALUES ('導出', 'module:feature:action:export',
+        (SELECT id FROM ${tenant}_authority WHERE authority = 'module:feature:action'), 1, 1, 'superAdmin')
+ON CONFLICT (authority) DO NOTHING;
+```
+
+**情況B：需要創建新的父權限**
 ```sql
 -- 新增父權限
 INSERT INTO ${tenant}_authority (name, authority, pid, type, creator_id, creator)
@@ -201,6 +237,11 @@ VALUES ('导出', 'module:feature:action:export',
 ON CONFLICT (authority) DO NOTHING;
 ```
 
+**重要提示**：
+- 使用 `ON CONFLICT (authority) DO NOTHING;` 避免重複插入
+- `pid` 通過子查詢獲取父權限 ID
+- `type = 1` 表示子權限，`type = 0` 表示父權限
+
 ### Step 7: 驗證編譯
 
 ```bash
@@ -212,22 +253,37 @@ mvn compile -DskipTests
 
 ---
 
-## 實作範例：提現審批概觀報表
+## 實作範例：出款操作總覽報表
 
 ### 輸入
 ```
 curl 'https://admin-ot888-sit.mr9.site/api/v1/fund/withdraw/manage/approve-overview/list?page=1&size=100...'
 ```
 
+### 權限分析
+
+檢查 Controller 發現現有權限：
+```java
+@PreAuthorize("hasAuthority('fund:withdraw:operatorOverview:approve')")
+@PostMapping("/approve/reassignment")
+public SuccessResp<String> reassignment(@Valid @RequestBody ApproveOverviewReassignmentDto dto)
+```
+
+**結論**：父權限 `fund:withdraw:operatorOverview` 已存在，只需添加導出權限。
+
 ### 輸出文件
 1. **Handler**: `WithdrawApproveOverviewReport.java`
 2. **ReportType** (3個模組同步)
-3. **Migration**: `V20260202120000__add_auth_withdraw_approve_overview.sql`
+3. **Migration**: `V20260202120000__add_auth_withdraw_operator_overview.sql`
 
 ### 關鍵代碼片段
 
 #### Handler 類別結構
 ```java
+/**
+ * 出款操作總覽导出
+ */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WithdrawApproveOverviewReport implements DownloadReportHandler {
@@ -237,7 +293,7 @@ public class WithdrawApproveOverviewReport implements DownloadReportHandler {
 
     @Override
     public ReportType type() {
-        return ReportType.PLT_REPORT_WITHDRAW_APPROVE_OVERVIEW_DOWNLOAD;
+        return ReportType.PLT_REPORT_WITHDRAW_OPERATOR_OVERVIEW_DOWNLOAD;
     }
 
     @Override
@@ -245,6 +301,27 @@ public class WithdrawApproveOverviewReport implements DownloadReportHandler {
         // 分頁查詢 + 隱碼處理 + CSV 生成
     }
 }
+```
+
+#### ReportType 枚舉（3個模組）
+```java
+// plt-fund-aggregation
+PLT_REPORT_WITHDRAW_OPERATOR_OVERVIEW_DOWNLOAD("託售管理(出款操作總覽)"),
+
+// plt-basics
+PLT_REPORT_WITHDRAW_OPERATOR_OVERVIEW_DOWNLOAD("fund-report-download", "託售管理(出款操作總覽)", "csv"),
+
+// plt-gateway
+PLT_REPORT_WITHDRAW_OPERATOR_OVERVIEW_DOWNLOAD("fund:withdraw:operatorOverview:export"),
+```
+
+#### Migration SQL（情況A：父權限已存在）
+```sql
+-- 出款操作總覽: 導出
+INSERT INTO ${tenant}_authority (name, authority, pid, type, creator_id, creator)
+VALUES ('出款操作總覽导出', 'fund:withdraw:operatorOverview:export',
+        (SELECT id FROM ${tenant}_authority WHERE authority = 'fund:withdraw:operatorOverview'), 1, 1, 'superAdmin')
+ON CONFLICT (authority) DO NOTHING;
 ```
 
 #### 子單展開邏輯
@@ -256,4 +333,12 @@ row.add("--");
 for (WithdrawChildPayOverviewVo child : record.getSubList()) {
     row.add(child.getOrderSubId()); // 實際子單號
 }
+```
+
+### 權限結構圖
+```
+fund:withdraw (託售管理)
+└── fund:withdraw:operatorOverview (出款操作總覽)
+    ├── fund:withdraw:operatorOverview:approve (重新派單) [原有]
+    └── fund:withdraw:operatorOverview:export (导出) [新增]
 ```
