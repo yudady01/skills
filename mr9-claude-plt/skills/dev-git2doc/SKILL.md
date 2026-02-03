@@ -1,18 +1,22 @@
 ---
 name: dev-git2doc
-description: 抽取 Git branch 變更內容，自動生成開發文檔
+description: 抽取 Git branch 變更內容，自動生成開發文檔。當用戶請求分析 git branch 的 commits 並生成開發文檔、抽取功能分支的變更作為新增類似功能的參考、記錄多模組的關聯變更時使用此 Skill。
+version: 1.0.0
+tags: ["git", "documentation", "commit-analysis", "multi-module", "plt"]
+triggers:
+  - "dev-git2doc"
+  - "git2doc"
+  - "/dev-git2doc"
+  - "分析 git branch"
+  - "生成開發文檔"
+  - "抽取 git 變更"
 ---
 
-# Dev Git2Doc Skill
+# Dev Git2Doc
 
-## 觸發條件
+抽取 Git branch 變更內容，自動生成開發文檔。
 
-當用戶請求以下任務時使用此 Skill：
-- 分析 git branch 的 commits 並生成開發文檔
-- 抽取功能分支的變更作為新增類似功能的參考
-- 記錄多模組的關聯變更
-
-## 輸入格式
+## 使用方式
 
 ```
 /dev-git2doc <branch>
