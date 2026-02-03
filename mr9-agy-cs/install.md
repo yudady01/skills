@@ -1,4 +1,11 @@
-ln -s /Users/tommy/Documents/skills/mr9-gemini-cs .gemini
+ln -s /Users/tommy/Documents/skills/mr9-agy-cs /Users/tommy/Documents/git/mr9/backend/cs/.agent/skills
+
+
+
+
+
+
+
 
 
 
