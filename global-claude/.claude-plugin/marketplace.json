@@ -11,163 +11,163 @@
     {
       "name": "en2zh",
       "description": "专业的英中翻译工具，专门处理技术和编程内容",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "en2zh"
+        "./skills/en2zh"
       ]
     },
     {
       "name": "repeatable-sql",
       "description": "可重复执行的 SQL 技能生成器",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "repeatable-sql"
+        "./skills/repeatable-sql"
       ]
     },
     {
       "name": "theme-factory",
       "description": "用于为工件应用主题样式的工具包",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "theme-factory"
+        "./skills/theme-factory"
       ]
     },
     {
       "name": "video-downloader",
       "description": "下载 YouTube 视频，支持可自定义的质量和格式选项",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "video-downloader"
+        "./skills/video-downloader"
       ]
     },
     {
       "name": "mermaid-visualizer",
       "description": "将文本内容转换为专业的 Mermaid 图表",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "mermaid-visualizer"
+        "./skills/mermaid-visualizer"
       ]
     },
     {
       "name": "excalidraw-diagram",
       "description": "从文本内容生成 Excalidraw 图表",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "excalidraw-diagram"
+        "./skills/excalidraw-diagram"
       ]
     },
     {
       "name": "create-plan",
       "description": "创建简洁的计划",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "create-plan"
+        "./skills/create-plan"
       ]
     },
     {
       "name": "markitdown",
       "description": "将文件和 Office 文档转换为 Markdown",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "markitdown"
+        "./skills/markitdown"
       ]
     },
     {
       "name": "obsidian-canvas-creator",
       "description": "从文本内容创建 Obsidian Canvas 文件",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "obsidian-canvas-creator"
+        "./skills/obsidian-canvas-creator"
       ]
     },
     {
       "name": "agy-impl",
       "description": "Antigravity 计划实现执行工具",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "agy-impl"
+        "./skills/agy-impl"
       ]
     },
     {
       "name": "excalidraw",
       "description": "从代码库分析生成架构图",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "excalidraw"
+        "./skills/excalidraw"
       ]
     },
     {
       "name": "json-canvas",
       "description": "创建和编辑 JSON Canvas 文件",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "json-canvas"
+        "./skills/json-canvas"
       ]
     },
     {
       "name": "obsidian-bases",
       "description": "创建和编辑 Obsidian Bases 文件",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "obsidian-bases"
+        "./skills/obsidian-bases"
       ]
     },
     {
       "name": "obsidian-markdown",
       "description": "创建和编辑 Obsidian Flavored Markdown",
-      "source": "../skills/",
+      "source": "./",
       "strict": false,
       "skills": [
-        "obsidian-markdown"
+        "./skills/obsidian-markdown"
       ]
     },
     {
       "name": "ob-fm",
-      "description": "Apple 风格的 Markdown 文档格式化工具，提供优雅的排版和设计规范",
-      "source": "../skills/",
+      "description": "Apple 风格的 Markdown 文档格式化工具",
+      "source": "./",
       "strict": false,
       "skills": [
-        "ob-fm"
+        "./skills/ob-fm"
       ]
     },
     {
       "name": "api-analyzer",
-      "description": "分析 cURL 請求並自動生成 API 文檔。當用戶提供 curl 命令時，自動分析請求方法、路徑、請求頭、認證方式、代碼調用鏈，並生成結構化的文檔保存到指定目錄。文檔按 Swagger @Tag 分類組織。",
-      "source": "../skills/",
+      "description": "分析 cURL 請求並自動生成 API 文檔",
+      "source": "./",
       "strict": false,
       "skills": [
-        "api-analyzer"
+        "./skills/api-analyzer"
       ]
     },
     {
       "name": "to-mp4",
-      "description": "视频转 MP4 转换器，支持任意视频格式（MOV、MP4、AVI、MKV 等）转换为 MP4。批量处理文件夹，智能压缩，交互式方案选择。对 MP4 输入自动优化（缩小尺寸、快速处理）。",
-      "source": "../skills/",
+      "description": "视频转 MP4 转换器",
+      "source": "./",
       "strict": false,
       "skills": [
-        "to-mp4"
+        "./skills/to-mp4"
       ]
     },
     {
       "name": "fixed-git-files",
-      "description": "自动查找当前文件夹下的所有文本文件并转换换行符为 LF（Unix 格式）。排除 .git 文件夹，使用 sed 命令将所有 CRLF（Windows）转换为 LF。",
-      "source": "../skills/",
+      "description": "自动查找当前文件夹下的所有文本文件并转换换行符为 LF",
+      "source": "./",
       "strict": false,
       "skills": [
-        "fixed-git-files"
+        "./skills/fixed-git-files"
       ]
     }
   ]
