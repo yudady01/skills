@@ -3,6 +3,9 @@
 
 echo "正在将所有文件转换为 LF 格式..."
 
+# 设置 LC_ALL 以处理非 ASCII 字符
+export LC_ALL=C
+
 # 使用 find 排除 .git 文件夹，并调用 dos2unix 进行转换
 # 如果没有 dos2unix，可以使用 sed
 find . -type d -name ".git" -prune -o -type f -print0 | xargs -0 sed -i '' 's/\r$//'
