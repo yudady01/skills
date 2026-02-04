@@ -169,6 +169,15 @@
       "skills": [
         "./skills/fixed-git-files"
       ]
+    },
+    {
+      "name": "skill-creator",
+      "description": "创建有效技能的指南",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/skill-creator"
+      ]
     }
   ]
 }
