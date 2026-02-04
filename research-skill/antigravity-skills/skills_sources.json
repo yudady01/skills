@@ -1,0 +1,94 @@
+[
+    {
+        "name": "anthropics-skills",
+        "repo_url": "https://github.com/anthropics/skills.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": []
+            }
+        ]
+    },
+    {
+        "name": "notebooklm",
+        "repo_url": "https://github.com/PleasePrompto/notebooklm-skill.git",
+        "branch": "master",
+        "copy_rules": [
+            {
+                "source": ".",
+                "dest": "skills/notebooklm",
+                "exclude": [
+                    ".git",
+                    ".github",
+                    ".gitignore"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "superpowers",
+        "repo_url": "https://github.com/obra/superpowers.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": []
+            }
+        ]
+    },
+    {
+        "name": "planning-with-files",
+        "repo_url": "https://github.com/OthmanAdi/planning-with-files.git",
+        "branch": "master",
+        "copy_rules": [
+            {
+                "source": "skills/planning-with-files",
+                "dest": "skills/planning-with-files",
+                "exclude": [
+                    ".git",
+                    ".github",
+                    ".gitignore"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "context-engineering",
+        "repo_url": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": []
+            }
+        ]
+    },
+    {
+        "name": "obsidian-skills",
+        "repo_url": "https://github.com/kepano/obsidian-skills.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": []
+            }
+        ]
+    },
+    {
+        "name": "remotion-skills",
+        "repo_url": "https://github.com/remotion-dev/skills.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": []
+            }
+        ]
+    }
+]
