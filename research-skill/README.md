@@ -7,3 +7,6 @@ https://github.com/topics/agent-skills
 
 [repomirror/repomirror.md at main · repomirrorhq/repomirror · GitHub](https://github.com/repomirrorhq/repomirror/blob/main/repomirror.md)
 
+
+
+[GitHub - VoltAgent/awesome-agent-skills: Claude Code Skills and 200+ agent skills from official dev teams and the community, compatible with Codex, Antigravity, Gemini CLI, Cursor and others.](https://github.com/VoltAgent/awesome-agent-skills)
