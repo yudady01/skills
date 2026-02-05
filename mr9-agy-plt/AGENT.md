@@ -1,64 +1,64 @@
-# Project Context: PLT Backend
+# 项目上下文：PLT 后端
 
-## Overview
-This is a large-scale Java/Spring Boot microservices backend project, likely for a financial or gaming platform ("plt"). It follows a multi-module Maven architecture, where each directory (e.g., `pay`, `plt-user`, `plt-fund`) represents a distinct service or module.
+## 概述
+这是一个大规模的 Java/Spring Boot 微服务后端项目，可能用于金融或游戏平台（"plt"）。它遵循多模块 Maven 架构，其中每个目录（例如 `pay`、`plt-user`、`plt-fund`）代表一个独立的服务或模块。
 
-## Key Technologies
-- **Language:** Java (Likely 17+)
-- **Framework:** Spring Boot 3.x
-- **Build Tool:** Maven
-- **Database:** PostgreSQL (with Flyway for migrations)
-- **ORM:** MyBatis Plus
-- **Cache/KV:** Redis (Redisson)
-- **Messaging:** RabbitMQ
-- **Observability:** Micrometer, Prometheus, OpenTelemetry
-- **Utilities:** Lombok, MapStruct, FastJSON
+## 核心技术
+- **语言：** Java（可能是 17+）
+- **框架：** Spring Boot 3.x
+- **构建工具：** Maven
+- **数据库：** PostgreSQL（使用 Flyway 进行迁移）
+- **ORM：** MyBatis Plus
+- **缓存/键值存储：** Redis (Redisson)
+- **消息传递：** RabbitMQ
+- **可观测性：** Micrometer、Prometheus、OpenTelemetry
+- **工具库：** Lombok、MapStruct、FastJSON
 
-## Current Mission: Withdrawal System Refactoring
-**Status:** In Progress (Phase 2 - Backend Implementation)
-**Goal:** Simplify the withdrawal process by removing the "Withdrawal Assignment" (提款分配) and "Exception Handling" (異常提現處理) steps to create a "Direct Pass" (直通車) mode.
+## 当前任务：提现系统重构
+**状态：** 进行中（阶段 2 - 后端实现）
+**目标：** 通过移除"提款分配"和"异常提現處理"步骤来简化提现流程，创建"直通车"模式。
 
-**Key Changes:**
-1.  **Workflow Simplification:**
-    *   Manual Withdraw: `Waiting Review (1)` -> `Waiting Pay (3)` -> `Payed (4)` (Skipping state `2`).
-    *   3rd Party Withdraw: `Waiting Review (1)` -> `Waiting Pay (3)` -> `Processing (7)` (Skipping state `2`).
-2.  **Deprecation Strategy:**
-    *   **Do NOT delete code/columns.**
-    *   Use `@Deprecated` annotation for Java classes/methods/fields.
-    *   Use `DEPRECATED` comments for SQL columns and Mapper XMLs.
-    *   Front-end will hide UI elements instead of removing code.
+**关键变更：**
+1.  **流程简化：**
+    *   手动提现：`待审核 (1)` -> `待支付 (3)` -> `已支付 (4)`（跳过状态 `2`）。
+    *   第三方提现：`待审核 (1)` -> `待支付 (3)` -> `处理中 (7)`（跳过状态 `2`）。
+2.  **废弃策略：**
+    *   **不要删除代码/列。**
+    *   对 Java 类/方法/字段使用 `@Deprecated` 注解。
+    *   对 SQL 列和 Mapper XML 使用 `DEPRECATED` 注释。
+    *   前端将隐藏 UI 元素而不是删除代码。
 
-**Reference Documents:**
-*   `doc/action-plan.md`: Detailed step-by-step execution plan. **(Primary Source of Truth)**
-*   `pay/README.md`: Overview of the refactoring goals and state changes.
-*   `doc/task.md`: Specific task tracking.
+**参考文档：**
+*   `doc/action-plan.md`：详细的分步执行计划。**（主要事实来源）**
+*   `pay/README.md`：重构目标和状态变更概述。
+*   `doc/task.md`：具体任务跟踪。
 
-## Directory Structure
-*   `pay/`: Payment service module.
-*   `plt-fund/`: Fund management service module (Center of current refactoring).
-*   `plt-user/`: User management service module.
-*   `doc/`: Project documentation, SQL scripts, and action plans.
-*   `pom.xml`: (In subdirectories) Maven build configuration.
+## 目录结构
+*   `pay/`：支付服务模块。
+*   `plt-fund/`：资金管理服务模块（当前重构的核心）。
+*   `plt-user/`：用户管理服务模块。
+*   `doc/`：项目文档、SQL 脚本和行动计划。
+*   `pom.xml`：（在子目录中）Maven 构建配置。
 
-## Build & Run
-**Build:**
-Standard Maven build (skip tests if necessary during dev):
+## 构建与运行
+**构建：**
+标准 Maven 构建（开发期间必要时跳过测试）：
 ```bash
 mvn clean install -DskipTests
 ```
 
-**Run:**
-Spring Boot applications are typically run via their main class or Maven plugin:
+**运行：**
+Spring Boot 应用程序通常通过其主类或 Maven 插件运行：
 ```bash
 mvn spring-boot:run
 ```
 
-## Development Conventions
-*   **Versioning:** Check `pom.xml` for dependencies. Use `com.galaxy:parent` as the parent POM.
-*   **Code Style:** Standard Java/Spring conventions. Use Lombok for boilerplate.
-*   **Testing:** JUnit tests are expected.
-*   **Deprecation:** Strictly follow the "Annotate, Don't Delete" rule for the current withdrawal refactoring task.
+## 开发约定
+*   **版本控制：** 检查 `pom.xml` 中的依赖项。使用 `com.galaxy:parent` 作为父 POM。
+*   **代码风格：** 标准 Java/Spring 约定。使用 Lombok 减少样板代码。
+*   **测试：** 预期有 JUnit 测试。
+*   **废弃：** 对于当前的提现重构任务，严格遵循"标注，不删除"规则。
 
-## Mermaid Documentation Rules
-When creating Mermaid diagrams in markdown files, **you MUST follow the Obsidian Mermaid skill**: `.agent/skills/obsidian-mermaid/SKILL.md`
+## Mermaid 文档规则
+在 markdown 文件中创建 Mermaid 图表时，**必须遵循 Obsidian Mermaid 技能**：`.agent/skills/obsidian-mermaid/SKILL.md`
 
