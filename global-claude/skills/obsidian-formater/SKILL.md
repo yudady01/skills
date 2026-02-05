@@ -1,10 +1,10 @@
 ---
-name: ob-fm
+name: obsidian-formater
 description: 当用户要求"使用 Apple 风格格式化"、"Apple 官网风格"、"Obsidian Apple Style Architect"、"重新格式化为 Apple 风格笔记"、"应用 Apple 官网美学"，或请求将原始文本转换为 Apple 官网风格的 Obsidian 笔记时使用此技能。全面的 Apple 风格格式化，包含 H1-H3 层级结构、1.8 行高、1.2em 段落间距和 Callout 转换。重要：直接替换原始文件，禁止创建新文件。必需：必须包含 `cssclass: apple-style` 字段。
 version: 2.1.1
 ---
 
-# Obsidian Apple Style Architect (ob-fm)
+# Obsidian Apple Style Architect (obsidian-formater)
 
 ## 角色定义
 

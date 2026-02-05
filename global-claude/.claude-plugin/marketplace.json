@@ -135,12 +135,12 @@
       ]
     },
     {
-      "name": "ob-fm",
+      "name": "obsidian-formater",
       "description": "Apple 风格的 Markdown 文档格式化工具",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/ob-fm"
+        "./skills/obsidian-formater"
       ]
     },
     {
