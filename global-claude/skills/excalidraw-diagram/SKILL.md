@@ -1,5 +1,5 @@
 ---
-name: excalidraw-diagram
+name: local:excalidraw-diagram
 description: Generate Excalidraw diagrams from text content for Obsidian. Use when user asks to create diagrams, flowcharts, mind maps, or visual representations in Excalidraw format. Triggers on "Excalidraw", "画图", "流程图", "思维导图", "可视化", "diagram".
 metadata:
   version: 1.1.0

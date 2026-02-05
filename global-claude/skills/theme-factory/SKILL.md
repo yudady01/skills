@@ -1,5 +1,5 @@
 ---
-name: theme-factory
+name: local:theme-factory
 description: 用于为工件应用主题样式的工具包。这些工件可以是幻灯片、文档、报告、HTML 着陆页等。有 10 种预设主题，包含颜色/字体，可以应用于任何已创建的工件，或者可以即时生成新主题。
 license: 完整条款见 LICENSE.txt
 

@@ -9,21 +9,61 @@
   },
   "plugins": [
     {
-      "name": "en2zh",
-      "description": "专业的英中翻译工具，专门处理技术和编程内容",
+      "name": "development-tools",
+      "description": "Collection of development utilities including translation, SQL idempotent scripts, API analysis, and Git file fixing",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/en2zh"
+        "./skills/en2zh",
+        "./skills/repeatable-sql",
+        "./skills/api-analyzer",
+        "./skills/fixed-git-files"
       ]
     },
     {
-      "name": "repeatable-sql",
-      "description": "可重复执行的 SQL 技能生成器",
+      "name": "diagram-visualizer",
+      "description": "Collection of diagram and visualization tools including Mermaid charts and Excalidraw diagrams for text-to-visual conversion",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/repeatable-sql"
+        "./skills/mermaid-visualizer",
+        "./skills/excalidraw-diagram",
+        "./skills/excalidraw"
+      ]
+    },
+    {
+      "name": "media-converter",
+      "description": "Collection of media conversion tools including video download, MP4 conversion, and document-to-Markdown conversion",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/video-downloader",
+        "./skills/to-mp4",
+        "./skills/markitdown"
+      ]
+    },
+    {
+      "name": "obsidian-suite",
+      "description": "Collection of Obsidian-related capabilities including Canvas, Bases, JSON Canvas, Markdown, and Apple-style formatting",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/obsidian-canvas-creator",
+        "./skills/obsidian-bases",
+        "./skills/obsidian-markdown",
+        "./skills/obsidian-formater",
+        "./skills/json-canvas"
+      ]
+    },
+    {
+      "name": "workflow-tools",
+      "description": "Collection of workflow and planning tools including plan creation, Antigravity implementation, and skill development guidance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/create-plan",
+        "./skills/agy-impl",
+        "./skills/skill-creator"
       ]
     },
     {
@@ -33,150 +73,6 @@
       "strict": false,
       "skills": [
         "./skills/theme-factory"
-      ]
-    },
-    {
-      "name": "video-downloader",
-      "description": "下载 YouTube 视频，支持可自定义的质量和格式选项",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/video-downloader"
-      ]
-    },
-    {
-      "name": "mermaid-visualizer",
-      "description": "将文本内容转换为专业的 Mermaid 图表",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/mermaid-visualizer"
-      ]
-    },
-    {
-      "name": "excalidraw-diagram",
-      "description": "从文本内容生成 Excalidraw 图表",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/excalidraw-diagram"
-      ]
-    },
-    {
-      "name": "create-plan",
-      "description": "创建简洁的计划",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/create-plan"
-      ]
-    },
-    {
-      "name": "markitdown",
-      "description": "将文件和 Office 文档转换为 Markdown",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/markitdown"
-      ]
-    },
-    {
-      "name": "obsidian-canvas-creator",
-      "description": "从文本内容创建 Obsidian Canvas 文件",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/obsidian-canvas-creator"
-      ]
-    },
-    {
-      "name": "agy-impl",
-      "description": "Antigravity 计划实现执行工具",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/agy-impl"
-      ]
-    },
-    {
-      "name": "excalidraw",
-      "description": "从代码库分析生成架构图",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/excalidraw"
-      ]
-    },
-    {
-      "name": "json-canvas",
-      "description": "创建和编辑 JSON Canvas 文件",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/json-canvas"
-      ]
-    },
-    {
-      "name": "obsidian-bases",
-      "description": "创建和编辑 Obsidian Bases 文件",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/obsidian-bases"
-      ]
-    },
-    {
-      "name": "obsidian-markdown",
-      "description": "创建和编辑 Obsidian Flavored Markdown",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/obsidian-markdown"
-      ]
-    },
-    {
-      "name": "obsidian-formater",
-      "description": "Apple 风格的 Markdown 文档格式化工具",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/obsidian-formater"
-      ]
-    },
-    {
-      "name": "api-analyzer",
-      "description": "分析 cURL 請求並自動生成 API 文檔",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/api-analyzer"
-      ]
-    },
-    {
-      "name": "to-mp4",
-      "description": "视频转 MP4 转换器",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/to-mp4"
-      ]
-    },
-    {
-      "name": "fixed-git-files",
-      "description": "自动查找当前文件夹下的所有文本文件并转换换行符为 LF",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/fixed-git-files"
-      ]
-    },
-    {
-      "name": "skill-creator",
-      "description": "创建有效技能的指南",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/skill-creator"
       ]
     }
   ]

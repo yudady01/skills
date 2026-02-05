@@ -1,5 +1,5 @@
 ---
-name: agy-impl
+name: local:agy-impl
 description: This skill should be used when the user asks to "implement Antigravity plan", "execute implementation plan", "实作 Antigravity 计划", "执行实作计划", "执行 antigravity 计划", "执行计划实作", "运行实作计划", or mentions "implementation_plan.md.resolved" files. Provides specialized guidance for executing Antigravity plan implementations including plan retrieval, code modification (MODIFY/DELETE/ADD), test validation, and completion reporting.
 version: 1.0.0
 ---

@@ -1,5 +1,5 @@
 ---
-name: api-analyzer
+name: local:api-analyzer
 description: 分析 cURL 請求並自動生成 API 文檔。當用戶提供 curl 命令時，自動分析請求方法、路徑、請求頭、認證方式、代碼調用鏈，並生成結構化的文檔保存到指定目錄。文檔按 Swagger @Tag 分類組織。
 license: MIT
 ---

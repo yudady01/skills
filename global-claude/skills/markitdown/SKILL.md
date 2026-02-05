@@ -1,5 +1,5 @@
 ---
-name: markitdown
+name: local:markitdown
 description: "Convert files and office documents to Markdown. Supports PDF, DOCX, PPTX, XLSX, images (with OCR), audio (with transcription), HTML, CSV, JSON, XML, ZIP, YouTube URLs, EPubs and more."
 allowed-tools: [Read, Write, Edit, Bash]
 license: MIT

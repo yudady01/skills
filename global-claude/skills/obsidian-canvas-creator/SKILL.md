@@ -1,5 +1,5 @@
 ---
-name: obsidian-canvas-creator
+name: local:obsidian-canvas-creator
 description: Create Obsidian Canvas files from text content, supporting both MindMap and freeform layouts. Use this skill when users want to visualize content as an interactive canvas, create mind maps, or organize information spatially in Obsidian format.
 ---
 

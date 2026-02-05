@@ -1,5 +1,5 @@
 ---
-name: youtube-downloader
+name: local:video-downloader
 description: 下载 YouTube 视频，支持可自定义的质量和格式选项。当用户要求下载、保存或获取 YouTube 视频时使用此技能。支持多种质量设置（best、1080p、720p、480p、360p）、多种格式（mp4、webm、mkv）以及仅下载音频为 MP3。
 ---
 

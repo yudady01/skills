@@ -102,6 +102,8 @@ def get_skills_dir() -> Path:
 def load_marketplace_skills() -> List[Dict[str, Any]]:
     """Load skills from marketplace.json.
 
+    Expands plugin groups to load individual skill details from SKILL.md files.
+
     Returns:
         List of skill dictionaries with name, description, etc.
     """
@@ -111,7 +113,36 @@ def load_marketplace_skills() -> List[Dict[str, Any]]:
 
     try:
         data = json.loads(marketplace_path.read_text(encoding="utf-8"))
-        return data.get("plugins", [])
+        plugins = data.get("plugins", [])
+        skills_dir = get_skills_dir()
+
+        result = []
+        for plugin in plugins:
+            skills_list = plugin.get("skills", [])
+
+            if len(skills_list) == 0:
+                continue
+
+            if len(skills_list) == 1:
+                # Single skill plugin - use plugin name and description directly
+                result.append({
+                    "name": plugin.get("name", ""),
+                    "description": plugin.get("description", "")
+                })
+            else:
+                # Multiple skills in one plugin - expand them
+                for skill_path in skills_list:
+                    if skill_path.startswith("./"):
+                        # Extract skill name from path (e.g., "./skills/en2zh" -> "en2zh")
+                        skill_name = skill_path.replace("./skills/", "").strip("/")
+                        skill_details = load_skill_details(skill_name)
+                        if skill_details:
+                            result.append({
+                                "name": skill_details.get("name", skill_name),
+                                "description": skill_details.get("description", "")
+                            })
+
+        return result
     except (json.JSONDecodeError, IOError):
         return []
 

@@ -1,5 +1,5 @@
 ---
-name: excalidraw
+name: local:excalidraw
 description: Generate architecture diagrams as .excalidraw files from codebase analysis. Use when the user asks to create architecture diagrams, system diagrams, visualize codebase structure, or generate excalidraw files.
 ---
 

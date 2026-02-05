@@ -1,5 +1,5 @@
 ---
-name: create-plan
+name: local:create-plan
 description: 创建简洁的计划。当用户明确要求与编码任务相关的计划时使用。
 metadata:
   short-description: 创建计划

@@ -1,5 +1,5 @@
 ---
-name: fixed-git-files
+name: local:fixed-git-files
 description: 自动查找当前文件夹下的所有文本文件并转换换行符为 LF（Unix 格式）。排除 .git 文件夹，使用 sed 命令将所有 CRLF（Windows）转换为 LF。
 ---
 

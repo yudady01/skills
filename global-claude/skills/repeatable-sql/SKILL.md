@@ -1,5 +1,5 @@
 ---
-name: repeatable-sql
+name: local:repeatable-sql
 description: 可重复执行SQL技能生成器，专门用于创建幂等的数据库迁移脚本。支持MySQL和PostgreSQL，提供索引管理、表结构变更、数据操作的模板和工具。当需要编写可安全重复执行的SQL脚本、设计Flyway迁移、或确保数据库操作幂等性时使用。
 ---
 
