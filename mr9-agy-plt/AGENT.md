@@ -60,22 +60,5 @@ mvn spring-boot:run
 *   **Deprecation:** Strictly follow the "Annotate, Don't Delete" rule for the current withdrawal refactoring task.
 
 ## Mermaid Documentation Rules
-When creating Mermaid diagrams in markdown files (especially for Obsidian compatibility):
+When creating Mermaid diagrams in markdown files, **you MUST follow the Obsidian Mermaid skill**: `.agent/skills/obsidian-mermaid/SKILL.md`
 
-1.  **Use `flowchart TD` instead of `stateDiagram-v2`** - State diagrams may fail to render in Obsidian.
-2.  **Use English node IDs** - e.g., `M0`, `S1`, `A1` instead of Chinese characters like `主單0`.
-3.  **Put Chinese text in labels** - Use `M0["0: 待審核分配"]` format.
-4.  **Use `<br/>` for line breaks** - Not `\n` in labels.
-5.  **Avoid `note` syntax** - Use `subgraph` or inline comments instead.
-
-**Example:**
-```mermaid
-flowchart TD
-    M0["0: WAITING_ASSIGN<br/>待審核分配"] -->|"dispatch<br/>審核分配"| M1["1: WAITING_REVIEW<br/>待出款審核"]
-    style M0 fill:#90EE90
-```
-
-**Reference:** See `/mermaid-obsidian-guide` workflow for detailed examples.
-
-## Actionable Context
-When working on the codebase, always check `doc/action-plan.md` to see which phase of the refactoring is currently active. We are currently ensuring backend code (Enumerations, Entities, DTOs, Services) reflects the deprecation of states `-3`, `-2`, and `2`, and the logic shift for state `1` -> `3`.
