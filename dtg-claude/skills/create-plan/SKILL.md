@@ -1,5 +1,5 @@
 ---
-name: dtg-create-plan
+name: dtg:create-plan
 description: 创建 Spring Boot 技术方案与执行计划（固定栈：MyBatis-Plus + Redis + HikariCP + ActiveMQ）。用于架构设计和任务拆解。
 tags: [spring-boot, architecture, planning]
 metadata:

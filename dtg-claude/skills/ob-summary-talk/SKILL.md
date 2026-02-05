@@ -1,5 +1,5 @@
 ---
-name: ob-summary-talk
+name: dtg:ob-summary-talk
 description: 总结当前对话并生成详细的技术与流程报告（Obsidian Markdown），保存到用户指定的固定目录。
 ---
 

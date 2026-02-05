@@ -1,5 +1,5 @@
 ---
-name: s-level-testing
+name: dtg:s-level-testing
 description: 執行 S 級標準的單元測試，包括環境檢查、測試執行、覆蓋率驗證和問題排查
 ---
 

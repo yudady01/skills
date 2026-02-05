@@ -1,5 +1,5 @@
 ---
-name: dev-dtg
+name: dtg:dev-dtg
 description: This skill should be used when the user asks to "DTG-Pay development", "xxpay development", "create payment service", "add payment channel", "integrate Alipay/WeChat Pay", "Dubbo microservice development", "Spring Boot payment system", or mentions DTG-Pay, xxpay modules, payment gateway, payment channel, or multi-module Maven project with Dubbo. Provides specialized development guidance for DTG-Pay/xxpay distributed payment system including Dubbo RPC services, payment channel integration, multi-module Maven project structure, and Spring Boot 2.7 + Dubbo 3.2 best practices.
 version: 2.1.0
 tags: ["dtg-pay", "payment-system", "dubbo", "spring-boot", "java", "xxpay"]

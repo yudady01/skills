@@ -1,5 +1,5 @@
 ---
-name: flyway-idempotent
+name: dtg:flyway-idempotent
 description: 将 Flyway SQL 迁移脚本改造为幂等版本，确保可安全重复执行
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: dtg-i18n
+name: dtg:i18n
 description: This skill should be used when the user asks to "process i18n translation", "handle i18n translations", "add missing translations", "check i18n keys", "update translation files", or mentions "i18ndata" or "translateMessageByPath". Automatically extracts i18n keys from HTML/JS files and updates corresponding JSON translation files for dtg-pay project.
 version: 1.1.0
 ---

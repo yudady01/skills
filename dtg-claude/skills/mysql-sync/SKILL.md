@@ -1,5 +1,5 @@
 ---
-name: dtg-mysql-sync
+name: dtg:mysql-sync
 description: Use when user enters "dtg-mysql-sync <table>" or asks to sync MySQL data, copy MySQL table, or replicate MySQL 8 database. Synchronizes MySQL 8 table data from source to target with time filtering, batch processing, retry mechanism, and auto-cleanup. Ask for table name if not provided.
 version: 3.0.0
 tags: ["mysql", "data-sync", "replication", "mysql-8", "database-operations", "xxpay"]
