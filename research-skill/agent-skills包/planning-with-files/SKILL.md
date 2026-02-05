@@ -1,7 +1,7 @@
 ---
 name: planning-with-files
 version: "2.10.0"
-description: Implements Manus-style file-based planning for complex tasks. Creates task_plan.md, findings.md, and progress.md. Use when starting complex multi-step tasks, research projects, or any task requiring >5 tool calls. Now with automatic session recovery after /clear.
+description: 实现 Manus 风格的基于文件的复杂任务规划。创建 task_plan.md、findings.md 和 progress.md。在开始复杂的多步骤任务、研究项目或任何需要 >5 次工具调用的任务时使用。现在支持 /clear 后的自动会话恢复。
 user-invocable: true
 allowed-tools:
   - Read
@@ -22,7 +22,7 @@ hooks:
     - matcher: "Write|Edit"
       hooks:
         - type: command
-          command: "echo '[planning-with-files] File updated. If this completes a phase, update task_plan.md status.'"
+          command: "echo '[planning-with-files] 文件已更新。如果完成了一个阶段，请更新 task_plan.md 状态。'"
   Stop:
     - hooks:
         - type: command
@@ -53,13 +53,13 @@ hooks:
             fi
 ---
 
-# Planning with Files
+# 使用文件进行规划
 
-Work like Manus: Use persistent markdown files as your "working memory on disk."
+像 Manus 一样工作：使用持久的 markdown 文件作为您的"磁盘上的工作记忆"。
 
-## FIRST: Check for Previous Session (v2.2.0)
+## 首先：检查以前的会话（v2.2.0）
 
-**Before starting work**, check for unsynced context from a previous session:
+**在开始工作之前**，检查来自以前会话的未同步上下文：
 
 ```bash
 # Linux/macOS
@@ -71,178 +71,178 @@ $(command -v python3 || command -v python) ${CLAUDE_PLUGIN_ROOT}/scripts/session
 & (Get-Command python -ErrorAction SilentlyContinue).Source "$env:USERPROFILE\.claude\skills\planning-with-files\scripts\session-catchup.py" (Get-Location)
 ```
 
-If catchup report shows unsynced context:
-1. Run `git diff --stat` to see actual code changes
-2. Read current planning files
-3. Update planning files based on catchup + git diff
-4. Then proceed with task
+如果追赶报告显示未同步的上下文：
+1. 运行 `git diff --stat` 查看实际的代码更改
+2. 阅读当前的规划文件
+3. 根据追赶 + git diff 更新规划文件
+4. 然后继续执行任务
 
-## Important: Where Files Go
+## 重要：文件放在哪里
 
-- **Templates** are in `${CLAUDE_PLUGIN_ROOT}/templates/`
-- **Your planning files** go in **your project directory**
+- **模板**位于 `${CLAUDE_PLUGIN_ROOT}/templates/`
+- **您的规划文件**放在**您的项目目录**中
 
-| Location | What Goes There |
+| 位置 | 内容 |
 |----------|-----------------|
-| Skill directory (`${CLAUDE_PLUGIN_ROOT}/`) | Templates, scripts, reference docs |
-| Your project directory | `task_plan.md`, `findings.md`, `progress.md` |
+| 技能目录（`${CLAUDE_PLUGIN_ROOT}/`） | 模板、脚本、参考文档 |
+| 您的项目目录 | `task_plan.md`、`findings.md`、`progress.md` |
 
-## Quick Start
+## 快速开始
 
-Before ANY complex task:
+在任何复杂任务之前：
 
-1. **Create `task_plan.md`** — Use [templates/task_plan.md](templates/task_plan.md) as reference
-2. **Create `findings.md`** — Use [templates/findings.md](templates/findings.md) as reference
-3. **Create `progress.md`** — Use [templates/progress.md](templates/progress.md) as reference
-4. **Re-read plan before decisions** — Refreshes goals in attention window
-5. **Update after each phase** — Mark complete, log errors
+1. **创建 `task_plan.md`** — 使用 [templates/task_plan.md](templates/task_plan.md) 作为参考
+2. **创建 `findings.md`** — 使用 [templates/findings.md](templates/findings.md) 作为参考
+3. **创建 `progress.md`** — 使用 [templates/progress.md](templates/progress.md) 作为参考
+4. **在决策前重新阅读计划** — 刷新注意力窗口中的目标
+5. **在每个阶段后更新** — 标记完成，记录错误
 
-> **Note:** Planning files go in your project root, not the skill installation folder.
+> **注意：**规划文件放在您的项目根目录中，而不是技能安装文件夹中。
 
-## The Core Pattern
+## 核心模式
 
 ```
-Context Window = RAM (volatile, limited)
-Filesystem = Disk (persistent, unlimited)
+上下文窗口 = RAM（易失，有限）
+文件系统 = 磁盘（持久，无限）
 
-→ Anything important gets written to disk.
+→ 任何重要内容都会写入磁盘。
 ```
 
-## File Purposes
+## 文件用途
 
-| File | Purpose | When to Update |
+| 文件 | 用途 | 更新时机 |
 |------|---------|----------------|
-| `task_plan.md` | Phases, progress, decisions | After each phase |
-| `findings.md` | Research, discoveries | After ANY discovery |
-| `progress.md` | Session log, test results | Throughout session |
+| `task_plan.md` | 阶段、进度、决策 | 每个阶段后 |
+| `findings.md` | 研究、发现 | 任何发现后 |
+| `progress.md` | 会话日志、测试结果 | 整个会话期间 |
 
-## Critical Rules
+## 关键规则
 
-### 1. Create Plan First
-Never start a complex task without `task_plan.md`. Non-negotiable.
+### 1. 首先创建计划
+永远不要在没有 `task_plan.md` 的情况下开始复杂任务。不可协商。
 
-### 2. The 2-Action Rule
-> "After every 2 view/browser/search operations, IMMEDIATELY save key findings to text files."
+### 2. 两操作规则
+> "在每 2 次查看/浏览器/搜索操作后，立即将关键发现保存到文本文件。"
 
-This prevents visual/multimodal information from being lost.
+这可以防止视觉/多模态信息丢失。
 
-### 3. Read Before Decide
-Before major decisions, read the plan file. This keeps goals in your attention window.
+### 3. 决策前阅读
+在做出重大决定之前，阅读计划文件。这可以保持目标在您的注意力窗口中。
 
-### 4. Update After Act
-After completing any phase:
-- Mark phase status: `in_progress` → `complete`
-- Log any errors encountered
-- Note files created/modified
+### 4. 操作后更新
+完成任何阶段后：
+- 标记阶段状态：`in_progress` → `complete`
+- 记录遇到的任何错误
+- 注明创建/修改的文件
 
-### 5. Log ALL Errors
-Every error goes in the plan file. This builds knowledge and prevents repetition.
+### 5. 记录所有错误
+每个错误都进入计划文件。这可以建立知识并防止重复。
 
 ```markdown
-## Errors Encountered
-| Error | Attempt | Resolution |
+## 遇到的错误
+| 错误 | 尝试 | 解决方案 |
 |-------|---------|------------|
-| FileNotFoundError | 1 | Created default config |
-| API timeout | 2 | Added retry logic |
+| FileNotFoundError | 1 | 创建默认配置 |
+| API timeout | 2 | 添加重试逻辑 |
 ```
 
-### 6. Never Repeat Failures
+### 6. 永远不要重复失败
 ```
 if action_failed:
     next_action != same_action
 ```
-Track what you tried. Mutate the approach.
+跟踪您尝试过的内容。改变方法。
 
-## The 3-Strike Error Protocol
+## 三次错误协议
 
 ```
-ATTEMPT 1: Diagnose & Fix
-  → Read error carefully
-  → Identify root cause
-  → Apply targeted fix
+尝试 1：诊断并修复
+  → 仔细阅读错误
+  → 识别根本原因
+  → 应用有针对性的修复
 
-ATTEMPT 2: Alternative Approach
-  → Same error? Try different method
-  → Different tool? Different library?
-  → NEVER repeat exact same failing action
+尝试 2：替代方法
+  → 仍然出错？尝试不同的方法
+  → 不同的工具？不同的库？
+  → 永远不要重复完全相同的失败操作
 
-ATTEMPT 3: Broader Rethink
-  → Question assumptions
-  → Search for solutions
-  → Consider updating the plan
+尝试 3：更广泛的重新思考
+  → 质疑假设
+  → 搜索解决方案
+  → 考虑更新计划
 
-AFTER 3 FAILURES: Escalate to User
-  → Explain what you tried
-  → Share the specific error
-  → Ask for guidance
+3 次失败后：升级到用户
+  → 解释您尝试了什么
+  → 分享具体错误
+  → 请求指导
 ```
 
-## Read vs Write Decision Matrix
+## 读写决策矩阵
 
-| Situation | Action | Reason |
+| 情况 | 操作 | 原因 |
 |-----------|--------|--------|
-| Just wrote a file | DON'T read | Content still in context |
-| Viewed image/PDF | Write findings NOW | Multimodal → text before lost |
-| Browser returned data | Write to file | Screenshots don't persist |
-| Starting new phase | Read plan/findings | Re-orient if context stale |
-| Error occurred | Read relevant file | Need current state to fix |
-| Resuming after gap | Read all planning files | Recover state |
+| 刚刚写入文件 | 不要读取 | 内容仍在上下文中 |
+| 查看图像/PDF | 立即写入发现 | 多模态 → 在丢失之前转为文本 |
+| 浏览器返回数据 | 写入文件 | 屏幕截图不会持久化 |
+| 开始新阶段 | 阅读计划/发现 | 如果上下文过时，重新定位 |
+| 发生错误 | 阅读相关文件 | 需要当前状态来修复 |
+| 间隔后恢复 | 阅读所有规划文件 | 恢复状态 |
 
-## The 5-Question Reboot Test
+## 五问题重启测试
 
-If you can answer these, your context management is solid:
+如果您能回答这些问题，您的上下文管理就很扎实：
 
-| Question | Answer Source |
+| 问题 | 答案来源 |
 |----------|---------------|
-| Where am I? | Current phase in task_plan.md |
-| Where am I going? | Remaining phases |
-| What's the goal? | Goal statement in plan |
-| What have I learned? | findings.md |
-| What have I done? | progress.md |
+| 我在哪里？ | task_plan.md 中的当前阶段 |
+| 我要去哪里？ | 剩余阶段 |
+| 目标是什么？ | 计划中的目标声明 |
+| 我学到了什么？ | findings.md |
+| 我做了什么？ | progress.md |
 
-## When to Use This Pattern
+## 何时使用此模式
 
-**Use for:**
-- Multi-step tasks (3+ steps)
-- Research tasks
-- Building/creating projects
-- Tasks spanning many tool calls
-- Anything requiring organization
+**用于：**
+- 多步骤任务（3+ 步骤）
+- 研究任务
+- 构建/创建项目
+- 跨越许多工具调用的任务
+- 任何需要组织的任务
 
-**Skip for:**
-- Simple questions
-- Single-file edits
-- Quick lookups
+**跳过：**
+- 简单问题
+- 单文件编辑
+- 快速查找
 
-## Templates
+## 模板
 
-Copy these templates to start:
+复制这些模板以开始：
 
-- [templates/task_plan.md](templates/task_plan.md) — Phase tracking
-- [templates/findings.md](templates/findings.md) — Research storage
-- [templates/progress.md](templates/progress.md) — Session logging
+- [templates/task_plan.md](templates/task_plan.md) — 阶段跟踪
+- [templates/findings.md](templates/findings.md) — 研究存储
+- [templates/progress.md](templates/progress.md) — 会话日志
 
-## Scripts
+## 脚本
 
-Helper scripts for automation:
+用于自动化的辅助脚本：
 
-- `scripts/init-session.sh` — Initialize all planning files
-- `scripts/check-complete.sh` — Verify all phases complete
-- `scripts/session-catchup.py` — Recover context from previous session (v2.2.0)
+- `scripts/init-session.sh` — 初始化所有规划文件
+- `scripts/check-complete.sh` — 验证所有阶段完成
+- `scripts/session-catchup.py` — 从以前的会话恢复上下文（v2.2.0）
 
-## Advanced Topics
+## 高级主题
 
-- **Manus Principles:** See [reference.md](reference.md)
-- **Real Examples:** See [examples.md](examples.md)
+- **Manus 原则：** 参阅 [reference.md](reference.md)
+- **真实示例：** 参阅 [examples.md](examples.md)
 
-## Anti-Patterns
+## 反模式
 
-| Don't | Do Instead |
+| 不要做 | 改为这样做 |
 |-------|------------|
-| Use TodoWrite for persistence | Create task_plan.md file |
-| State goals once and forget | Re-read plan before decisions |
-| Hide errors and retry silently | Log errors to plan file |
-| Stuff everything in context | Store large content in files |
-| Start executing immediately | Create plan file FIRST |
-| Repeat failed actions | Track attempts, mutate approach |
-| Create files in skill directory | Create files in your project |
+| 使用 TodoWrite 进行持久化 | 创建 task_plan.md 文件 |
+| 陈述一次目标然后忘记 | 在决策前重新阅读计划 |
+| 隐藏错误并静默重试 | 将错误记录到计划文件 |
+| 把所有东西都塞进上下文 | 将大内容存储在文件中 |
+| 立即开始执行 | 首先创建计划文件 |
+| 重复失败的操作 | 跟踪尝试，改变方法 |
+| 在技能目录中创建文件 | 在您的项目中创建文件 |

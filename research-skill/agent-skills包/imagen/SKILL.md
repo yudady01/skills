@@ -1,79 +1,78 @@
 ---
 name: imagen
 description: |
-  Generate images using Google Gemini's image generation capabilities.
-  Use this skill when the user needs to create, generate, or produce images
-  for any purpose including UI mockups, icons, illustrations, diagrams,
-  concept art, placeholder images, or visual representations.
+  使用 Google Gemini 的图像生成能力生成图像。
+  当用户需要创建、生成或制作任何用途的图像（包括 UI 原型、图标、插图、图表、
+  概念艺术、占位图像或视觉表示）时使用此技能。
 ---
 
-# Imagen - AI Image Generation Skill
+# Imagen - AI 图像生成技能
 
-## Overview
+## 概述
 
-This skill generates images using Google Gemini's image generation model (`gemini-3-pro-image-preview`). It enables seamless image creation during any Claude Code session - whether you're building frontend UIs, creating documentation, or need visual representations of concepts.
+此技能使用 Google Gemini 的图像生成模型（`gemini-3-pro-image-preview`）生成图像。它能在任何 Claude Code 会话中无缝创建图像——无论是构建前端 UI、创建文档，还是需要概念的可视化表示。
 
-**Cross-Platform**: Works on Windows, macOS, and Linux.
+**跨平台支持**：适用于 Windows、macOS 和 Linux。
 
-## When to Use This Skill
+## 何时使用此技能
 
-Automatically activate this skill when:
-- User requests image generation (e.g., "generate an image of...", "create a picture...")
-- Frontend development requires placeholder or actual images
-- Documentation needs illustrations or diagrams
-- Visualizing concepts, architectures, or ideas
-- Creating icons, logos, or UI assets
-- Any task where an AI-generated image would be helpful
+在以下情况下自动激活此技能：
+- 用户请求生成图像（例如："生成一张...的图像"、"创建一幅图片..."）
+- 前端开发需要占位图或实际图像
+- 文档需要插图或图表
+- 可视化概念、架构或想法
+- 创建图标、徽标或 UI 资源
+- 任何 AI 生成图像可能有帮助的任务
 
-## How It Works
+## 工作原理
 
-1. Takes a text prompt describing the desired image
-2. Calls Google Gemini API with image generation configuration
-3. Saves the generated image to a specified location (defaults to current directory)
-4. Returns the file path for use in your project
+1. 接受描述所需图像的文本提示
+2. 使用图像生成配置调用 Google Gemini API
+3. 将生成的图像保存到指定位置（默认为当前目录）
+4. 返回文件路径供项目使用
 
-## Usage
+## 使用方法
 
-### Python (Cross-Platform - Recommended)
+### Python（跨平台 - 推荐）
 
 ```bash
-# Basic usage
-python scripts/generate_image.py "A futuristic city skyline at sunset"
+# 基本用法
+python scripts/generate_image.py "日落时分的未来城市天际线"
 
-# With custom output path
-python scripts/generate_image.py "A minimalist app icon for a music player" "./assets/icons/music-icon.png"
+# 自定义输出路径
+python scripts/generate_image.py "音乐播放器的简约应用图标" "./assets/icons/music-icon.png"
 
-# With custom size
-python scripts/generate_image.py --size 2K "High resolution landscape" "./wallpaper.png"
+# 自定义尺寸
+python scripts/generate_image.py --size 2K "高分辨率风景图" "./wallpaper.png"
 ```
 
-## Requirements
+## 要求
 
-- `GEMINI_API_KEY` environment variable must be set
-- Python 3.6+ (uses standard library only, no pip install needed)
+- 必须设置 `GEMINI_API_KEY` 环境变量
+- Python 3.6+（仅使用标准库，无需 pip 安装）
 
-## Output
+## 输出
 
-Generated images are saved as PNG files. The script returns:
-- Success: Path to the generated image
-- Failure: Error message with details
+生成的图像保存为 PNG 文件。脚本返回：
+- 成功：生成的图像路径
+- 失败：包含详细信息的错误消息
 
-## Examples
+## 示例
 
-### Frontend Development
+### 前端开发
 ```
-User: "I need a hero image for my landing page - something abstract and tech-focused"
--> Generates and saves image, provides path for use in HTML/CSS
-```
-
-### Documentation
-```
-User: "Create a diagram showing microservices architecture"
--> Generates visual representation, ready for README or docs
+用户："我需要一张用于我的落地页的英雄图像 - 要抽象一些且聚焦科技主题"
+-> 生成并保存图像，提供用于 HTML/CSS 的路径
 ```
 
-### UI Assets
+### 文档
 ```
-User: "Generate a placeholder avatar image for the user profile component"
--> Creates image in appropriate size for component use
+用户："创建一张显示微服务架构的图表"
+-> 生成可视化表示，准备好用于 README 或文档
+```
+
+### UI 资源
+```
+用户："为用户资料组件生成一张占位头像图像"
+-> 创建适合组件使用的尺寸的图像
 ```

@@ -1,6 +1,6 @@
 ---
 name: remotion
-description: Best practices and comprehensive guide for Remotion - programmatic video creation in React with animations, compositions, and media handling
+description: Remotion 最佳实践和综合指南 - 使用 React 以编程方式创建视频，包含动画、合成和媒体处理
 version: 1.0.0
 author: remotion-dev
 repo: https://github.com/remotion-dev/skills
@@ -9,94 +9,94 @@ tags: [Video, React, Animation, Remotion, Composition, Media, 3D, Audio, Caption
 dependencies: [remotion>=4.0.0, react>=18.0.0]
 ---
 
-# Remotion - Video Creation in React
+# Remotion - 使用 React 创建视频
 
-Comprehensive skill set for creating programmatic videos using Remotion, a framework for creating videos programmatically using React.
+使用 Remotion 以编程方式创建视频的综合技能集，Remotion 是一个使用 React 以编程方式创建视频的框架。
 
-## When to use
+## 何时使用
 
-Use this skill whenever you are dealing with Remotion code to obtain domain-specific knowledge about:
+每当您处理 Remotion 代码以获取以下领域特定知识时，请使用此技能：
 
-- Creating video compositions with React components
-- Animating elements using frame-based animations
-- Working with audio, video, and image assets
-- Building charts and data visualizations
-- Implementing text animations and captions
-- Using 3D content with Three.js
-- Applying transitions and sequencing
-- Integrating Tailwind CSS and Lottie animations
+- 使用 React 组件创建视频合成
+- 使用基于帧的动画制作动画元素
+- 处理音频、视频和图像资源
+- 构建图表和数据可视化
+- 实现文本动画和字幕
+- 使用 Three.js 处理 3D 内容
+- 应用转场和排序
+- 集成 Tailwind CSS 和 Lottie 动画
 
-## Core Concepts
+## 核心概念
 
-Remotion allows you to create videos using:
-- **React Components**: Build video content with familiar React syntax
-- **Frame-based Animations**: All animations driven by `useCurrentFrame()` hook
-- **Compositions**: Define video compositions with duration, dimensions, and props
-- **Assets**: Import and manipulate images, videos, audio, and fonts
-- **Rendering**: Export videos programmatically with customizable settings
+Remotion 允许您使用以下方式创建视频：
+- **React 组件**：使用熟悉的 React 语法构建视频内容
+- **基于帧的动画**：所有动画由 `useCurrentFrame()` hook 驱动
+- **合成**：定义具有持续时间、尺寸和属性的视频合成
+- **资源**：导入和操作图像、视频、音频和字体
+- **渲染**：以可编程方式导出具有可自定义设置的视频
 
-## Key Features
+## 主要功能
 
-- Frame-by-frame control over animations
-- Dynamic metadata calculation
-- Media processing (trimming, volume, speed, pitch)
-- Caption generation and display
-- Data visualization with charts
-- 3D content integration
-- Professional text animations
-- Scene transitions and sequencing
+- 逐帧控制动画
+- 动态元数据计算
+- 媒体处理（修剪、音量、速度、音调）
+- 字幕生成和显示
+- 使用图表进行数据可视化
+- 3D 内容集成
+- 专业文本动画
+- 场景转场和排序
 
-## How to use
+## 如何使用
 
-Read individual rule files for detailed explanations and code examples:
+阅读单个规则文件以获取详细说明和代码示例：
 
-### Core Animation & Timing
-- **[references/animations.md](references/animations.md)** - Fundamental animation techniques for Remotion
-- **[references/timing.md](references/timing.md)** - Interpolation curves: linear, easing, spring animations
-- **[references/sequencing.md](references/sequencing.md)** - Delay, trim, and limit duration of items
-- **[references/trimming.md](references/trimming.md)** - Cut the beginning or end of animations
+### 核心动画和计时
+- **[references/animations.md](references/animations.md)** - Remotion 的基本动画技术
+- **[references/timing.md](references/timing.md)** - 插值曲线：线性、缓动、弹簧动画
+- **[references/sequencing.md](references/sequencing.md)** - 延迟、修剪和限制项目的持续时间
+- **[references/trimming.md](references/trimming.md)** - 剪切动画的开头或结尾
 
-### Compositions & Metadata
-- **[references/compositions.md](references/compositions.md)** - Defining compositions, stills, folders, default props
-- **[references/calculate-metadata.md](references/calculate-metadata.md)** - Dynamically set composition duration, dimensions, and props
+### 合成和元数据
+- **[references/compositions.md](references/compositions.md)** - 定义合成、静态图像、文件夹、默认属性
+- **[references/calculate-metadata.md](references/calculate-metadata.md)** - 动态设置合成持续时间、尺寸和属性
 
-### Assets & Media
-- **[references/assets.md](references/assets.md)** - Importing images, videos, audio, and fonts
-- **[references/images.md](references/images.md)** - Embedding images using the Img component
-- **[references/videos.md](references/videos.md)** - Embedding videos with trimming, volume, speed, looping, pitch
-- **[references/audio.md](references/audio.md)** - Using audio and sound with trimming, volume, speed, pitch
-- **[references/gifs.md](references/gifs.md)** - Displaying GIFs synchronized with timeline
+### 资源和媒体
+- **[references/assets.md](references/assets.md)** - 导入图像、视频、音频和字体
+- **[references/images.md](references/images.md)** - 使用 Img 组件嵌入图像
+- **[references/videos.md](references/videos.md)** - 嵌入视频，支持修剪、音量、速度、循环、音调
+- **[references/audio.md](references/audio.md)** - 使用音频和声音，支持修剪、音量、速度、音调
+- **[references/gifs.md](references/gifs.md)** - 显示与时间线同步的 GIF
 
-### Text & Typography
-- **[references/text-animations.md](references/text-animations.md)** - Typography and text animation patterns
-- **[references/measuring-text.md](references/measuring-text.md)** - Measuring text dimensions, fitting text, checking overflow
-- **[references/fonts.md](references/fonts.md)** - Loading Google Fonts and local fonts
+### 文本和排版
+- **[references/text-animations.md](references/text-animations.md)** - 排版和文本动画模式
+- **[references/measuring-text.md](references/measuring-text.md)** - 测量文本尺寸、适配文本、检查溢出
+- **[references/fonts.md](references/fonts.md)** - 加载 Google 字体和本地字体
 
-### Captions & Transcription
-- **[references/display-captions.md](references/display-captions.md)** - Displaying captions with TikTok-style pages and word highlighting
-- **[references/import-srt-captions.md](references/import-srt-captions.md)** - Importing .srt subtitle files using @remotion/captions
-- **[references/transcribe-captions.md](references/transcribe-captions.md)** - Transcribing audio to generate captions
+### 字幕和转录
+- **[references/display-captions.md](references/display-captions.md)** - 显示带有 TikTok 风格页面和单词高亮的字幕
+- **[references/import-srt-captions.md](references/import-srt-captions.md)** - 使用 @remotion/captions 导入 .srt 字幕文件
+- **[references/transcribe-captions.md](references/transcribe-captions.md)** - 转录音频以生成字幕
 
-### Data Visualization
-- **[references/charts.md](references/charts.md)** - Chart and data visualization patterns
+### 数据可视化
+- **[references/charts.md](references/charts.md)** - 图表和数据可视化模式
 
-### Advanced Features
-- **[references/3d.md](references/3d.md)** - 3D content using Three.js and React Three Fiber
-- **[references/lottie.md](references/lottie.md)** - Embedding Lottie animations
-- **[references/transitions.md](references/transitions.md)** - Scene transition patterns
+### 高级功能
+- **[references/3d.md](references/3d.md)** - 使用 Three.js 和 React Three Fiber 的 3D 内容
+- **[references/lottie.md](references/lottie.md)** - 嵌入 Lottie 动画
+- **[references/transitions.md](references/transitions.md)** - 场景转场模式
 
-### Styling & Layout
-- **[references/tailwind.md](references/tailwind.md)** - Using TailwindCSS in Remotion
-- **[references/measuring-dom-nodes.md](references/measuring-dom-nodes.md)** - Measuring DOM element dimensions
+### 样式和布局
+- **[references/tailwind.md](references/tailwind.md)** - 在 Remotion 中使用 TailwindCSS
+- **[references/measuring-dom-nodes.md](references/measuring-dom-nodes.md)** - 测量 DOM 元素尺寸
 
-### Media Processing (Mediabunny)
-- **[references/can-decode.md](references/can-decode.md)** - Check if a video can be decoded by the browser
-- **[references/extract-frames.md](references/extract-frames.md)** - Extract frames from videos at specific timestamps
-- **[references/get-audio-duration.md](references/get-audio-duration.md)** - Getting the duration of an audio file
-- **[references/get-video-dimensions.md](references/get-video-dimensions.md)** - Getting the width and height of a video file
-- **[references/get-video-duration.md](references/get-video-duration.md)** - Getting the duration of a video file
+### 媒体处理（Mediabunny）
+- **[references/can-decode.md](references/can-decode.md)** - 检查视频是否可以被浏览器解码
+- **[references/extract-frames.md](references/extract-frames.md)** - 从视频中提取特定时间戳的帧
+- **[references/get-audio-duration.md](references/get-audio-duration.md)** - 获取音频文件的持续时间
+- **[references/get-video-dimensions.md](references/get-video-dimensions.md)** - 获取视频文件的宽度和高度
+- **[references/get-video-duration.md](references/get-video-duration.md)** - 获取视频文件的持续时间
 
-## Quick Start Example
+## 快速开始示例
 
 ```tsx
 import { useCurrentFrame, useVideoConfig, interpolate } from "remotion";
@@ -117,19 +117,19 @@ export const MyComposition = () => {
 };
 ```
 
-## Best Practices
+## 最佳实践
 
-1. **Always use `useCurrentFrame()`** - Drive all animations from the current frame
-2. **Avoid CSS animations** - They won't render correctly in videos
-3. **Think in seconds** - Multiply time in seconds by `fps` for frame calculations
-4. **Use interpolate for smooth animations** - Built-in interpolation with easing functions
-5. **Clamp extrapolation** - Prevent values from exceeding intended ranges
-6. **Test frequently** - Preview in Remotion Studio before rendering
+1. **始终使用 `useCurrentFrame()`** - 从当前帧驱动所有动画
+2. **避免 CSS 动画** - 它们不会在视频中正确渲染
+3. **以秒为单位思考** - 将以秒为单位的时间乘以 `fps` 进行帧计算
+4. **使用 interpolate 实现平滑动画** - 内置插值，带有缓动函数
+5. **钳位外推** - 防止值超出预期范围
+6. **频繁测试** - 在渲染之前在 Remotion Studio 中预览
 
-## Resources
+## 资源
 
-- **Documentation**: https://www.remotion.dev/docs
-- **Repository**: https://github.com/remotion-dev/remotion
-- **Skills Repository**: https://github.com/remotion-dev/skills
-- **Community**: Discord and GitHub Discussions
-- **License**: MIT
+- **文档**：https://www.remotion.dev/docs
+- **存储库**：https://github.com/remotion-dev/remotion
+- **技能存储库**：https://github.com/remotion-dev/skills
+- **社区**：Discord 和 GitHub 讨论
+- **许可证**：MIT
