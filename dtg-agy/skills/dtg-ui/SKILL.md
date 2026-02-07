@@ -1,7 +1,6 @@
 ---
 name: dtg-ui
-description: 专门用于处理 dtg-pay 项目（xxpay-manage）的 UI 相关任务。包含 Layui 布局规范、CSS 宽度修正习惯、统计汇总块模版、多皮肤 i18n 自动化处理逻辑以及标准的 JS 常规操作（权限、请求、渲染）。
-version: 1.0.0
+description: dtg-pay 项目 UI 开发助手。支持 Layui 页面生成、组件模板、i18n 国际化自动处理（含翻译文件更新）、CSS 修复、代码重构。适用 xxpay-manage xxpay-merchant xxpay-agent 模块。
 ---
 
 # DTG UI & i18n 综合助理 (多模块增强版)
