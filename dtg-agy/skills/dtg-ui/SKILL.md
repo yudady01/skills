@@ -163,27 +163,41 @@ description: dtg-pay 项目 UI 开发助手。支持 Layui 页面生成、组件
 
 ### 2.4 键命名规范
 
-- 嵌套结构：`module:feature.sub_feature.property`
-- 常用前缀：`merchant:`, `agent:`, `common:`, `order:`
-- 通用键（存放在 common.json）：`save`, `back`, `saveSuccess`, `saveFailed`, `search`, `export`
+**键结构**：`module:subDir1.subDir2.fileName.property`
+
+| 路径组成 | 转换规则 | 示例 |
+|---------|---------|------|
+| **Module** (冒号前) | 取 `views/` 下第一级目录名，对应 JSON 文件名 | `agent` |
+| **子目录** | 转驼峰，用 `.` 分隔每个层级 | `agentpayPassage` |
+| **文件名** | 去掉 `.html`，保持原样 | `list` |
+| **属性名** | 驼峰命名 | `agentManage` |
+
+**示例映射**：
+
+| 文件路径 | i18n 键 |
+|---------|---------|
+| `views/agent/agentpay_passage/list.html` | `agent:agentpayPassage.list.xxx` |
+| `views/agent/subagent/config/edit.html` | `agent:subagent.config.edit.xxx` |
+| `views/merchant/pay_passage/add.html` | `merchant:payPassage.add.xxx` |
+
+**通用键**（存放在 common.json）：`save`, `back`, `saveSuccess`, `saveFailed`, `search`, `export`
 
 ### 2.5 翻译文件格式示例
 
 ```json
 // agent.json
 {
-  "rate": {
-    "edit": {
-      "home": "首页",
-      "agentManagement": "代理商管理",
-      "updateAgentRate": "修改代理商费率",
-      "basicInfo": "基本信息"
+  "agentpayPassage": {
+    "list": {
+      "agentManage": "代理商管理",
+      "passageConfig": "通道配置",
+      "searchPlaceholder": "请输入关键字"
     }
   }
 }
 ```
 
-对应的 i18n 键：`agent:rate.edit.home`, `agent:rate.edit.agentManagement` 等
+对应的 i18n 键：`agent:agentpayPassage.list.agentManage`, `agent:agentpayPassage.list.passageConfig` 等
 
 ---
 
