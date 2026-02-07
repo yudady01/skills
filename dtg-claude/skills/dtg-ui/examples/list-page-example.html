@@ -1,0 +1,233 @@
+&lt;!DOCTYPE html&gt;
+&lt;!--
+列表页面示例 - 包含搜索区、数据表格、分页、操作按钮
+适用于：商户列表、订单列表、代理商列表等
+--&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;列表页面示例&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;!-- 面包屑导航 --&gt;
+&lt;div class="layui-card layadmin-header"&gt;
+    &lt;div class="layui-breadcrumb" lay-filter="breadcrumb"&gt;
+        &lt;a lay-href="" i18ndata="common:home"&gt;首页&lt;/a&gt;
+        &lt;a&gt;&lt;cite i18ndata="merchant:list.title"&gt;商户列表&lt;/cite&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 主内容区域 --&gt;
+&lt;div class="layui-fluid"&gt;
+    &lt;div class="layui-card"&gt;
+        &lt;div class="layui-tab layui-tab-brief"&gt;
+            &lt;ul class="layui-tab-title"&gt;
+                &lt;li class="layui-this" i18ndata="merchant:list.tab"&gt;商户列表&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div class="layui-tab-content"&gt;
+                
+                &lt;!-- 搜索区域 --&gt;
+                &lt;div class="layui-row"&gt;
+                    &lt;div class="layui-form" style="float:right; margin-bottom: 10px;"&gt;
+                        &lt;div class="layui-form-item" style="margin:0;"&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;select name="status"&gt;
+                                    &lt;option value="" i18ndata="common:all"&gt;全部状态&lt;/option&gt;
+                                    &lt;option value="1" i18ndata="common:enabled"&gt;启用&lt;/option&gt;
+                                    &lt;option value="0" i18ndata="common:disabled"&gt;禁用&lt;/option&gt;
+                                &lt;/select&gt;
+                            &lt;/div&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="createTimeStart" name="createTimeStart" placeholder="开始时间" class="layui-input"&gt;
+                            &lt;/div&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="createTimeEnd" name="createTimeEnd" placeholder="结束时间" class="layui-input"&gt;
+                            &lt;/div&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="keyword" placeholder="商户名称/ID" class="layui-input"&gt;
+                            &lt;/div&gt;
+                            &lt;button id="btnSearch" class="layui-btn" i18ndata="common:search"&gt;搜索&lt;/button&gt;
+                            &lt;button id="btnReset" class="layui-btn layui-btn-primary" i18ndata="common:reset"&gt;重置&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- 工具栏 --&gt;
+                &lt;div class="layui-btn-group" style="margin-bottom: 10px;"&gt;
+                    &lt;button id="btnAdd" class="layui-btn layui-btn-sm" i18ndata="common:add"&gt;
+                        &lt;i class="layui-icon layui-icon-add-1"&gt;&lt;/i&gt; 新增
+                    &lt;/button&gt;
+                    &lt;button id="btnBatchDelete" class="layui-btn layui-btn-sm layui-btn-danger" i18ndata="common:batchDelete"&gt;
+                        &lt;i class="layui-icon layui-icon-delete"&gt;&lt;/i&gt; 批量删除
+                    &lt;/button&gt;
+                    &lt;button id="btnExport" class="layui-btn layui-btn-sm layui-btn-warm" i18ndata="common:export"&gt;
+                        &lt;i class="layui-icon layui-icon-export"&gt;&lt;/i&gt; 导出
+                    &lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;!-- 汇总区域（可选） --&gt;
+                &lt;div id="summaryBlock" class="layui-form-item" style="display: none"&gt;
+                    &lt;blockquote class="layui-elem-quote"&gt;
+                        &lt;span i18ndata="common:totalCount"&gt;总数:&lt;/span&gt;&lt;span id="totalCount" style="color: blue; margin-right: 10px;"&gt;&lt;/span&gt;
+                        &lt;span i18ndata="common:totalAmount"&gt;总金额:&lt;/span&gt;&lt;span id="totalAmount" style="color: green;"&gt;&lt;/span&gt;
+                    &lt;/blockquote&gt;
+                &lt;/div&gt;
+
+                &lt;!-- 数据表格 --&gt;
+                &lt;table id="dataTable" lay-filter="dataTable"&gt;&lt;/table&gt;
+
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 状态模板 --&gt;
+&lt;script type="text/html" id="statusTpl"&gt;
+    {{# if(d.status === 1){ }}
+        &lt;span class="layui-badge layui-bg-green"&gt;启用&lt;/span&gt;
+    {{# } else { }}
+        &lt;span class="layui-badge layui-bg-gray"&gt;禁用&lt;/span&gt;
+    {{# } }}
+&lt;/script&gt;
+
+&lt;!-- 操作栏模板 --&gt;
+&lt;script type="text/html" id="actionBar"&gt;
+    &lt;a class="layui-btn layui-btn-xs" lay-event="view" i18ndata="common:view"&gt;查看&lt;/a&gt;
+    &lt;a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" i18ndata="common:edit"&gt;编辑&lt;/a&gt;
+    &lt;a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" i18ndata="common:delete"&gt;删除&lt;/a&gt;
+&lt;/script&gt;
+
+&lt;script&gt;
+layui.use(['table', 'form', 'laydate'], function(){
+    var table = layui.table;
+    var form = layui.form;
+    var laydate = layui.laydate;
+
+    // 日期选择器
+    laydate.render({ elem: '#createTimeStart', type: 'datetime' });
+    laydate.render({ elem: '#createTimeEnd', type: 'datetime' });
+
+    // 表格渲染
+    table.render({
+        elem: '#dataTable',
+        url: layui.setter.baseUrl + '/api/merchant/list',
+        headers: { access_token: layui.data(layui.setter.tableName).access_token },
+        page: true,
+        limit: 10,
+        limits: [10, 20, 50, 100],
+        cols: [[
+            { type: 'checkbox', fixed: 'left' },
+            { field: 'mchId', title: '商户ID', width: 100, sort: true },
+            { field: 'mchName', title: '商户名称', minWidth: 150 },
+            { field: 'email', title: '邮箱', minWidth: 150 },
+            { field: 'status', title: '状态', width: 80, templet: '#statusTpl' },
+            { field: 'createTime', title: '创建时间', width: 180 },
+            { title: '操作', width: 180, toolbar: '#actionBar', fixed: 'right' }
+        ]],
+        done: function(res, curr, count) {
+            // 更新汇总信息
+            if(res.summary) {
+                $('#totalCount').text(res.summary.count);
+                $('#totalAmount').text(res.summary.amount);
+                $('#summaryBlock').show();
+            }
+        }
+    });
+
+    // 搜索
+    $('#btnSearch').on('click', function(){
+        var formData = {};
+        $('.layui-form').find('input, select').each(function(){
+            formData[this.name] = $(this).val();
+        });
+        table.reload('dataTable', { where: formData, page: { curr: 1 } });
+    });
+
+    // 重置
+    $('#btnReset').on('click', function(){
+        $('.layui-form')[0].reset();
+        form.render();
+        table.reload('dataTable', { where: {}, page: { curr: 1 } });
+    });
+
+    // 新增
+    $('#btnAdd').on('click', function(){
+        layer.open({
+            type: 2,
+            title: '新增商户',
+            area: ['800px', '600px'],
+            content: 'mch_add.html'
+        });
+    });
+
+    // 工具栏事件
+    table.on('tool(dataTable)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'view') {
+            layer.open({
+                type: 2,
+                title: '查看详情',
+                area: ['800px', '600px'],
+                content: 'mch_view.html?id=' + data.mchId
+            });
+        } else if(obj.event === 'edit') {
+            layer.open({
+                type: 2,
+                title: '编辑商户',
+                area: ['800px', '600px'],
+                content: 'mch_edit.html?id=' + data.mchId,
+                end: function() { table.reload('dataTable'); }
+            });
+        } else if(obj.event === 'del') {
+            layer.confirm('确定删除此商户？', { icon: 3, title: '提示' }, function(index){
+                $.ajax({
+                    url: layui.setter.baseUrl + '/api/merchant/delete',
+                    method: 'POST',
+                    data: { mchId: data.mchId },
+                    headers: { access_token: layui.data(layui.setter.tableName).access_token },
+                    success: function(res) {
+                        if(res.code === 0) {
+                            layer.msg('删除成功');
+                            table.reload('dataTable');
+                        } else {
+                            layer.msg(res.msg);
+                        }
+                    }
+                });
+                layer.close(index);
+            });
+        }
+    });
+
+    // 批量删除
+    $('#btnBatchDelete').on('click', function(){
+        var checkStatus = table.checkStatus('dataTable');
+        var data = checkStatus.data;
+        if(data.length === 0) {
+            layer.msg('请选择要删除的数据');
+            return;
+        }
+        var ids = data.map(function(item){ return item.mchId; });
+        layer.confirm('确定删除选中的 ' + ids.length + ' 条数据？', function(index){
+            $.ajax({
+                url: layui.setter.baseUrl + '/api/merchant/batchDelete',
+                method: 'POST',
+                data: JSON.stringify({ ids: ids }),
+                contentType: 'application/json',
+                headers: { access_token: layui.data(layui.setter.tableName).access_token },
+                success: function(res) {
+                    if(res.code === 0) {
+                        layer.msg('删除成功');
+                        table.reload('dataTable');
+                    }
+                }
+            });
+            layer.close(index);
+        });
+    });
+});
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
