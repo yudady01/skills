@@ -57,13 +57,14 @@
     },
     {
       "name": "workflow-tools",
-      "description": "Collection of workflow and planning tools including plan creation, Antigravity implementation, and skill development guidance",
+      "description": "Collection of workflow and planning tools including plan creation, Antigravity implementation, skill development guidance, and file organization",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/create-plan",
         "./skills/agy-impl",
-        "./skills/skill-creator"
+        "./skills/skill-creator",
+        "./skills/file-organizer"
       ]
     },
     {
