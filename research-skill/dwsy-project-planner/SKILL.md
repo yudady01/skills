@@ -19,221 +19,221 @@ description: Comprehensive project planning and documentation generator for soft
 - **生成的文档**：保存在执行命令时的当前目录（`process.cwd()`）
 - **项目上下文**：基于当前工作目录确定项目根目录
 
-This skill provides templates and guidance for generating comprehensive project planning documents that serve as blueprints for AI-assisted implementation.
+此技能提供模板和指导，用于生成全面的项目规划文档，作为 AI 辅助实施的蓝图。
 
-## Quick Start
+## 快速开始
 
-When a user wants to start a new project, generate three core documents:
-1. **Requirements Document** - User stories with acceptance criteria
-2. **Design Document** - Technical architecture and component specifications  
-3. **Implementation Plan** - Hierarchical task breakdown with requirement tracing
+当用户想要开始一个新项目时，生成三个核心文档：
+1. **需求文档** - 包含验收标准的用户故事
+2. **设计文档** - 技术架构和组件规格
+3. **实施计划** - 分层任务分解与需求追踪
 
-## Why Explicit Architectural Planning Works
+## 为什么明确的架构规划有效
 
-Setting clear roles, responsibilities, and deliverables upfront dramatically improves project outcomes:
+提前设定清晰的角色、职责和交付成果能显著改善项目成果：
 
-### Benefits of Upfront Definition
+### 前期定义的好处
 
-1. **Component Clarity** - Defining all system components first prevents scope creep and ensures complete coverage
-2. **Data Flow Visibility** - Mapping data movement early reveals integration complexities and performance bottlenecks
-3. **Integration Planning** - Identifying all touchpoints upfront prevents surprise dependencies during implementation
-4. **Clear Boundaries** - Explicitly stating what's in/out of scope focuses effort and prevents feature drift
-5. **Measurable Success** - Specific goals and constraints enable objective progress tracking
+1. **组件清晰度** - 首先定义所有系统组件可以防止范围蔓延并确保完整覆盖
+2. **数据流可见性** - 早期映射数据移动可以揭示集成复杂性和性能瓶颈
+3. **集成规划** - 提前识别所有接触点可以在实施期间防止意外依赖
+4. **清晰边界** - 明确说明范围内外的内容可以集中精力并防止功能漂移
+5. **可衡量的成功** - 具体目标和约束能够实现客观的进度跟踪
 
-### The Architect Mindset
+### 架构师思维模式
 
-When acting as a **Project Architect**, approach planning with:
-- **Systems Thinking** - See the whole before diving into parts
-- **Interface-First Design** - Define contracts between components before internals
-- **Traceability Focus** - Every requirement maps to design elements and tasks
-- **Constraint Awareness** - Acknowledge limitations upfront to guide decisions
-- **Deliverable Orientation** - Know exactly what artifacts you're producing
+当作为**项目架构师**时，应采用以下方式进行规划：
+- **系统思维** - 在深入细节之前先看到整体
+- **接口优先设计** - 在内部之前定义组件之间的契约
+- **可追溯性焦点** - 每个需求都映射到设计元素和任务
+- **约束意识** - 提前承认局限性以指导决策
+- **交付成果导向** - 准确知道要生成什么工件
 
-## Document Generation Workflow
+## 文档生成工作流
 
-### 1. Project Architect Role Definition
+### 1. 项目架构师角色定义
 
-When starting a project, explicitly establish Claude as the **Project Architect** with clear responsibilities:
+开始项目时，明确将 Claude 确立为具有清晰职责的**项目架构师**：
 
-**Role:** System Architect and Planning Specialist
-**Responsibilities:**
-- Define complete system architecture with all components
-- Map data flow between system elements
-- Identify all integration points and interfaces
-- Establish clear project boundaries and constraints
-- Create traceable requirements to implementation tasks
+**角色：** 系统架构师和规划专家
+**职责：**
+- 定义包含所有组件的完整系统架构
+- 映射系统元素之间的数据流
+- 识别所有集成点和接口
+- 建立清晰的项目边界和约束
+- 创建可追踪的需求到实施任务的映射
 
-### 2. Initial Project Understanding
+### 2. 初步项目理解
 
-Before generating documents, gather key information and architectural elements:
-
-```
-Required Project Information:
-- Project name and purpose
-- Target users (single-user local, multi-tenant SaaS, etc.)
-- Core functionality (3-5 main features)
-- Technical preferences (languages, frameworks, deployment)
-- Non-functional requirements (performance, security, scalability)
-
-Required Architectural Elements (define upfront):
-- System Components: All major modules/services and their purposes
-- Data Flow: How data moves through the entire system
-- Integration Points: All external APIs, services, databases
-- System Boundaries: What's in scope vs out of scope
-- Constraints: Technical, business, and resource limitations
-- Success Metrics: Clear, measurable goals for the system
-```
-
-### 3. Deliverable Definition (Set Upfront)
-
-Define all deliverables explicitly before starting documentation:
+在生成文档之前，收集关键信息和架构元素：
 
 ```
-Standard Deliverables Package:
-1. Requirements Document
-   - User stories with measurable acceptance criteria
-   - Complete glossary of terms
-   - Traceable requirement IDs
-   
-2. System Design Document  
-   - Component architecture diagram
-   - Data flow diagrams for all major processes
-   - Integration point specifications
-   - API/Interface contracts
-   - Performance and scaling targets
-   
-3. Implementation Plan
-   - Hierarchical task breakdown
-   - Requirement-to-task mapping
-   - Dependency graph
-   - Phase-based delivery schedule
+所需项目信息：
+- 项目名称和目的
+- 目标用户（单用户本地、多租户 SaaS 等）
+- 核心功能（3-5 个主要功能）
+- 技术偏好（语言、框架、部署）
+- 非功能性需求（性能、安全性、可扩展性）
 
-Optional Deliverables (specify if needed):
-- API Documentation
-- Database Schema Design
-- Security Threat Model
-- Deployment Guide
-- Testing Strategy Document
+所需架构元素（提前定义）：
+- 系统组件：所有主要模块/服务及其用途
+- 数据流：数据如何在整个系统中移动
+- 集成点：所有外部 API、服务、数据库
+- 系统边界：范围内与范围外的内容
+- 约束：技术、业务和资源限制
+- 成功指标：系统的清晰、可衡量目标
 ```
 
-### 4. Generate Requirements Document
+### 3. 交付成果定义（提前设定）
 
-Use the requirements template to create user-focused specifications:
+在开始文档编制之前明确定义所有交付成果：
+
+```
+标准交付成果包：
+1. 需求文档
+   - 包含可衡量验收标准的用户故事
+   - 完整的术语表
+   - 可追踪的需求 ID
+
+2. 系统设计文档
+   - 组件架构图
+   - 所有主要流程的数据流图
+   - 集成点规格
+   - API/接口契约
+   - 性能和扩展目标
+
+3. 实施计划
+   - 分层任务分解
+   - 需求到任务的映射
+   - 依赖关系图
+   - 基于阶段的交付计划
+
+可选交付成果（如需要请指定）：
+- API 文档
+- 数据库架构设计
+- 安全威胁模型
+- 部署指南
+- 测试策略文档
+```
+
+### 4. 生成需求文档
+
+使用需求模板创建以用户为中心的规格：
 
 ```python
-# Execute this to generate requirements structure
+# 执行此操作以生成需求结构
 requirements = {
-    "introduction": "System purpose and scope",
-    "glossary": "Domain-specific terms",
+    "introduction": "系统目的和范围",
+    "glossary": "领域特定术语",
     "requirements": [
         {
             "id": "REQ-X",
-            "user_story": "As a [role], I want [feature], so that [benefit]",
+            "user_story": "作为 [角色]，我想要 [功能]，以便 [利益]",
             "acceptance_criteria": [
-                "WHEN [condition], THE system SHALL [behavior]",
-                "WHERE [context], THE system SHALL [behavior]",
-                "IF [condition], THEN THE system SHALL [behavior]"
+                "当 [条件] 时，系统应 [行为]",
+                "在 [上下文] 中，系统应 [行为]",
+                "如果 [条件]，那么系统应 [行为]"
             ]
         }
     ]
 }
 ```
 
-### 5. Generate Design Document
+### 5. 生成设计文档
 
-Create technical specifications with explicit architectural elements:
+创建包含明确架构元素的技术规格：
 
 ```python
-# Execute this to generate comprehensive design structure
+# 执行此操作以生成全面的设计结构
 design = {
-    "overview": "High-level system description",
+    "overview": "高级系统描述",
     "architecture": {
-        "diagram": "ASCII or visual representation of all components",
+        "diagram": "所有组件的 ASCII 或可视化表示",
         "components": [
             {
                 "id": "COMP-1",
-                "name": "Component Name",
-                "type": "Frontend/Backend/Service/Database",
-                "responsibility": "Single clear purpose",
-                "boundaries": "What it does and doesn't do"
+                "name": "组件名称",
+                "type": "前端/后端/服务/数据库",
+                "responsibility": "单一明确目的",
+                "boundaries": "它做什么和不做什么"
             }
         ]
     },
     "data_flow": {
         "primary_flows": [
             {
-                "name": "User Registration Flow",
+                "name": "用户注册流程",
                 "steps": [
-                    "1. User submits form → Frontend",
-                    "2. Frontend validates → API Gateway",
-                    "3. API Gateway → Auth Service",
-                    "4. Auth Service → User Database",
-                    "5. Response flows back"
+                    "1. 用户提交表单 → 前端",
+                    "2. 前端验证 → API 网关",
+                    "3. API 网关 → 认证服务",
+                    "4. 认证服务 → 用户数据库",
+                    "5. 响应流回"
                 ],
-                "data_transformations": "How data changes at each step"
+                "data_transformations": "数据在每一步如何变化"
             }
         ]
     },
     "integration_points": [
         {
-            "name": "External Payment API",
-            "type": "REST/GraphQL/WebSocket/Database",
-            "purpose": "Process payments",
-            "interface": "API contract definition",
-            "authentication": "Method used",
-            "error_handling": "Retry/fallback strategy"
+            "name": "外部支付 API",
+            "type": "REST/GraphQL/WebSocket/数据库",
+            "purpose": "处理支付",
+            "interface": "API 契约定义",
+            "authentication": "使用的方法",
+            "error_handling": "重试/回退策略"
         }
     ],
     "components_detail": [
         {
-            "name": "Component Name",
-            "responsibility": "What it does",
-            "key_classes": ["Class descriptions"],
-            "interfaces": "API/method signatures",
-            "dependencies": "What it needs to function",
-            "performance": "Targets and constraints"
+            "name": "组件名称",
+            "responsibility": "它的作用",
+            "key_classes": ["类描述"],
+            "interfaces": "API/方法签名",
+            "dependencies": "运行所需的东西",
+            "performance": "目标和约束"
         }
     ],
-    "data_models": "Entity definitions with relationships",
+    "data_models": "带有关系的实体定义",
     "system_boundaries": {
-        "in_scope": ["What the system handles"],
-        "out_of_scope": ["What it delegates or ignores"],
-        "assumptions": ["External dependencies assumed available"]
+        "in_scope": ["系统处理的内容"],
+        "out_of_scope": ["系统委托或忽略的内容"],
+        "assumptions": ["假设可用的外部依赖"]
     },
-    "error_handling": "Strategies for failures",
-    "testing_strategy": "Unit, integration, performance",
-    "deployment": "Docker, environment, configuration"
+    "error_handling": "故障策略",
+    "testing_strategy": "单元、集成、性能",
+    "deployment": "Docker、环境、配置"
 }
 ```
 
-### 6. Generate Implementation Plan
+### 6. 生成实施计划
 
-Break down the project into executable tasks with clear scope boundaries:
+将项目分解为具有清晰范围边界的可执行任务：
 
 ```python
-# Execute this to generate task structure with boundaries
+# 执行此操作以生成带有边界的任务结构
 tasks = {
     "project_boundaries": {
-        "must_have": ["Core features for MVP"],
-        "nice_to_have": ["Enhancement features"],
-        "out_of_scope": ["Features explicitly excluded"],
-        "technical_constraints": ["Framework/library limitations"]
+        "must_have": ["MVP 的核心功能"],
+        "nice_to_have": ["增强功能"],
+        "out_of_scope": ["明确排除的功能"],
+        "technical_constraints": ["框架/库限制"]
     },
     "phases": [
         {
             "id": 1,
-            "name": "Infrastructure Setup",
-            "deliverables": ["What this phase produces"],
+            "name": "基础设施设置",
+            "deliverables": ["此阶段产生的内容"],
             "tasks": [
                 {
                     "id": "1.1",
-                    "description": "Task description",
-                    "subtasks": ["Specific actions"],
+                    "description": "任务描述",
+                    "subtasks": ["具体操作"],
                     "requirements_fulfilled": ["REQ-1.1", "REQ-2.3"],
                     "components_involved": ["COMP-1", "COMP-3"],
                     "dependencies": [],
                     "estimated_hours": 4,
-                    "success_criteria": "How to verify completion"
+                    "success_criteria": "如何验证完成"
                 }
             ]
         }
@@ -241,616 +241,616 @@ tasks = {
 }
 ```
 
-## Requirements Document Template
+## 需求文档模板
 
 ```markdown
-# Requirements Document
+# 需求文档
 
-## Introduction
+## 简介
 
-[System description in 2-3 sentences. Target user and deployment model.]
+[2-3 句话的系统描述。目标用户和部署模式。]
 
-## Glossary
+## 术语表
 
-- **Term**: Definition specific to this system
-- **Component**: Major system module or service
-[Add all domain-specific terms]
+- **术语**：此系统特定的定义
+- **组件**：主要系统模块或服务
+[添加所有领域特定术语]
 
-## Requirements
+## 需求
 
-### Requirement [NUMBER]
+### 需求 [编号]
 
-**User Story:** As a [user type], I want [capability], so that [benefit]
+**用户故事：** 作为 [用户类型]，我想要 [能力]，以便 [利益]
 
-#### Acceptance Criteria
+#### 验收标准
 
-1. WHEN [trigger/condition], THE [component] SHALL [action/behavior]
-2. WHERE [mode/context], THE [component] SHALL [action/behavior]  
-3. IF [condition], THEN THE [component] SHALL [action/behavior]
-4. THE [component] SHALL [capability with measurable target]
+1. 当 [触发/条件] 时，[组件] 应 [操作/行为]
+2. 在 [模式/上下文] 中，[组件] 应 [操作/行为]
+3. 如果 [条件]，那么 [组件] 应 [操作/行为]
+4. [组件] 应 [具有可衡量目标的能力]
 
-[Repeat for each requirement]
+[为每个需求重复]
 ```
 
-### Requirements Best Practices
+### 需求最佳实践
 
-1. **One capability per requirement** - Each requirement should address a single feature
-2. **Testable criteria** - Every criterion must be verifiable
-3. **Use SHALL for mandatory** - Consistent RFC 2119 keywords
-4. **Include performance targets** - "within X milliseconds/seconds"
-5. **Specify all states** - Success, failure, edge cases
-6. **Number systematically** - REQ-1, REQ-2 for traceability
+1. **每个需求一个功能** - 每个需求应针对单个功能
+2. **可测试的标准** - 每个标准必须可验证
+3. **使用 SHALL 表示强制性** - 一致的 RFC 2119 关键字
+4. **包含性能目标** - "在 X 毫秒/秒内"
+5. **指定所有状态** - 成功、失败、边缘情况
+6. **系统编号** - REQ-1、REQ-2 以便追踪
 
-### Acceptance Criteria Patterns
+### 验收标准模式
 
 ```
-Behavior criteria:
-- WHEN [event occurs], THE system SHALL [respond]
-- THE system SHALL [provide capability]
-- THE system SHALL [enforce rule/limit]
+行为标准：
+- 当 [事件发生] 时，系统应 [响应]
+- 系统应 [提供能力]
+- 系统应 [执行规则/限制]
 
-Conditional criteria:
-- IF [condition], THEN THE system SHALL [action]
-- WHERE [mode is active], THE system SHALL [behavior]
+条件标准：
+- 如果 [条件]，那么系统应 [操作]
+- 在 [模式激活] 时，系统应 [行为]
 
-Performance criteria:
-- THE system SHALL [complete action] within [time]
-- THE system SHALL support [number] concurrent [operations]
-- THE system SHALL maintain [metric] above/below [threshold]
+性能标准：
+- 系统应 [完成操作] 在 [时间] 内
+- 系统应支持 [数量] 并发 [操作]
+- 系统应保持 [指标] 高于/低于 [阈值]
 
-Data criteria:
-- THE system SHALL persist [data type] with [attributes]
-- THE system SHALL validate [input] against [rules]
-- THE system SHALL return [data] in [format]
+数据标准：
+- 系统应持久化 [数据类型] 与 [属性]
+- 系统应根据 [规则] 验证 [输入]
+- 系统应以 [格式] 返回 [数据]
 ```
 
-## Design Document Template
+## 设计文档模板
 
 ```markdown
-# Design Document
+# 设计文档
 
-## Overview
+## 概述
 
-[System architecture summary in 3-4 sentences. Key design decisions and priorities.]
+[3-4 句话的系统架构摘要。关键设计决策和优先级。]
 
-## System Architecture
+## 系统架构
 
-### Component Map
+### 组件映射
 
-| Component ID | Name | Type | Responsibility | Interfaces With |
-|-------------|------|------|----------------|-----------------|
-| COMP-1 | Web Frontend | UI | User interface | COMP-2 |
-| COMP-2 | API Gateway | Service | Request routing | COMP-3, COMP-4 |
-| COMP-3 | Business Logic | Service | Core processing | COMP-5 |
-[Complete component inventory]
+| 组件 ID | 名称 | 类型 | 职责 | 接口对象 |
+|---------|------|------|------|----------|
+| COMP-1 | Web 前端 | UI | 用户界面 | COMP-2 |
+| COMP-2 | API 网关 | 服务 | 请求路由 | COMP-3, COMP-4 |
+| COMP-3 | 业务逻辑 | 服务 | 核心处理 | COMP-5 |
+[完整组件清单]
 
-### High-Level Architecture Diagram
+### 高级架构图
 
-[ASCII diagram showing all components and their relationships]
+[显示所有组件及其关系的 ASCII 图]
 
-## Data Flow Specifications
+## 数据流规格
 
-### Primary Data Flows
+### 主要数据流
 
-#### 1. [Flow Name] (e.g., User Authentication)
+#### 1. [流程名称]（例如：用户认证）
 
 ```
-1. [Source] → [Component]: [Data description]
-2. [Component] → [Component]: [Transformation applied]
-3. [Component] → [Destination]: [Final data format]
+1. [源] → [组件]：[数据描述]
+2. [组件] → [组件]：[应用的转换]
+3. [组件] → [目标]：[最终数据格式]
 ```
 
-**Data Transformations:**
-- Step 2: [How data changes]
-- Step 3: [Validation/Processing applied]
+**数据转换：**
+- 步骤 2：[数据如何变化]
+- 步骤 3：[应用的验证/处理]
 
-[Repeat for each major data flow]
+[为每个主要数据流重复]
 
-## Integration Points
+## 集成点
 
-### Internal Integration Points
+### 内部集成点
 
-| Source | Target | Protocol | Data Format | Purpose |
-|--------|--------|----------|-------------|---------|
-| Frontend | API Gateway | HTTPS/REST | JSON | API calls |
-| API Gateway | Auth Service | gRPC | Protobuf | Authentication |
-[All internal integrations]
+| 源 | 目标 | 协议 | 数据格式 | 目的 |
+|----|------|------|----------|------|
+| 前端 | API 网关 | HTTPS/REST | JSON | API 调用 |
+| API 网关 | 认证服务 | gRPC | Protobuf | 认证 |
+[所有内部集成]
 
-### External Integration Points
+### 外部集成点
 
-#### [External System Name]
+#### [外部系统名称]
 
-**Type:** REST API / Database / Message Queue / etc.
-**Purpose:** [What this integration provides]
-**Endpoint:** [URL/Connection string pattern]
-**Authentication:** [Method - OAuth2, API Key, etc.]
-**Rate Limits:** [Any constraints]
+**类型：** REST API / 数据库 / 消息队列 / 等
+**目的：** [此集成提供的内容]
+**端点：** [URL/连接字符串模式]
+**认证：** [方法 - OAuth2、API 密钥等]
+**速率限制：** [任何约束]
 
-**Interface Contract:**
+**接口契约：**
 ```language
-// Request format
+// 请求格式
 POST /api/endpoint
 {
     "field": "type"
 }
 
-// Response format  
+// 响应格式
 {
     "result": "type"
 }
 ```
 
-**Error Handling:**
-- Retry strategy: [Exponential backoff, circuit breaker]
-- Fallback: [What happens if unavailable]
-- Monitoring: [How to detect issues]
+**错误处理：**
+- 重试策略：[指数退避、断路器]
+- 回退：[不可用时发生什么]
+- 监控：[如何检测问题]
 
-[Repeat for each external integration]
+[为每个外部集成重复]
 
-## Components and Interfaces
+## 组件和接口
 
-### 1. [Component Name]
+### 1. [组件名称]
 
-**Responsibility:** [Single sentence description]
+**职责：** [单句描述]
 
-**Key Classes:**
-- `ClassName`: [Purpose and main methods]
-- `ServiceName`: [What it manages]
+**关键类：**
+- `ClassName`：[用途和主要方法]
+- `ServiceName`：[管理的内容]
 
-**Interfaces:**
+**接口：**
 ```language
 class InterfaceName:
     def method_name(params) -> ReturnType
-    # Core methods only
+    # 仅核心方法
 ```
 
-**Data Flow:**
-- Receives [input] from [source]
-- Processes by [algorithm/logic]
-- Outputs [result] to [destination]
+**数据流：**
+- 从 [源] 接收 [输入]
+- 通过 [算法/逻辑] 处理
+- 将 [结果] 输出到 [目标]
 
-**Performance:**
-- Target: [metric and value]
-- Constraints: [limitations]
+**性能：**
+- 目标：[指标和值]
+- 约束：[限制]
 
-[Repeat for each major component]
+[为每个主要组件重复]
 
-## Data Models
+## 数据模型
 
-### [Entity Name]
+### [实体名称]
 ```language
 @dataclass
 class EntityName:
     field: Type
     field: Optional[Type]
-    # Core fields only
+    # 仅核心字段
 ```
 
-## Error Handling
+## 错误处理
 
-### [Error Category]
-**Types:** [List of error scenarios]
-**Handling:** [Strategy and recovery]
+### [错误类别]
+**类型：** [错误场景列表]
+**处理：** [策略和恢复]
 
-## Testing Strategy
+## 测试策略
 
-### Unit Tests
-- [Component]: Test [aspects]
-- Coverage target: 80%
+### 单元测试
+- [组件]：测试 [方面]
+- 覆盖目标：80%
 
-### Integration Tests
-- [Flow]: Test [end-to-end scenario]
+### 集成测试
+- [流程]：测试 [端到端场景]
 
-### Performance Tests
-- [Operation]: Target [metric]
+### 性能测试
+- [操作]：目标 [指标]
 
-## Deployment
+## 部署
 
-### Docker Configuration
+### Docker 配置
 ```yaml
-# Essential service definitions only
+# 仅必要的服务定义
 ```
 
-### Environment Variables
+### 环境变量
 ```
-CATEGORY_VAR=description
-```
-
-## Performance Targets
-
-- [Operation]: <[time]
-- [Throughput]: >[rate]
-- [Resource]: <[limit]
-
-## Security Considerations
-
-- [Authentication method if applicable]
-- [Data protection approach]
-- [Access control model]
+CATEGORY_VAR=描述
 ```
 
-### Design Best Practices
+## 性能目标
 
-1. **Component responsibilities** - Single, clear purpose per component
-2. **Interface first** - Define contracts before implementation
-3. **Data flow clarity** - Show how data moves through system
-4. **Error categories** - Group related failures with consistent handling
-5. **Performance targets** - Specific, measurable goals
-6. **Deployment ready** - Include Docker and configuration
+- [操作]：<[时间]
+- [吞吐量]：>[速率]
+- [资源]：<[限制]
 
-## Implementation Plan Template
+## 安全考虑
+
+- [适用的认证方法]
+- [数据保护方法]
+- [访问控制模型]
+```
+
+### 设计最佳实践
+
+1. **组件职责** - 每个组件单一、明确的目的
+2. **接口优先** - 在实施之前定义契约
+3. **数据流清晰** - 显示数据如何通过系统移动
+4. **错误类别** - 将相关故障分组并一致处理
+5. **性能目标** - 具体、可衡量的目标
+6. **部署就绪** - 包含 Docker 和配置
+
+## 实施计划模板
 
 ```markdown
-# Implementation Plan
+# 实施计划
 
-- [x] 1. [Phase Name]
-  
-  - [x] 1.1 [Task name]
-    - [Subtask description]
-    - [Subtask description]
-    - _Requirements: [REQ-X.Y, REQ-A.B]_
-    
-  - [ ] 1.2 [Task name]
-    - [Subtask description]
-    - _Requirements: [REQ-X.Y]_
-    - _Dependencies: Task 1.1_
+- [x] 1. [阶段名称]
 
-- [ ] 2. [Phase Name]
+  - [x] 1.1 [任务名称]
+    - [子任务描述]
+    - [子任务描述]
+    - _需求：[REQ-X.Y, REQ-A.B]_
 
-  - [ ] 2.1 [Task name]
-    - [Detailed steps or subtasks]
-    - _Requirements: [REQ-X.Y]_
-    - _Dependencies: Phase 1_
+  - [ ] 1.2 [任务名称]
+    - [子任务描述]
+    - _需求：[REQ-X.Y]_
+    - _依赖：任务 1.1_
 
-[Continue for all phases]
+- [ ] 2. [阶段名称]
+
+  - [ ] 2.1 [任务名称]
+    - [详细步骤或子任务]
+    - _需求：[REQ-X.Y]_
+    - _依赖：阶段 1_
+
+[继续所有阶段]
 ```
 
-### Task Planning Best Practices
+### 任务规划最佳实践
 
-1. **Hierarchical structure** - Phases > Tasks > Subtasks
-2. **Requirement tracing** - Link each task to requirements
-3. **Dependency marking** - Identify blockers and prerequisites  
-4. **Checkbox format** - [x] for complete, [ ] for pending
-5. **Atomic tasks** - Each task independently completable
-6. **Progressive implementation** - Infrastructure → Core → Features → Polish
+1. **分层结构** - 阶段 > 任务 > 子任务
+2. **需求追踪** - 将每个任务链接到需求
+3. **依赖标记** - 识别阻塞因素和先决条件
+4. **复选框格式** - [x] 表示完成，[ ] 表示待处理
+5. **原子任务** - 每个任务独立可完成
+6. **渐进式实施** - 基础设施 → 核心 → 功能 → 完善
 
-### Common Implementation Phases
+### 常见实施阶段
 
 ```markdown
-1. **Infrastructure Setup**
-   - Project structure
-   - Database schema
-   - Docker configuration
-   - Core dependencies
+1. **基础设施设置**
+   - 项目结构
+   - 数据库架构
+   - Docker 配置
+   - 核心依赖
 
-2. **Data Layer**
-   - Models/entities
-   - Database operations
-   - Migrations
+2. **数据层**
+   - 模型/实体
+   - 数据库操作
+   - 迁移
 
-3. **Business Logic**
-   - Core algorithms
-   - Service classes
-   - Validation rules
+3. **业务逻辑**
+   - 核心算法
+   - 服务类
+   - 验证规则
 
-4. **API/Interface Layer**
-   - REST/GraphQL endpoints
-   - WebSocket handlers
-   - Authentication
+4. **API/接口层**
+   - REST/GraphQL 端点
+   - WebSocket 处理程序
+   - 认证
 
-5. **Frontend/UI**
-   - Component structure
-   - State management
-   - API integration
-   - Responsive design
+5. **前端/用户界面**
+   - 组件结构
+   - 状态管理
+   - API 集成
+   - 响应式设计
 
-6. **Integration**
-   - External services
-   - Third-party APIs
-   - Message queues
+6. **集成**
+   - 外部服务
+   - 第三方 API
+   - 消息队列
 
-7. **Testing**
-   - Unit tests
-   - Integration tests
-   - End-to-end tests
+7. **测试**
+   - 单元测试
+   - 集成测试
+   - 端到端测试
 
 8. **DevOps**
-   - CI/CD pipeline
-   - Monitoring
-   - Logging
-   - Deployment scripts
+   - CI/CD 流水线
+   - 监控
+   - 日志记录
+   - 部署脚本
 
-9. **Documentation**
-   - API documentation
-   - User guides
-   - Deployment guide
+9. **文档**
+   - API 文档
+   - 用户指南
+   - 部署指南
    - README
 ```
 
-## Document Patterns by Project Type
+## 按项目类型的文档模式
 
-### Web Application (Full-Stack)
+### Web 应用程序（全栈）
 
-Requirements focus:
-- User authentication and authorization
-- CRUD operations for entities
-- Real-time updates
-- Responsive UI
-- API design
+需求焦点：
+- 用户认证和授权
+- 实体的 CRUD 操作
+- 实时更新
+- 响应式用户界面
+- API 设计
 
-Design focus:
-- 3-tier architecture (Frontend, Backend, Database)
-- REST/GraphQL API design
-- State management strategy
-- Component hierarchy
-- Database schema
+设计焦点：
+- 三层架构（前端、后端、数据库）
+- REST/GraphQL API 设计
+- 状态管理策略
+- 组件层次结构
+- 数据库架构
 
-Tasks focus:
-1. Database and backend setup
-2. API implementation
-3. Frontend components
-4. Integration and testing
+任务焦点：
+1. 数据库和后端设置
+2. API 实施
+3. 前端组件
+4. 集成和测试
 
-### Microservices System
+### 微服务系统
 
-Requirements focus:
-- Service boundaries
-- Inter-service communication
-- Data consistency
-- Service discovery
-- Fault tolerance
+需求焦点：
+- 服务边界
+- 服务间通信
+- 数据一致性
+- 服务发现
+- 容错能力
 
-Design focus:
-- Service decomposition
-- API contracts between services
-- Message queue/event bus
-- Distributed tracing
-- Container orchestration
+设计焦点：
+- 服务分解
+- 服务之间的 API 契约
+- 消息队列/事件总线
+- 分布式追踪
+- 容器编排
 
-Tasks focus:
-1. Service scaffolding
-2. Shared libraries/contracts
-3. Individual service implementation
-4. Integration layer
-5. Orchestration setup
+任务焦点：
+1. 服务脚手架
+2. 共享库/契约
+3. 单个服务实施
+4. 集成层
+5. 编排设置
 
-### Data Pipeline/ETL
+### 数据管道/ETL
 
-Requirements focus:
-- Data sources and formats
-- Transformation rules
-- Data quality checks
-- Schedule/triggers
-- Error handling and retry
+需求焦点：
+- 数据源和格式
+- 转换规则
+- 数据质量检查
+- 计划/触发器
+- 错误处理和重试
 
-Design focus:
-- Pipeline stages
-- Data flow diagram
-- Schema evolution
-- Monitoring and alerting
-- Storage strategy
+设计焦点：
+- 管道阶段
+- 数据流图
+- 架构演进
+- 监控和告警
+- 存储策略
 
-Tasks focus:
-1. Data source connectors
-2. Transformation logic
-3. Validation and quality checks
-4. Scheduling setup
-5. Monitoring implementation
+任务焦点：
+1. 数据源连接器
+2. 转换逻辑
+3. 验证和质量检查
+4. 调度设置
+5. 监控实施
 
-### CLI Tool/Library
+### CLI 工具/库
 
-Requirements focus:
-- Command structure
-- Input/output formats
-- Configuration options
-- Error messages
-- Performance requirements
+需求焦点：
+- 命令结构
+- 输入/输出格式
+- 配置选项
+- 错误消息
+- 性能要求
 
-Design focus:
-- Command parser architecture
-- Plugin system (if applicable)
-- Configuration management
-- Output formatters
-- Testing strategy
+设计焦点：
+- 命令解析器架构
+- 插件系统（如适用）
+- 配置管理
+- 输出格式化程序
+- 测试策略
 
-Tasks focus:
-1. Core command structure
-2. Business logic implementation
-3. Input/output handlers
-4. Configuration system
-5. Documentation and examples
+任务焦点：
+1. 核心命令结构
+2. 业务逻辑实施
+3. 输入/输出处理程序
+4. 配置系统
+5. 文档和示例
 
-## Generating Documents for Specific Domains
+## 为特定领域生成文档
 
-### Trading/Financial Systems
+### 交易/金融系统
 
-Additional requirements:
-- Risk management rules
-- Order execution logic
-- Market data handling
-- Compliance requirements
-- Audit trail
+附加需求：
+- 风险管理规则
+- 订单执行逻辑
+- 市场数据处理
+- 合规要求
+- 审计跟踪
 
-Additional design:
-- High-frequency data handling
-- Position tracking
-- Risk calculations
-- Order routing
-- Failover strategies
+附加设计：
+- 高频数据处理
+- 持仓跟踪
+- 风险计算
+- 订单路由
+- 故障转移策略
 
-### Real-time Systems (Chat, Gaming, IoT)
+### 实时系统（聊天、游戏、物联网）
 
-Additional requirements:
-- Latency targets
-- Connection handling
-- State synchronization
-- Offline support
-- Push notifications
+附加需求：
+- 延迟目标
+- 连接处理
+- 状态同步
+- 离线支持
+- 推送通知
 
-Additional design:
-- WebSocket/SSE architecture
-- State management
-- Caching strategy
-- Message queuing
-- Horizontal scaling
+附加设计：
+- WebSocket/SSE 架构
+- 状态管理
+- 缓存策略
+- 消息队列
+- 水平扩展
 
-### Machine Learning Systems
+### 机器学习系统
 
-Additional requirements:
-- Model training pipeline
-- Feature engineering
-- Model versioning
-- Prediction API
-- Monitoring/drift detection
+附加需求：
+- 模型训练管道
+- 特征工程
+- 模型版本控制
+- 预测 API
+- 监控/漂移检测
 
-Additional design:
-- Training infrastructure
-- Feature store
-- Model registry
-- Serving architecture
-- A/B testing framework
+附加设计：
+- 训练基础设施
+- 特征存储
+- 模型注册表
+- 服务架构
+- A/B 测试框架
 
-## Quality Checklist
+## 质量检查清单
 
-Before finalizing documents, verify:
+在定稿文档之前，验证：
 
-### Requirements Document
-- [ ] Every requirement has a clear user story
-- [ ] All acceptance criteria are testable
-- [ ] Non-functional requirements specified (performance, security)
-- [ ] Glossary covers all domain terms
-- [ ] Requirements are numbered for tracing
+### 需求文档
+- [ ] 每个需求都有清晰的用户故事
+- [ ] 所有验收标准都可测试
+- [ ] 指定了非功能性需求（性能、安全性）
+- [ ] 术语表涵盖所有领域术语
+- [ ] 需求已编号以便追踪
 
-### Design Document
-- [ ] Architecture diagram included
-- [ ] All components have clear responsibilities
-- [ ] Interfaces defined for integration points
-- [ ] Error handling strategy documented
-- [ ] Performance targets specified
-- [ ] Deployment configuration included
+### 设计文档
+- [ ] 包含架构图
+- [ ] 所有组件都有清晰的职责
+- [ ] 为集成点定义了接口
+- [ ] 记录了错误处理策略
+- [ ] 指定了性能目标
+- [ ] 包含了部署配置
 
-### Implementation Plan
-- [ ] Tasks grouped into logical phases
-- [ ] Dependencies identified between tasks
-- [ ] Requirements traced to tasks
-- [ ] Tasks are atomic and completable
-- [ ] Checkbox format for progress tracking
+### 实施计划
+- [ ] 任务分组为逻辑阶段
+- [ ] 识别了任务之间的依赖关系
+- [ ] 需求追踪到任务
+- [ ] 任务是原子的且可完成
+- [ ] 复选框格式用于进度跟踪
 
-## Example Usage Patterns
+## 示例使用模式
 
-### Starting a New Project (With Explicit Architecture Focus)
-
-```
-User: "I want to build an order flow trading automation system"
-
-Response: "I'll act as your Project Architect to create comprehensive planning documents. 
-
-First, let me establish the architectural foundation:
-
-**System Components I need to define:**
-- Market data ingestion service
-- Order flow analysis engine  
-- Trading signal generator
-- Risk management module
-- Order execution service
-- Monitoring dashboard
-
-**Data Flows to map:**
-- Market data → Analysis → Signals → Execution
-- Position tracking → Risk calculation → Trading limits
-- All events → Audit trail
-
-**Integration Points to specify:**
-- Exchange APIs (which ones?)
-- Database system (time-series data needs?)
-- Notification services (alerts/reporting?)
-
-**Key Questions:**
-1. Is this for personal use (single-user) or a platform (multi-user)?
-2. Which specific exchanges/brokers will it connect to?
-3. What are your latency requirements (milliseconds matter)?
-4. What's your risk tolerance and position sizing approach?
-5. Do you need backtesting capabilities?
-
-**Deliverables I'll create:**
-1. Requirements document with traceable user stories
-2. System design with complete component map and data flows
-3. Implementation plan with phased delivery milestones
-
-This architectural blueprint will ensure nothing is overlooked during implementation."
-```
-
-### Starting a New Project (Simple Approach)
+### 开始新项目（明确架构焦点）
 
 ```
-User: "I want to build an order flow trading automation system"
+用户："我想构建一个订单流交易自动化系统"
 
-Response: "I'll help you create comprehensive planning documents for your trading system. Let me gather some key information:
+回复："我将作为您的项目架构师创建全面的规划文档。
 
-1. Is this for personal use (single-user) or a multi-user platform?
-2. Which markets/exchanges will it connect to?
-3. What are the core trading strategies or patterns?
-4. Any specific performance requirements (latency, throughput)?
+首先，让我建立架构基础：
 
-Based on this, I'll generate:
-- Requirements document with user stories
-- System design with components and data flow
-- Implementation plan with phases and tasks"
+**我需要定义的系统组件：**
+- 市场数据摄取服务
+- 订单流分析引擎
+- 交易信号生成器
+- 风险管理模块
+- 订单执行服务
+- 监控仪表板
+
+**要映射的数据流：**
+- 市场数据 → 分析 → 信号 → 执行
+- 持仓跟踪 → 风险计算 → 交易限制
+- 所有事件 → 审计跟踪
+
+**要指定的集成点：**
+- 交易所 API（哪些？）
+- 数据库系统（时序数据需求？）
+- 通知服务（警报/报告？）
+
+**关键问题：**
+1. 这是供个人使用（单用户）还是平台（多用户）？
+2. 它将连接到哪些特定交易所/经纪人？
+3. 您的延迟要求是什么（毫秒很重要）？
+4. 您的风险承受能力和仓位规模方法是什么？
+5. 您需要回测功能吗？
+
+**我将创建的交付成果：**
+1. 包含可追踪用户故事的需求文档
+2. 包含完整组件映射和数据流的系统设计
+3. 包含分阶段交付里程碑的实施计划
+
+此架构蓝图将确保在实施期间不会遗漏任何内容。"
 ```
 
-### Expanding Existing Requirements
+### 开始新项目（简单方法）
 
 ```
-User: "Add real-time monitoring dashboard to the requirements"
+用户："我想构建一个订单流交易自动化系统"
 
-Response: "I'll add dashboard requirements to your document:
+回复："我将帮助您为交易系统创建全面的规划文档。让我收集一些关键信息：
 
-### Requirement 15
-**User Story:** As a trader, I want a real-time dashboard, so that I can monitor system performance and trading activity
+1. 这是供个人使用（单用户）还是多用户平台？
+2. 它将连接到哪些市场/交易所？
+3. 核心交易策略或模式是什么？
+4. 是否有特定的性能要求（延迟、吞吐量）？
 
-#### Acceptance Criteria
-1. THE Dashboard SHALL display active positions with current P&L
-2. THE Dashboard SHALL update market data within 1 second
-3. THE Dashboard SHALL provide filtering by symbol, timeframe, and date range
-4. WHEN a trade executes, THE Dashboard SHALL reflect it within 100ms"
+基于此，我将生成：
+- 包含用户故事的需求文档
+- 包含组件和数据流的系统设计
+- 包含阶段和任务的实施计划"
 ```
 
-## Common Pitfalls to Avoid
+### 扩展现有需求
 
-### Planning Pitfalls
-1. **Skipping architectural planning** - Jumping to requirements without mapping components first
-2. **Vague role definition** - Not establishing the architect role leads to unfocused documentation
-3. **Hidden integration points** - Discovering external dependencies during implementation
-4. **Undefined boundaries** - No clear scope leads to feature creep and timeline slippage
-5. **Missing data flow analysis** - Not mapping how data moves reveals issues late
+```
+用户："在需求中添加实时监控仪表板"
 
-### Requirements Pitfalls
-1. **Over-specifying implementation** - Requirements should define "what" not "how"
-2. **Vague acceptance criteria** - Avoid "user-friendly" or "fast" without metrics
-3. **Missing error cases** - Include failure scenarios in requirements
-4. **Untraceable requirements** - Every requirement should map to tasks
+回复："我将在您的文档中添加仪表板需求：
 
-### Design Pitfalls
-1. **Monolithic components** - Break down large components into focused services
-2. **Circular dependencies** - Ensure task dependencies form a DAG
-3. **Missing data models** - Define core entities early
-4. **Ignoring deployment** - Include Docker/deployment from the start
-5. **Unclear component boundaries** - Each component needs explicit responsibilities
+### 需求 15
+**用户故事：** 作为交易员，我想要一个实时仪表板，以便我可以监控系统性能和交易活动
 
-## Output Format
+#### 验收标准
+1. 仪表板应显示当前损益的活跃持仓
+2. 仪表板应在 1 秒内更新市场数据
+3. 仪表板应按符号、时间范围和日期范围提供过滤
+4. 当交易执行时，仪表板应在 100ms 内反映它"
+```
 
-Generate documents in Markdown format for easy editing and version control. Use:
-- Clear hierarchical headings (##, ###, ####)
-- Code blocks with language hints
-- Bulleted and numbered lists
-- Tables for structured data
-- Checkboxes for task tracking
-- Bold for emphasis on key terms
-- Inline code for technical terms
+## 要避免的常见陷阱
 
-Save documents as:
-- `requirements.md` - Requirements document
-- `design.md` - Design document
-- `tasks.md` - Implementation plan
+### 规划陷阱
+1. **跳过架构规划** - 在不先映射组件的情况下跳转到需求
+2. **模糊的角色定义** - 不建立架构师角色会导致文档不集中
+3. **隐藏的集成点** - 在实施期间发现外部依赖
+4. **未定义的边界** - 没有明确的范围会导致功能蔓延和时间延误
+5. **缺失数据流分析** - 不映射数据移动会延迟发现问题
 
-These documents serve as the foundation for AI-assisted implementation, providing clear specifications that can be referenced throughout development.
+### 需求陷阱
+1. **过度指定实施** - 需求应定义"什么"而不是"如何"
+2. **模糊的验收标准** - 避免没有指标的"用户友好"或"快速"
+3. **缺失错误情况** - 在需求中包含故障场景
+4. **不可追踪的需求** - 每个需求都应映射到任务
+
+### 设计陷阱
+1. **单体组件** - 将大型组件分解为专注的服务
+2. **循环依赖** - 确保任务依赖形成 DAG
+3. **缺失数据模型** - 尽早定义核心实体
+4. **忽略部署** - 从一开始就包含 Docker/部署
+5. **不清楚的组件边界** - 每个组件都需要明确的职责
+
+## 输出格式
+
+以 Markdown 格式生成文档以便于编辑和版本控制。使用：
+- 清晰的分层标题（##、###、####）
+- 带有语言提示的代码块
+- 项目符号和编号列表
+- 用于结构化数据的表格
+- 用于任务跟踪的复选框
+- 粗体表示关键术语的强调
+- 内联代码表示技术术语
+
+将文档保存为：
+- `requirements.md` - 需求文档
+- `design.md` - 设计文档
+- `tasks.md` - 实施计划
+
+这些文档作为 AI 辅助实施的基础，提供可在整个开发过程中参考的清晰规格。
