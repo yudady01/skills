@@ -1,0 +1,229 @@
+&lt;!DOCTYPE html&gt;
+&lt;!--
+新增页面示例 - 包含表单布局、验证规则、提交逻辑
+适用于：商户新增、代理商新增、产品新增等
+--&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;新增页面示例&lt;/title&gt;
+    &lt;style&gt;
+        /* 表单对齐修复 */
+        .layui-form-label {
+            width: 120px !important;
+        }
+        .layui-input-inline {
+            width: calc(100% - 140px) !important;
+        }
+        .layui-form-item .layui-input-block {
+            margin-left: 140px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;!-- 面包屑导航 --&gt;
+&lt;div class="layui-card layadmin-header"&gt;
+    &lt;div class="layui-breadcrumb" lay-filter="breadcrumb"&gt;
+        &lt;a lay-href="" i18ndata="common:home"&gt;首页&lt;/a&gt;
+        &lt;a lay-href="merchant/list/index.html" i18ndata="merchant:list.title"&gt;商户列表&lt;/a&gt;
+        &lt;a&gt;&lt;cite i18ndata="merchant:add.title"&gt;新增商户&lt;/cite&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 主内容区域 --&gt;
+&lt;div class="layui-fluid"&gt;
+    &lt;div class="layui-card"&gt;
+        &lt;div class="layui-card-body" style="padding: 20px;"&gt;
+            
+            &lt;form class="layui-form layui-form-pane" lay-filter="addForm"&gt;
+                
+                &lt;!-- 基本信息区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:add.basicInfo"&gt;基本信息&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span class="required"&gt;*&lt;/span&gt;
+                                &lt;span i18ndata="merchant:field.name"&gt;商户名称&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="mchName" lay-verify="required" 
+                                       placeholder="请输入商户名称" class="layui-input"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span class="required"&gt;*&lt;/span&gt;
+                                &lt;span i18ndata="merchant:field.email"&gt;邮箱&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="email" lay-verify="required|email" 
+                                       placeholder="请输入邮箱" class="layui-input"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span i18ndata="merchant:field.phone"&gt;手机号&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="phone" lay-verify="phone" 
+                                       placeholder="请输入手机号" class="layui-input"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span class="required"&gt;*&lt;/span&gt;
+                                &lt;span i18ndata="merchant:field.status"&gt;状态&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;select name="status" lay-verify="required"&gt;
+                                    &lt;option value="" i18ndata="common:pleaseSelect"&gt;请选择&lt;/option&gt;
+                                    &lt;option value="1" i18ndata="common:enabled"&gt;启用&lt;/option&gt;
+                                    &lt;option value="0" i18ndata="common:disabled"&gt;禁用&lt;/option&gt;
+                                &lt;/select&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 费率配置区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:add.rateConfig"&gt;费率配置&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span class="required"&gt;*&lt;/span&gt;
+                                &lt;span i18ndata="merchant:field.rate"&gt;费率(%)&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="rate" lay-verify="required|rate" 
+                                       placeholder="如: 1.5" class="layui-input"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;
+                                &lt;span i18ndata="merchant:field.feePerOrder"&gt;单笔手续费&lt;/span&gt;
+                            &lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" name="feePerOrder" lay-verify="number" 
+                                       placeholder="如: 0.5" class="layui-input"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 图片上传区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:add.documents"&gt;证件上传&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;营业执照&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="hidden" name="licenseImg" id="licenseImg"&gt;
+                                &lt;img class="layui-upload-img" id="licensePreview" style="max-width: 200px; max-height: 150px;"&gt;
+                                &lt;button type="button" class="layui-btn layui-btn-sm" id="btnUploadLicense"&gt;上传图片&lt;/button&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 提交按钮 --&gt;
+                &lt;div class="layui-form-item" style="margin-top: 20px;"&gt;
+                    &lt;div class="layui-input-block"&gt;
+                        &lt;button class="layui-btn" lay-submit lay-filter="submitForm" i18ndata="common:submit"&gt;提交&lt;/button&gt;
+                        &lt;button type="reset" class="layui-btn layui-btn-primary" i18ndata="common:reset"&gt;重置&lt;/button&gt;
+                        &lt;button type="button" class="layui-btn layui-btn-primary" id="btnBack" i18ndata="common:back"&gt;返回&lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+            &lt;/form&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+layui.use(['form', 'upload'], function(){
+    var form = layui.form;
+    var upload = layui.upload;
+
+    // 自定义验证规则
+    form.verify({
+        rate: function(value) {
+            if(!/^\d+(\.\d{1,4})?$/.test(value)){
+                return '费率格式不正确，最多4位小数';
+            }
+            if(parseFloat(value) &gt; 100){
+                return '费率不能超过100%';
+            }
+        }
+    });
+
+    // 图片上传
+    upload.render({
+        elem: '#btnUploadLicense',
+        url: layui.setter.baseUrl + '/upload/image',
+        headers: { access_token: layui.data(layui.setter.tableName).access_token },
+        done: function(res) {
+            if(res.code === 0) {
+                $('#licensePreview').attr('src', res.data.src);
+                $('#licenseImg').val(res.data.src);
+            } else {
+                layer.msg(res.msg);
+            }
+        }
+    });
+
+    // 表单提交
+    form.on('submit(submitForm)', function(data) {
+        layer.load();
+        $.ajax({
+            url: layui.setter.baseUrl + '/api/merchant/add',
+            method: 'POST',
+            data: data.field,
+            headers: { access_token: layui.data(layui.setter.tableName).access_token },
+            success: function(res) {
+                layer.closeAll('loading');
+                if(res.code === 0) {
+                    layer.msg('添加成功', { icon: 1 }, function(){
+                        // 关闭弹窗或跳转
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    });
+                } else {
+                    layer.msg(res.msg, { icon: 2 });
+                }
+            },
+            error: function() {
+                layer.closeAll('loading');
+                layer.msg('请求失败', { icon: 2 });
+            }
+        });
+        return false; // 阻止默认提交
+    });
+
+    // 返回
+    $('#btnBack').on('click', function(){
+        var index = parent.layer.getFrameIndex(window.name);
+        if(index) {
+            parent.layer.close(index);
+        } else {
+            history.back();
+        }
+    });
+});
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;

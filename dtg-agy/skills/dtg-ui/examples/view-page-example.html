@@ -1,0 +1,244 @@
+&lt;!DOCTYPE html&gt;
+&lt;!--
+查看页面示例 - 只读表单展示详情
+适用于：商户详情、订单详情、代理商详情等
+--&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;查看页面示例&lt;/title&gt;
+    &lt;style&gt;
+        .layui-form-label {
+            width: 120px !important;
+        }
+        .layui-input-inline {
+            width: calc(100% - 140px) !important;
+        }
+        /* 只读输入框样式 */
+        .layui-input[disabled] {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .detail-value {
+            line-height: 38px;
+            padding-left: 10px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;!-- 面包屑导航 --&gt;
+&lt;div class="layui-card layadmin-header"&gt;
+    &lt;div class="layui-breadcrumb" lay-filter="breadcrumb"&gt;
+        &lt;a lay-href="" i18ndata="common:home"&gt;首页&lt;/a&gt;
+        &lt;a lay-href="merchant/list/index.html" i18ndata="merchant:list.title"&gt;商户列表&lt;/a&gt;
+        &lt;a&gt;&lt;cite i18ndata="merchant:view.title"&gt;商户详情&lt;/cite&gt;&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- 主内容区域 --&gt;
+&lt;div class="layui-fluid"&gt;
+    &lt;div class="layui-card"&gt;
+        &lt;div class="layui-card-body" style="padding: 20px;"&gt;
+            
+            &lt;form class="layui-form layui-form-pane"&gt;
+                
+                &lt;!-- 基本信息区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:view.basicInfo"&gt;基本信息&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.id"&gt;商户ID&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="mchId" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.name"&gt;商户名称&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="mchName" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.email"&gt;邮箱&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="email" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.phone"&gt;手机号&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="phone" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.status"&gt;状态&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;span id="status" class="detail-value"&gt;&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 费率信息区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:view.rateInfo"&gt;费率信息&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.rate"&gt;费率(%)&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="rate" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="merchant:field.feePerOrder"&gt;单笔手续费&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="feePerOrder" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 证件图片区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:view.documents"&gt;证件图片&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label"&gt;营业执照&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;img id="licenseImg" style="max-width: 300px; max-height: 200px; cursor: pointer;" onclick="previewImage(this.src)"&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 时间信息区块 --&gt;
+                &lt;fieldset class="layui-elem-field"&gt;
+                    &lt;legend i18ndata="merchant:view.timeInfo"&gt;时间信息&lt;/legend&gt;
+                    &lt;div class="layui-field-box"&gt;
+                        
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="common:createTime"&gt;创建时间&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="createTime" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class="layui-form-item"&gt;
+                            &lt;label class="layui-form-label" i18ndata="common:updateTime"&gt;更新时间&lt;/label&gt;
+                            &lt;div class="layui-input-inline"&gt;
+                                &lt;input type="text" id="updateTime" class="layui-input" disabled&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                    &lt;/div&gt;
+                &lt;/fieldset&gt;
+
+                &lt;!-- 操作按钮 --&gt;
+                &lt;div class="layui-form-item" style="margin-top: 20px;"&gt;
+                    &lt;div class="layui-input-block"&gt;
+                        &lt;button type="button" class="layui-btn layui-btn-normal" id="btnEdit" i18ndata="common:edit"&gt;编辑&lt;/button&gt;
+                        &lt;button type="button" class="layui-btn layui-btn-primary" id="btnBack" i18ndata="common:back"&gt;返回&lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+            &lt;/form&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// 图片预览
+function previewImage(src) {
+    layer.photos({
+        photos: {
+            data: [{ src: src }]
+        },
+        anim: 5
+    });
+}
+
+layui.use(['layer'], function(){
+    // 获取 URL 参数
+    function getParam(name) {
+        var reg = new RegExp("(^|&amp;)" + name + "=([^&amp;]*)(&amp;|$)");
+        var r = window.location.search.substr(1).match(reg);
+        return r ? decodeURIComponent(r[2]) : null;
+    }
+
+    var mchId = getParam('id');
+    if(!mchId) {
+        layer.msg('缺少商户ID');
+        return;
+    }
+
+    // 加载详情数据
+    $.ajax({
+        url: layui.setter.baseUrl + '/api/merchant/detail',
+        data: { mchId: mchId },
+        headers: { access_token: layui.data(layui.setter.tableName).access_token },
+        success: function(res) {
+            if(res.code === 0) {
+                var data = res.data;
+                $('#mchId').val(data.mchId);
+                $('#mchName').val(data.mchName);
+                $('#email').val(data.email);
+                $('#phone').val(data.phone || '-');
+                $('#rate').val(data.rate + '%');
+                $('#feePerOrder').val(data.feePerOrder || '0');
+                $('#createTime').val(data.createTime);
+                $('#updateTime').val(data.updateTime);
+                
+                // 状态显示
+                if(data.status === 1) {
+                    $('#status').html('&lt;span class="layui-badge layui-bg-green"&gt;启用&lt;/span&gt;');
+                } else {
+                    $('#status').html('&lt;span class="layui-badge layui-bg-gray"&gt;禁用&lt;/span&gt;');
+                }
+                
+                // 图片
+                if(data.licenseImg) {
+                    $('#licenseImg').attr('src', data.licenseImg);
+                }
+            } else {
+                layer.msg(res.msg);
+            }
+        }
+    });
+
+    // 编辑
+    $('#btnEdit').on('click', function(){
+        layer.open({
+            type: 2,
+            title: '编辑商户',
+            area: ['800px', '600px'],
+            content: 'mch_edit.html?id=' + mchId
+        });
+    });
+
+    // 返回
+    $('#btnBack').on('click', function(){
+        var index = parent.layer.getFrameIndex(window.name);
+        if(index) {
+            parent.layer.close(index);
+        } else {
+            history.back();
+        }
+    });
+});
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
