@@ -4,9 +4,18 @@ description: 专门用于处理 dtg-pay 项目（xxpay-manage）的 UI 相关任
 version: 1.0.0
 ---
 
-# DTG UI & i18n 综合助理
+# DTG UI & i18n 综合助理 (多模块增强版)
 
-本技能旨在为 dtg-pay 项目（特别是 `xxpay-manage/views` 目录下的 HTML/JS）提供标准化的 UI 开发指导和国际化 (i18n) 处理能力。
+本技能旨在为 dtg-pay 项目（包含 `manage`, `agent`, `merchant` 三个核心模块）提供标准化的 UI 开发指导和国际化 (i18n) 处理能力。
+
+## 目标模块路径
+在处理任务前，请先确认所属模块及其对应的资源路径：
+
+- **xxpay-manage**: `/xxpay-manage/src/main/resources/static/x_mgr/src/views/`
+- **xxpay-agent**: `/xxpay-agent/src/main/resources/static/[skin]/x_agent/src/views/`
+- **xxpay-merchant**: `/xxpay-merchant/src/main/resources/static/[skin]/x_mch/src/views/`
+
+*注：[skin] 通常包含 ezpay, 724pay, lupay 等品牌，修改 UI 时应注意是否需要跨皮肤同步。*
 
 ## 核心任务
 
@@ -74,6 +83,69 @@ version: 1.0.0
 </form>
 ```
 
+### 1.4 高频组件模板 (Component Library)
+
+#### 1.4.1 日期范围选择器 (DateRange)
+标准的搜索栏时间筛选组件：
+```html
+<div class="layui-input-inline">
+    <input type="text" class="layui-input" id="createTimeStart" name="createTimeStart" placeholder="开始时间">
+</div>
+<div class="layui-input-inline">
+    <input type="text" class="layui-input" id="createTimeEnd" name="createTimeEnd" placeholder="结束时间">
+</div>
+<script>
+    layui.use(['laydate'], function(){
+        var laydate = layui.laydate;
+        laydate.render({ elem: '#createTimeStart', type: 'datetime' });
+        laydate.render({ elem: '#createTimeEnd', type: 'datetime' });
+    });
+</script>
+```
+
+#### 1.4.2 图片上传 (Image Upload)
+用于商户证件或Logo上传：
+```html
+<div class="layui-form-item">
+    <label class="layui-form-label">证件图片</label>
+    <div class="layui-input-inline">
+        <input type="hidden" name="imgUrl" id="imgUrl">
+        <img class="layui-upload-img" id="imgPreview" style="width: 150px;">
+        <button type="button" class="layui-btn" id="btnUpload">上传图片</button>
+    </div>
+</div>
+<script>
+    layui.use('upload', function(){
+        var upload = layui.upload;
+        upload.render({
+            elem: '#btnUpload',
+            url: layui.setter.baseUrl + '/upload/image',
+            headers: {access_token: layui.data(layui.setter.tableName).access_token},
+            done: function(res){
+                if(res.code === 0){
+                    $('#imgPreview').attr('src', res.data.src);
+                    $('#imgUrl').val(res.data.src);
+                }
+            }
+        });
+    });
+</script>
+```
+
+#### 1.4.3 富文本编辑器 (Rich Text)
+```html
+<textarea id="content" name="content" style="display: none;"></textarea>
+<script>
+    layui.use('layedit', function(){
+        var layedit = layui.layedit;
+        layedit.set({
+            uploadImage: { url: layui.setter.baseUrl + '/upload/image', type: 'post' }
+        });
+        var index = layedit.build('content'); // build editor
+    });
+</script>
+```
+
 ---
 
 ## 模式 2：i18n 自动化处理 (i18n Processor)
@@ -115,7 +187,8 @@ version: 1.0.0
 
 ## 指令集 (Commands)
 
-- **/extract-i18n [path]**: 扫描指定文件并生成翻译更新请求。
+- **/extract-i18n [path]**: 扫描指定文件并生成翻译更新请求。脚本会自动复用现有翻译记忆 (Shared TMs)。
+- **/scan-hardcoded [path]**: 扫描指定路径下未国际化的硬编码中文。
 - **/generate-page [type]**: 生成指定类型的页面骨架（list, add, view）。
 - **/fix-alignment**: 自动注入针对 Layui Form Pane 的 CSS 宽度修复代码。
 
@@ -124,5 +197,6 @@ version: 1.0.0
 ## 辅助工具位置
 
 - 提取脚本：`.agent/skills/dtg-ui/scripts/extract-i18n.py`
+- 扫描脚本：`.agent/skills/dtg-ui/scripts/scan-hardcoded.py`
 - 更新脚本：`.agent/skills/dtg-ui/scripts/update-translations.py`
 - 翻译参考：`.agent/skills/dtg-ui/references/common-translations.md`

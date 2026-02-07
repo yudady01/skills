@@ -5,7 +5,11 @@
 
 ## 核心功能
 
-### 1. UI 标准化
+### 1. UI 标准化 (多模块支持)
+- **多模块适配**：原生支持以下三个核心模块的 UI 开发：
+  - **Manage**: `xxpay-manage` (管理后台)
+  - **Agent**: `xxpay-agent` (代理商系统)
+  - **Merchant**: `xxpay-merchant` (商户系统)
 - **Layui 深度适配**：自动处理 `layui-fluid`, `layui-card`, `layui-tab` 的标准嵌套。
 - **样式修正自动注入**：针对 `layui-form-pane` 模式下标签宽度不一的问题，自动提供 CSS 修复 (`!important` 覆盖)。
 - **布局库**：包含列表页（带右侧搜索）、新增/编辑页（方框风格）、查看页（只读风格）的骨架模板。

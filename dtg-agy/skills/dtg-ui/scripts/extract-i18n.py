@@ -152,6 +152,26 @@ def process_file(source_file: Path, zh_json: Path, en_json: Path) -> Dict:
     zh_data = json.loads(zh_json.read_text(encoding='utf-8'))
     en_data = json.loads(en_json.read_text(encoding='utf-8'))
 
+    # Build Reverse Translation Memory from existing data
+    # Map: Chinese Text -> English Translation
+    reverse_tm = {}
+    
+    def build_tm(prefix, z_data, e_data):
+        if isinstance(z_data, dict) and isinstance(e_data, dict):
+            for k, v in z_data.items():
+                if k in e_data:
+                    build_tm(f"{prefix}.{k}" if prefix else k, v, e_data[k])
+        elif isinstance(z_data, str) and isinstance(e_data, str):
+            # Only store significant translations (skip empty or placeholders)
+            if z_data and e_data and "[" not in e_data:
+                reverse_tm[z_data] = e_data
+
+    try:
+        build_tm("", zh_data, en_data)
+    except Exception:
+        # Ignore errors during TM build, it's an optimization
+        pass
+
     # Find missing keys
     missing_zh = []
     missing_en = []
@@ -164,23 +184,38 @@ def process_file(source_file: Path, zh_json: Path, en_json: Path) -> Dict:
         # Check if key exists (handle colon separator for merchant namespace)
         lookup_key = key.replace(':', '.')
 
+        chinese_text = ""
         if get_nested_value(zh_data, lookup_key) is None:
-            chinese = default_text if default_text else generate_chinese_from_key(key)
-            missing_zh.append((key, chinese))
+            chinese_text = default_text if default_text else generate_chinese_from_key(key)
+            missing_zh.append((key, chinese_text))
 
         if get_nested_value(en_data, lookup_key) is None:
-            if default_text:
+            # Strategies for English generation:
+            # 1. Look up Reverse TM using explicit default text
+            # 2. Look up Reverse TM using generated Chinese text
+            # 3. Look up Common Dictionary
+            # 4. Fallback to placeholder
+            
+            english = ""
+            
+            # Try to determine the Chinese source for lookup
+            source_chinese = default_text if default_text else generate_chinese_from_key(key)
+            
+            if source_chinese in reverse_tm:
+                english = reverse_tm[source_chinese]
+            elif default_text:
                 english = generate_english_translation(default_text)
             else:
                 english = generate_english_from_key(key)
+                
             missing_en.append((key, english))
 
     return {
         "missing_zh": missing_zh,
         "missing_en": missing_en,
-        "extracted_keys": [(k, v) for k, v in extracted]
+        "extracted_keys": [(k, v) for k, v in extracted],
+        "tm_stats": len(reverse_tm)
     }
-
 
 def generate_chinese_from_key(key: str) -> str:
     """Generate Chinese text from key name."""
@@ -226,15 +261,34 @@ def main():
 
     source_file = Path(sys.argv[1])
 
-    # Default paths
+    # Default paths logic
     if len(sys.argv) >= 4:
         zh_json = Path(sys.argv[2])
         en_json = Path(sys.argv[3])
     else:
-        # Default dtg-pay project paths
-        base_dir = Path(__file__).parent.parent.parent.parent.parent.parent
-        zh_json = base_dir / "xxpay-merchant/src/main/resources/static/ezpay/x_mch/start/json/language/zh/translation.json"
-        en_json = base_dir / "xxpay-merchant/src/main/resources/static/ezpay/x_mch/start/json/language/en/translation.json"
+        # Auto-detect project base and module
+        try:
+            # Assuming script is in .agent/skills/dtg-ui/scripts/
+            project_base = Path(__file__).parent.parent.parent.parent.parent
+            source_abs = source_file.resolve()
+            
+            if "xxpay-manage" in str(source_abs):
+                lang_dir = project_base / "xxpay-manage/src/main/resources/static/x_mgr/start/json/language"
+            else:
+                # Agent or Merchant - default to ezpay skin if not detectable
+                skin = "ezpay"
+                if "724pay" in str(source_abs): skin = "724pay"
+                elif "lupay" in str(source_abs): skin = "lupay"
+                
+                lang_dir = project_base / f"xxpay-merchant/src/main/resources/static/{skin}/x_mch/start/json/language"
+            
+            zh_json = lang_dir / "zh/translation.json"
+            en_json = lang_dir / "en/translation.json"
+        except Exception:
+            # Fallback to hardcoded default if detection fails
+            base_dir = Path(__file__).parent.parent.parent.parent.parent
+            zh_json = base_dir / "xxpay-merchant/src/main/resources/static/ezpay/x_mch/start/json/language/zh/translation.json"
+            en_json = base_dir / "xxpay-merchant/src/main/resources/static/ezpay/x_mch/start/json/language/en/translation.json"
 
     if not source_file.exists():
         print(f"Error: Source file not found: {source_file}")
