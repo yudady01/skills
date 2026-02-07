@@ -64,6 +64,7 @@
         "./skills/create-plan",
         "./skills/agy-impl",
         "./skills/skill-creator",
+        "./skills/qiuzhi-skill-creator",
         "./skills/file-organizer"
       ]
     },
