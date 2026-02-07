@@ -1,27 +1,27 @@
-# Ralph Invoke Skill
+# Ralph 调用技能
 
-**Allows Claude to directly start Ralph-Wiggum autonomous loops without user commands.**
+**允许 Claude 直接启动 Ralph-Wiggum 自主循环，无需用户命令。**
 
-## Prerequisites
+## 前置条件
 
-The `ralph-wiggum` plugin must be installed and enabled:
+`ralph-wiggum` 插件必须已安装并启用：
 ```
 /plugin install ralph-wiggum@claude-code-plugins
 /plugin enable ralph-wiggum@claude-code-plugins
 ```
 
-## Triggers
+## 触发条件
 
-Use this skill when:
-- User asks to "start a ralph loop" or "run ralph"
-- User wants autonomous iteration on a task
-- User says "keep working until done" or "iterate until complete"
-- A complex task would benefit from multiple iterations
-- User explicitly requests Claude to invoke ralph
+在以下情况下使用此技能：
+- 用户要求"启动 ralph 循环"或"运行 ralph"
+- 用户希望对任务进行自主迭代
+- 用户说"持续工作直到完成"或"迭代直到完成"
+- 复杂任务将受益于多次迭代
+- 用户明确请求 Claude 调用 ralph
 
-## How to Start a Ralph Loop
+## 如何启动 Ralph 循环
 
-Run this bash command:
+运行此 bash 命令：
 
 ```bash
 "$HOME/.claude/plugins/cache/claude-code-plugins/ralph-wiggum/1.0.0/scripts/setup-ralph-loop.sh" \
@@ -30,80 +30,80 @@ Run this bash command:
   --completion-promise "<PROMISE_TEXT>"
 ```
 
-### Parameters
+### 参数
 
-| Parameter | Required | Default | Description |
+| 参数 | 必需 | 默认值 | 描述 |
 |-----------|----------|---------|-------------|
-| TASK_DESCRIPTION | Yes | - | The task to work on |
-| --max-iterations | Recommended | unlimited | Safety limit (use 20-100) |
-| --completion-promise | Recommended | null | Text to output when truly done |
+| TASK_DESCRIPTION | 是 | - | 要处理的任务 |
+| --max-iterations | 推荐 | 无限制 | 安全限制（建议使用 20-100） |
+| --completion-promise | 推荐 | null | 真正完成时输出的文本 |
 
-### Example Invocations
+### 示例调用
 
-**Simple task:**
+**简单任务：**
 ```bash
 "$HOME/.claude/plugins/cache/claude-code-plugins/ralph-wiggum/1.0.0/scripts/setup-ralph-loop.sh" \
-  "Fix all TypeScript type errors" \
+  "修复所有 TypeScript 类型错误" \
   --max-iterations 50 \
   --completion-promise "ALL_ERRORS_FIXED"
 ```
 
-**Complex refactor:**
+**复杂重构：**
 ```bash
 "$HOME/.claude/plugins/cache/claude-code-plugins/ralph-wiggum/1.0.0/scripts/setup-ralph-loop.sh" \
-  "Migrate all API handlers to the new v2 pattern" \
+  "将所有 API 处理程序迁移到新的 v2 模式" \
   --max-iterations 100 \
   --completion-promise "MIGRATION_COMPLETE"
 ```
 
-## How the Loop Works
+## 循环如何工作
 
-1. **Claude runs the setup script** → Creates state file at `.claude/ralph-loop.local.md`
-2. **Claude works on the task** → Normal operation
-3. **Claude tries to exit** → Stop hook intercepts
-4. **Hook re-injects prompt** → Claude continues with same task
-5. **Repeat** until:
-    - Max iterations reached, OR
-    - Claude outputs `<promise>PROMISE_TEXT</promise>`
+1. **Claude 运行设置脚本** → 在 `.claude/ralph-loop.local.md` 创建状态文件
+2. **Claude 处理任务** → 正常操作
+3. **Claude 尝试退出** → Stop hook 拦截
+4. **Hook 重新注入提示** → Claude 继续处理相同任务
+5. **重复**直到：
+    - 达到最大迭代次数，或
+    - Claude 输出 `<promise>PROMISE_TEXT</promise>`
 
-## Completing the Loop
+## 完成循环
 
-When the task is genuinely complete, output the completion promise in XML tags:
+当任务真正完成时，在 XML 标签中输出完成承诺：
 
 ```
 <promise>ALL_ERRORS_FIXED</promise>
 ```
 
-**CRITICAL RULES:**
-- Only output the promise when the statement is TRUE
-- Do NOT lie to exit the loop
-- Do NOT output false promises even if stuck
-- Trust the process - if stuck, iterate and try differently
+**关键规则：**
+- 仅在陈述为 TRUE 时输出承诺
+- 不要撒谎以退出循环
+- 即使卡住也不要输出虚假承诺
+- 信任过程 - 如果卡住，请以不同方式迭代尝试
 
-## Canceling a Loop
+## 取消循环
 
-If needed, cancel with:
+如需要，使用以下命令取消：
 ```bash
 rm .claude/ralph-loop.local.md
 ```
 
-Or use: `/ralph-wiggum:cancel-ralph`
+或使用：`/ralph-wiggum:cancel-ralph`
 
-## Best Practices
+## 最佳实践
 
-1. **Always set --max-iterations** - Prevents runaway costs (50-100 is reasonable)
-2. **Use specific completion promises** - "ALL_TESTS_PASS" not "DONE"
-3. **Include success criteria in task** - Be explicit about what "done" means
-4. **Monitor progress** - `head -10 .claude/ralph-loop.local.md`
-5. **Start small** - Test with 3-5 iterations first
+1. **始终设置 --max-iterations** - 防止成本失控（50-100 是合理的）
+2. **使用具体的完成承诺** - 使用 "ALL_TESTS_PASS" 而不是 "DONE"
+3. **在任务中包含成功标准** - 明确说明"完成"的含义
+4. **监控进度** - 使用 `head -10 .claude/ralph-loop.local.md`
+5. **从小开始** - 首先用 3-5 次迭代进行测试
 
-## Cost Warning
+## 成本警告
 
-Autonomous loops consume tokens rapidly. A 50-iteration loop can cost $50-100+ in API usage. Always use --max-iterations as a safety net.
+自主循环会快速消耗代币。50 次迭代的循环可能花费 $50-100+ 的 API 使用费用。始终使用 --max-iterations 作为安全网。
 
-## Why This Skill Exists
+## 为什么存在此技能
 
-The official ralph-wiggum plugin requires users to run `/ralph-loop` commands. This skill enables Claude to invoke loops directly, enabling:
-- Claude-initiated iteration on complex tasks
-- Programmatic loop triggers from other skills/agents
-- Automated workflows without manual commands
+官方 ralph-wiggum 插件要求用户运行 `/ralph-loop` 命令。此技能使 Claude 能够直接调用循环，实现：
+- Claude 对复杂任务发起的迭代
+- 来自其他技能/代理的编程式循环触发
+- 无需手动命令的自动化工作流程
